@@ -1,0 +1,21 @@
+package data.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.apache.ibatis.type.Alias;
+
+import java.sql.Timestamp;
+
+@Data
+@Alias("TradeDto")
+public class TradeDto {
+    private int t_num;
+    private int p_num;
+    private int u_num;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
+    private Timestamp day;
+    private int lastprice;
+    private int count;
+    private String invoice;
+    private String state;
+}
