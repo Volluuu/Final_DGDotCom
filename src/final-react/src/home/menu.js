@@ -11,7 +11,7 @@ function Menu(props) {
     return (
         <ul className={'menu'}>
             <li>
-                <NavLink to={"/"}>홈 / 메인</NavLink>
+                <NavLink to={"/"}>홈(메인)</NavLink>
             </li>
             <li>
                 <NavLink to={"/user/login"}>로그인</NavLink>
@@ -31,7 +31,14 @@ function Menu(props) {
             <li>
                 <NavLink to={"/mypage"}>마이페이지</NavLink>
             </li>
+            <span>[{u_name}]님</span>
+            {/*<button type={'button'} onClick={()=>{*/}
+            {/*    sessionStorage.removeItem("u_name");*/}
+            {/*    sessionStorage.u_name="세션이름 바꾸기";*/}
+            {/*}}>세션 u_name 바꾸기</button>*/}
+            {/* 세션 바꿔도 바로 안 바뀜 */}
         </ul>
+
     );
 }
 
