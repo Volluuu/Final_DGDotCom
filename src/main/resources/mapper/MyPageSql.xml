@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.MyPageMapper">
+    <select id="userByName" parameterType="String" resultType="UserDto">
+        select * from user where u_name=#{u_name}
+    </select>
+    <select id="userByNum" parameterType="int" resultType="UserDto">
+        select * from user where u_num=#{u_num}
+    </select>
+</mapper>

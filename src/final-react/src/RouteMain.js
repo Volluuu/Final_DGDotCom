@@ -30,7 +30,7 @@ function RouteMain(props) {
                 {/* 관리자 페이지 */}
                 <Route path={"/admin"} element={<AdminForm/>}/>
                 {/* 마이 페이지 */}
-                <Route path={"/mypage"} element={<MypageForm/>}/>
+                <Route path={"/mypage/*"} element={<MypageForm/>}/>
                 {/* 잘못된 주소*/}
                 <Route path={"*"} element={
                     <div>
