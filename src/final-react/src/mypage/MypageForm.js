@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import MypageRoute from "./MypageRoute";
 import axios from "axios";
 
 
 function MypageForm(props) {
-    // 세션의 u_num으로 초기값 설정
-    const [u_num, setU_num] = useState(sessionStorage.u_num);
-    // 세션의 u_name으로 초기값 설정
-    const [u_name, setU_name] = useState(sessionStorage.u_name);
-    // 세션의 u_num으로 받아온 유저 데이터
-    const [userDto, setUserDto] = useState('');
-    // 모달 창 State
-    const [pointStyle, setPointStyle] = useState('none');
+    const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
+    const [u_name, setU_name] = useState(sessionStorage.u_name); // 세션의 u_name으로 초기값 설정
+    const [userDto, setUserDto] = useState(''); // 세션의 u_num으로 받아온 유저 데이터
+    const [pointStyle, setPointStyle] = useState('none'); // 모달 창 State
 
     // 세션의 u_name으로 받아오는 유저 정보
     const userByName = () => {
