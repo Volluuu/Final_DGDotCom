@@ -7,7 +7,7 @@ import SignupForm from "./user/SignupForm";
 import ProductList from "./productlist/ProductList";
 import ProductDetail from "./productdetail/ProductDetail";
 import AdminForm from "./admin/AdminForm";
-import MypageForm from "./mypage/MypageForm";
+import MypageRoute from "./mypage/MypageRoute";
 
 function RouteMain(props) {
     return (
@@ -29,8 +29,10 @@ function RouteMain(props) {
                 </Route>
                 {/* 관리자 페이지 */}
                 <Route path={"/admin"} element={<AdminForm/>}/>
-                {/* 마이 페이지 */}
-                <Route path={"/mypage/*"} element={<MypageForm/>}/>
+                {/* 마이 페이지 이중 라우터 */}
+                <Route path={"/mypage/*"}>
+                    <Route path={":path"} element={<MypageRoute/>}/>
+                </Route>
                 {/* 잘못된 주소*/}
                 <Route path={"*"} element={
                     <div>

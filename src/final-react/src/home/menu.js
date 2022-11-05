@@ -29,7 +29,7 @@ function Menu(props) {
                 <NavLink to={"/admin"}>관리자페이지</NavLink>
             </li>
             <li>
-                <NavLink to={"/mypage"}>마이페이지</NavLink>
+                <NavLink to={"/mypage/all"}>마이페이지</NavLink>
             </li>
             <span>[{u_name}]님</span>
             {/*<button type={'button'} onClick={()=>{*/}
