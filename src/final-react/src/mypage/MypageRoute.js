@@ -1,22 +1,39 @@
 import React from 'react';
-import {Route, Routes} from "react-router-dom";
-import Home from "../home/Home";
-import LoginForm from "../user/LoginForm";
-import SignupForm from "../user/SignupForm";
-import ProductList from "../productlist/ProductList";
-import ProductDetail from "../productdetail/ProductDetail";
-import AdminForm from "../admin/AdminForm";
-import MypageForm from "./MypageForm";
+import {Route, Routes, useParams} from "react-router-dom";
 import MypageMenu from "./MypageMenu";
 import MypageOrder from "./MypageOrder";
 import MypageBasket from "./MypageBasket";
 import MypageProfile from "./MypageProfile";
+import MypageForm from "./MypageForm";
+import "./MypageCss.css";
 
 function MypageRoute(props) {
+    const path=useParams();
+    console.log(path);
+
     return (
-        <div>
-            <MypageMenu/>
+        <div className="container my lg" data-v-39b2348a="">
+            <div data-v-39b2348a="">
+                <MypageMenu/>
+            </div>
+            {
+                path.path==="all" &&
+                <MypageForm/>
+            }
+            {
+                path.path==="order" &&
+                <MypageOrder/>
+            }
+            {
+                path.path==="basket" &&
+                <MypageBasket/>
+            }
+            {
+                path.path==="profile" &&
+                <MypageProfile/>
+            }
             <Routes>
+                <Route path={"all"} element={<MypageForm/>}/>
                 <Route path={"order"} element={<MypageOrder/>}/>
                 <Route exact path={"basket"} element={<MypageBasket/>}/>
                 <Route exact path={"profile"} element={<MypageProfile/>}/>
