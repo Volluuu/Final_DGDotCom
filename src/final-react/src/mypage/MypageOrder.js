@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import MypageOrderList from "./MypageOrderList";
 
 function MypageOrder(props) {
     const {currentPage}=useParams(); // currentPage 값 받아오기
-    console.log(currentPage);
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
     const [tradeData, setTradeData]=useState({}); // 페이징 처리할 모든 데이터 담기
     const productUrl=localStorage.url+"/product/";
 
     // u_num 을 가진 거래내역 페이징 처리
     const getOrderList=()=>{
-        let orderListUrl=process.env.REACT_APP_URL+"/mypage/orderlist?u_num="+u_num+"&currentPage="+1;
+        let orderListUrl=process.env.REACT_APP_URL+"/mypage/orderlist?u_num="+u_num+"&currentPage="+(currentPage===undefined?1:currentPage);
         axios.get(orderListUrl)
             .then(res=>{
                 setTradeData(res.data);
@@ -84,6 +84,7 @@ function MypageOrder(props) {
                         </div>
                     </div>
                 </div>
+                <MypageOrderList/>
                 <ul data-v-a54c4c26="" className="search_info">
                     <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">한 번에 조회 가능한 기간은 최대 6개월입니다.</p>
                     </li>
