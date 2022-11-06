@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import Menu from "./home/menu";
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./home/Home";
 import LoginForm from "./user/LoginForm";
 import SignupForm from "./user/SignupForm";
@@ -10,6 +10,7 @@ import AdminForm from "./admin/AdminForm";
 import MypageRoute from "./mypage/MypageRoute";
 
 function RouteMain(props) {
+
     return (
         <div style={{marginLeft: '100px', marginTop: '50px'}}>
             <Menu/>
@@ -24,7 +25,7 @@ function RouteMain(props) {
                 </Route>
                 {/* 상품 관련 (리스트, 상세페이지)*/}
                 <Route path={"/product"}>
-                    <Route path={"list"} element={<ProductList/>}/>
+                    <Route path={"list/:currentPage"} element={<ProductList />} />
                     <Route path={"detail/:p_num"} element={<ProductDetail/>}/>
                 </Route>
                 {/* 관리자 페이지 */}
@@ -43,6 +44,7 @@ function RouteMain(props) {
             </Routes>
         </div>
     );
+
 }
 
 export default RouteMain;
