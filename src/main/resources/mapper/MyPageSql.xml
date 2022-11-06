@@ -2,11 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.MyPageMapper">
     <!--    user(회원) 테이블에 관한 CRUD -->
+    <!--    유저 이름으로 UserDto 반환-->
     <select id="userByName" parameterType="String" resultType="UserDto">
         select *
         from user
         where u_name = #{u_name}
     </select>
+    <!--    유저 번호로 UserDto 반환-->
     <select id="userByNum" parameterType="int" resultType="UserDto">
         select *
         from user
@@ -36,5 +38,30 @@
             limit #{startNum},#{perPage}
         </if>
     </select>
-    <!--    -->
+    <!--    u_num에 해당하는 trade와 각 trade의 product를 반환하는 Join select-->
+    <select id="joinTradeProductByU_num" parameterType="Map" resultType="JoinDto">
+        select * from trade T join product P where T.p_num=P.p_num and u_num=#{u_num}
+        <if test="startDate!=null and endDate!=null">
+            and (day between #{startDate} and #{endDate})
+        </if>
+        order by day desc
+        <if test="startNum!=null and perPage!=null">
+            limit #{startNum},#{perPage}
+        </if>
+    </select>
+    <!--    최초 거래 일자 반환 메서드-->
+    <select id="getMinDayByU_num" parameterType="int" resultType="String">
+        select min(day)
+        from trade
+        where u_num = #{u_num}
+    </select>
+
+    <!--    product(상품) CRUD-->
+    <!--    상품 번호로 ProductDto 반환-->
+    <select id="getProductByP_num" parameterType="Map" resultType="ProductDto">
+        select *
+        from product
+        where p_num = #{p_num}
+    </select>
+
 </mapper>

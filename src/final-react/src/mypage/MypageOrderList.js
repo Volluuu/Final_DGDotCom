@@ -1,86 +1,73 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
+import {useParams} from "react-router-dom";
 
 function MypageOrderList(props) {
+    const {currentPage} = useParams(); // currentPage 값 받아오기
+    const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
+    const [tradeData, setTradeData] = useState({}); // 페이징 처리할 모든 데이터 담기
+    const [photoExpand, setPhotoExpand] = useState("230px"); // 사진에 마우스 오버 시 사진 확대
+    const productUrl = localStorage.url + "/product/";
+
+    // u_num 을 가진 거래내역 페이징 처리
+    const getOrderList = () => {
+        let orderListUrl = process.env.REACT_APP_URL + "/mypage/orderlist?u_num=" + u_num + "&currentPage=" + (currentPage === undefined ? 1 : currentPage);
+        axios.get(orderListUrl)
+            .then(res => {
+                setTradeData(res.data);
+            })
+    }
+
+    useEffect(() => {
+        getOrderList();
+    }, [currentPage])
+
     return (
-        <div data-v-0358dbdc="" className="search_result_list">
-            <div data-v-3b925b8c="" data-v-0358dbdc="" className="search_result_item"><a data-v-3b925b8c=""
-                                                                                         href="/products/48860"
-                                                                                         className="item_inner">
-                <div data-v-edf7886c="" data-v-3b925b8c="" className="product"
-                     style={{backgroundColor: "rgb(244, 244, 244)"}}>
-                    <picture data-v-6c8b3524="" data-v-edf7886c="" className="picture product_img">
-                                <img data-v-6c8b3524="" alt="노스페이스 1996 에코 눕시 자켓 블랙"
-                                     src="https://kream-phinf.pstatic.net/MjAyMjExMDNfMTIg/MDAxNjY3NDQwNTA1NjM2.hgXEdLeuPgWMh8try3a6MQdLfSgaS2JNQdkAOCdhoXIg.ytA9Iy64y2Yo8OiH6I13mwlOS6hVdzCk8dsqqWLFWoUg.JPEG/a_e13d8ccda9064571ba8e5075b533c160.jpg?type=m"
-                                     className="image" />
-                    </picture>
-                    </div>
-                <div data-v-3b925b8c="" className="product_info">
-                    <div data-v-3b925b8c="" className="title"><p data-v-3b925b8c="" className="brand">The North
-                        Face</p><p data-v-3b925b8c="" className="name">The North Face 1996 Eco Nuptse Jacket
-                        Black</p><p data-v-3b925b8c="" className="translated_name">노스페이스 1996 에코 눕시 자켓 블랙</p></div>
-                    <div data-v-6da6dff3="" data-v-3b925b8c="" className="badge badge_product shipping_express"> 빠른배송
-                    </div>
-                    <div data-v-3b925b8c="" className="price">
-                        <div data-v-3b925b8c="" className="amount"><span data-v-3b925b8c=""
-                                                                         className="discount_rate"></span> 282,000원
+        <div data-v-0358dbdc="" data-v-92942946="" className="search_result lg">
+            <div data-v-0358dbdc="" className="search_result_list" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
+                {
+                    tradeData.plist &&
+                    tradeData.plist.map((item, i) => (
+                        <div key={i} data-v-3b925b8c="" data-v-0358dbdc="" className="search_result_item"
+                             ><a data-v-3b925b8c=""
+                                                         href={`/product/detail/${item.p_num}`}
+                                                         className="item_inner">
+                            <div data-v-edf7886c="" data-v-3b925b8c="" className="product"
+                                 style={{backgroundColor: "rgb(244, 244, 244)"}}>
+                                <picture data-v-6c8b3524="" data-v-edf7886c="" className="picture product_img">
+                                    <img data-v-6c8b3524="" alt=""
+                                         src={productUrl + item.photo}
+                                         className="image"/>
+                                </picture>
+                            </div>
+                            <div data-v-3b925b8c="" className="product_info">
+                                <div data-v-3b925b8c="" className="title"><p data-v-3b925b8c=""
+                                                                             className="brand">{item.brand}</p>
+                                    <p data-v-3b925b8c="" className="translated_name">{item.p_name}</p></div>
+                                {/*<div data-v-6da6dff3="" data-v-3b925b8c="" className="badge badge_product shipping_express"> 빠른배송</div>*/}
+                                <div data-v-3b925b8c="" className="price">
+                                    <div data-v-3b925b8c="" className="amount"><span data-v-3b925b8c=""
+                                                                                     className="discount_rate">{`${item.discount === 0 ? "" : item.discount + "% 할인"}`}</span> {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                                    </div>
+                                    {/*<div data-v-3b925b8c="" className="desc"><p data-v-3b925b8c="">즉시 구매가</p></div>*/}
+                                </div>
+                            </div>
+                        </a>
+                            <div data-v-3b925b8c="" className="interest_figure"><span data-v-3b925b8c=""
+                                                                                      className="wish_figure"><a
+                                data-v-150a7ea0="" data-v-3b925b8c="" href="#" aria-label="별점" className="btn_wish">
+                        {/*    아이콘 들어갈 자리 href 수정 */}별</a><span
+                                data-v-3b925b8c="" className="text">0</span></span><span data-v-3b925b8c=""
+                                                                                         className="review_figure"><a
+                                data-v-3b925b8c="" href="/social/products/48860" className="review_link"
+                                aria-label="리뷰 개수">
+                        {/*    아이콘 들어갈 자리 href 리뷰 보는 곳으로 */}리뷰
+                        </a><span
+                                data-v-3b925b8c="" className="text">0</span></span></div>
                         </div>
-                        <div data-v-3b925b8c="" className="desc"><p data-v-3b925b8c="">즉시 구매가</p></div>
-                    </div>
-                </div>
-            </a>
-                <div data-v-3b925b8c="" className="interest_figure"><span data-v-3b925b8c="" className="wish_figure"><a
-                    data-v-150a7ea0="" data-v-3b925b8c="" href="#" aria-label="관심상품" className="btn_wish"><svg
-                    data-v-150a7ea0="" xmlns="http://www.w3.org/2000/svg" className="icon sprite-icons ico-wish-off"><use
-                    data-v-150a7ea0="" href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-wish-off"
-                    href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-wish-off"></use></svg></a><span
-                    data-v-3b925b8c="" className="text">2.5만</span></span><span data-v-3b925b8c=""
-                                                                                className="review_figure"><a
-                    data-v-3b925b8c="" href="/social/products/48860" className="review_link"
-                    aria-label="노스페이스 1996 에코 눕시 자켓 블랙 리뷰"><svg data-v-3b925b8c="" xmlns="http://www.w3.org/2000/svg"
-                                                                className="ico-review icon sprite-icons"><use
-                    data-v-3b925b8c="" href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-review"
-                    href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-review"></use></svg></a><span
-                    data-v-3b925b8c="" className="text">178</span></span></div>
-            </div>
-            <div data-v-3b925b8c="" data-v-0358dbdc="" className="search_result_item"><a data-v-3b925b8c=""
-                                                                                         href="/products/12831"
-                                                                                         className="item_inner">
-                <div data-v-edf7886c="" data-v-3b925b8c="" className="product"
-                     style={{backgroundColor: "rgb(235, 240, 245)"}}>
-                    <picture data-v-6c8b3524="" data-v-edf7886c="" className="picture product_img">
-                                <img data-v-6c8b3524="" alt="나이키 에어포스 1 '07 로우 화이트"
-                                     src="https://kream-phinf.pstatic.net/MjAyMjA2MTVfMjYw/MDAxNjU1MjgzNjk2Mzk3.gh8n5rs7p-pWVqzIhNh7yj_KdyjLFBeJr9QbsDumoFEg.KdvPfvgBYmjm7MKKhcbIEQIP6FGeuof_GnmcDUgrvyAg.PNG/a_baa1ccea3726495badba419dfede63f9.png?type=m"
-                                     className="image" />
-                    </picture>
-                    </div>
-                <div data-v-3b925b8c="" className="product_info">
-                    <div data-v-3b925b8c="" className="title"><p data-v-3b925b8c="" className="brand">Nike</p><p
-                        data-v-3b925b8c="" className="name">Nike Air Force 1 '07 Low White</p><p data-v-3b925b8c=""
-                                                                                                 className="translated_name">나이키
-                        에어포스 1 '07 로우 화이트</p></div>
-                    <div data-v-6da6dff3="" data-v-3b925b8c="" className="badge badge_product shipping_express"> 빠른배송
-                    </div>
-                    <div data-v-3b925b8c="" className="price">
-                        <div data-v-3b925b8c="" className="amount"><span data-v-3b925b8c=""
-                                                                         className="discount_rate"></span> 131,000원
-                        </div>
-                        <div data-v-3b925b8c="" className="desc"><p data-v-3b925b8c="">즉시 구매가</p></div>
-                    </div>
-                </div>
-            </a>
-                <div data-v-3b925b8c="" className="interest_figure"><span data-v-3b925b8c="" className="wish_figure"><a
-                    data-v-150a7ea0="" data-v-3b925b8c="" href="#" aria-label="관심상품" className="btn_wish"><svg
-                    data-v-150a7ea0="" xmlns="http://www.w3.org/2000/svg" className="icon sprite-icons ico-wish-off"><use
-                    data-v-150a7ea0="" href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-wish-off"
-                    ></use></svg></a><span
-                    data-v-3b925b8c="" className="text">13.3만</span></span><span data-v-3b925b8c=""
-                                                                                 className="review_figure"><a
-                    data-v-3b925b8c="" href="/social/products/12831" className="review_link"
-                    aria-label="나이키 에어포스 1 '07 로우 화이트 리뷰"><svg data-v-3b925b8c="" xmlns="http://www.w3.org/2000/svg"
-                                                               className="ico-review icon sprite-icons"><use
-                    data-v-3b925b8c="" href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-review"
-                    href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-review"></use></svg></a><span
-                    data-v-3b925b8c="" className="text">5,327</span></span></div>
+                    ))
+                }
+
             </div>
         </div>
     );
