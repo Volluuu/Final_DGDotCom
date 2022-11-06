@@ -1,38 +1,82 @@
-.App {
-  text-align: center;
+*{
+  font-family: 'Anton';
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+ul.menu{
+  list-style:none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+ul.menu li{
+  float:left;
+  width:150px;
+  height:60px;
+  line-height: 60px;
+  border: 1px solid black;
+  text-align:center;
+  font-size: 22px;
+  margin-right:10px;
+  border-radius: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+ul.menu li a{
+  text-decoration: none;
+  color:black;
+  cursor:pointer;
+
 }
 
-.App-link {
-  color: #61dafb;
+ul.menu li:hover{
+  background-color: darkcyan;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ul.menu li a:hover{
+  color:aliceblue;
+}
+
+img.foodphoto{
+  width: 100px;
+  height: 100px;
+  border: 2px solid gray;
+  border-radius: 30px;
+  box-shadow: 3px 3px 3px #add;
+  margin-right: 10px;
+}
+
+div.login{
+  margin:100px 100px;
+  border: 5px solid gray;
+  width:320px;
+  border-radius: 10px;
+}
+
+.board .smallphoto{
+  width:60px;
+  height:60px;
+  border: 1px solid gray;
+  margin-right:10px;
+  border-radius: 10px;
+}
+.board a{
+  text-decoration: none;
+  color: black;
+}
+.board a:hover{
+  text-decoration: underline;
+  color: blue;
+}
+
+a.pagenum{
+  text-decoration: none;
+}
+
+a.pagenum b{
+  margin-right:5px;
+}
+
+.largephoto{
+  width: 300px;
+  height: 300px;
+  border: 1px solid gray;
+  margin-right:10px;
+  border-radius: 10px;
 }

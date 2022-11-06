@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.AdminMapper">
+<!--    총 유저수-->
+    <select id="TotalUser" parameterType="int" resultType="UserDto">
+        select count(*) from user
+    </select>
+<!--회원정보-->
+    <select id="UserNum" parameterType="int" resultType="UserDto">
+        select * from user where u_num = #{u_num}
+    </select>
+<!--회원삭제-->
+    <delete id="DeleteUser" parameterType="int">
+        delete from user where user_num = #{u_num}
+    </delete>
+<!--총 상품수-->
+    <select id="TotalProduct" parameterType="int" resultType="ProductDto">
+        select count(*) from product
+    </select>
+<!--상품 정보-->
+    <select id="ProductNum" parameterType="int" resultType="ProductDto">
+        select * from product where p_num = #{p_num}
+    </select>
+<!--상품 추가-->
+    <insert id="InsertProduct" parameterType="ProductDto">
+        insert into product (category, photo, brand, gender, p_name, price, discount)
+        values (#{category}, #{photo}, #{brand}, #{gender}, #{p_name}, #{price}, #{discount})
+    </insert>
+<!--상품 삭제-->
+    <delete id="DeleteProduct" parameterType="int">
+        delete from product where p_num = #{p_num}
+    </delete>
+<!--상품 업데이트-->
+    <update id="UpdateProduct" parameterType="int">
+        update product set category=#{category}, brand=#{brand}, gender=#{gender}, p_name=#{p_name},
+                           price=#{price}, discount=#{discount}
+        <if test="photo != null">
+            ,photo=#{photo}
+        </if>
+        where p_num = #{p_num}
+    </update>
+
+</mapper>
