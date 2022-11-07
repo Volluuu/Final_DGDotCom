@@ -6,7 +6,7 @@ import LoginForm from "./user/LoginForm";
 import SignupForm from "./user/SignupForm";
 import ProductList from "./productlist/ProductList";
 import ProductDetail from "./productdetail/ProductDetail";
-import AdminForm from "./admin/AdminForm";
+import DashBoard from "./admin/DashBoard";
 import MypageRoute from "./mypage/MypageRoute";
 import UserInfo from "./admin/UserInfo";
 import AdProduct from "./admin/AdProduct";
@@ -33,7 +33,7 @@ function RouteMain(props) {
           <Route path={"detail/:p_num"} element={<ProductDetail />} />
         </Route>
         {/* 관리자 페이지 */}
-        <Route path={"/admin"} element={<AdminForm/>}/>
+        <Route path={"/admin"} element={<DashBoard/>}/>
           <Route path={"/admin/UserInfo"} element={<UserInfo/>}/>
           <Route path={"/admin/AdProduct"} element={<AdProduct/>}/>
           <Route path={"/admin/Shipping"} element={<AdProduct/>}/>
