@@ -1,6 +1,6 @@
 import React from "react";
 import Menu from "./home/menu";
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import Home from "./home/Home";
 import LoginForm from "./user/LoginForm";
 import SignupForm from "./user/SignupForm";
@@ -8,10 +8,14 @@ import ProductList from "./productlist/ProductList";
 import ProductDetail from "./productdetail/ProductDetail";
 import AdminForm from "./admin/AdminForm";
 import MypageRoute from "./mypage/MypageRoute";
+import UserInfo from "./admin/UserInfo";
+import AdProduct from "./admin/AdProduct";
+import Cs from "./admin/Cs";
+import MypageOrder from "./mypage/MypageOrder";
 
 function RouteMain(props) {
   return (
-    <div style={{ marginLeft: "100px", marginTop: "50px" }}>
+     <div>
       <Menu />
       <br style={{ clear: "both" }} />
       <br />
@@ -29,10 +33,16 @@ function RouteMain(props) {
           <Route path={"detail/:p_num"} element={<ProductDetail />} />
         </Route>
         {/* 관리자 페이지 */}
-        <Route path={"/admin"} element={<AdminForm />} />
+        <Route path={"/admin"} element={<AdminForm/>}/>
+          <Route path={"/admin/UserInfo"} element={<UserInfo/>}/>
+          <Route path={"/admin/AdProduct"} element={<AdProduct/>}/>
+          <Route path={"/admin/Shipping"} element={<AdProduct/>}/>
+          <Route path={"/admin/Cs"} element={<Cs/>}/>
         {/* 마이 페이지 이중 라우터 */}
-        <Route path={"/mypage/*"}>
-          <Route path={":path"} element={<MypageRoute />} />
+        <Route path={"/mypage"}>
+            <Route path={":path"} element={<MypageRoute/>}>
+                <Route path={":currentPage"} element={<MypageRoute/>}/>
+            </Route>
         </Route>
         {/* 잘못된 주소*/}
         <Route
