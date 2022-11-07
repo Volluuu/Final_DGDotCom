@@ -58,19 +58,19 @@ export default function TransitionsModal() {
         },
         [],
     );
-    useEffect(() => {
-        if(!word.equal('')) {
-            const debounce = setTimeout(()=>{
-                if(word) updateData();
-            },200)
-            return () => {
-                clearTimeout(debounce);
-            }
-            axios.get("http://localhost:9003/list/search").then(res=>{
-                setSearchList(res.data);
-            },)
-        }
-    }, [word]);
+    // useEffect(() => {
+    //     if(!word.equal('')) {
+    //         const debounce = setTimeout(()=>{
+    //             if(word) updateData();
+    //         },200)
+    //         return () => {
+    //             clearTimeout(debounce);
+    //         }
+    //         axios.get("http://localhost:9003/list/search").then(res=>{
+    //             setSearchList(res.data);
+    //         },)
+    //     }
+    // }, [word]);
 
     return (
         <div>
