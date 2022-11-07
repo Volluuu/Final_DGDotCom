@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Link, NavLink, useParams} from "react-router-dom";
 
+
 function MypageMenu(props) {
     const {path} = useParams();
 
@@ -17,13 +18,17 @@ function MypageMenu(props) {
                     <ul data-v-4d11470e="" data-v-7bcac446="" className="snb_menu">
                         <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e="" to="/mypage/order"
                                                                         className="menu_link"
+
                                                                         style={{color: path === "order" ? "#0A58CA" : ""}}> 주문
                             내역 </Link>
+
                         </li>
-                        <li data-v-4d11470e="" className="menu_item"><a data-v-4d11470e=""
-                                                                        href="/mypage/basket"
+                        <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e=""
+                                                                        to="/mypage/basket"
                                                                         className="menu_link"
+
                                                                         style={{color: path === "basket" ? "#0A58CA" : ""}}> 장바구니 </a>
+
                         </li>
                     </ul>
                 </div>
@@ -31,8 +36,8 @@ function MypageMenu(props) {
                                                                      className="snb_title">내
                     정보</strong>
                     <ul data-v-4d11470e="" data-v-7bcac446="" className="snb_menu">
-                        <li data-v-4d11470e="" className="menu_item"><a data-v-4d11470e=""
-                                                                        href="/mypage/profile"
+                        <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e=""
+                                                                        to="/mypage/profile"
                                                                         className="menu_link"
                                                                         style={{color: path === "profile" ? "#0A58CA" : ""}}> 프로필
                             정보 </a>
@@ -41,8 +46,7 @@ function MypageMenu(props) {
                 </div>
             </nav>
         </div>
-    )
-        ;
+    ) ;
 }
 
 export default MypageMenu;

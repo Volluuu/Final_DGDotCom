@@ -10,7 +10,6 @@ import "./MypageCss.css";
 function MypageRoute(props) {
     const {path}=useParams();
 
-
     return (
         <div className="container my lg" data-v-39b2348a="">
             <div data-v-39b2348a="">
@@ -32,14 +31,6 @@ function MypageRoute(props) {
                 path==="profile" &&
                 <MypageProfile/>
             }
-            <Routes>
-                <Route path={"all"} element={<MypageForm/>}/>
-                <Route path={"order"} element={<MypageOrder/>}>
-                    <Route path={":currentPage"} element={<MypageOrder/>}/>
-                </Route>
-                <Route exact path={"basket"} element={<MypageBasket/>}/>
-                <Route exact path={"profile"} element={<MypageProfile/>}/>
-            </Routes>
         </div>
     );
 }
