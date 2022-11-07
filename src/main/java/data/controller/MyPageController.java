@@ -1,9 +1,6 @@
 package data.controller;
 
-import data.dto.JoinDto;
-import data.dto.ProductDto;
-import data.dto.TradeDto;
-import data.dto.UserDto;
+import data.dto.*;
 import data.mapper.MyPageMapper;
 import data.mapper.UserMapper;
 import org.apache.tomcat.util.json.JSONParser;
@@ -36,7 +33,7 @@ public class MyPageController {
     public Map<String, Object> orderPagingList(@RequestParam(defaultValue = "1") int currentPage, int u_num,
                                                @RequestParam(required = false) String startDate,
                                                @RequestParam(required = false) String endDate) {
-        System.out.println("currentPage="+currentPage);
+//        System.out.println("currentPage="+currentPage);
 //        System.out.println("startDate="+startDate);
 //        System.out.println("endDate="+endDate);
         int perPage = 10; // 한 페이지당 출력할 글 갯수
@@ -97,6 +94,14 @@ public class MyPageController {
             joinPaging = myPageMapper.joinTradeProductByU_num(pmap);
         }
 
+        List<ReviewDto> rlist=new ArrayList<>();
+        for(int i=0;i<joinPaging.size();i++){
+            int p_num=joinPaging.get(i).getP_num();
+            ReviewDto dto=new ReviewDto();
+            dto.setP_num(p_num);
+            dto.setU_num(u_num);
+            rlist.add(myPageMapper.reviewDetail(dto));
+        }
         //출력할 페이지번호들을 Vector에 담아서 보내기
         Vector<Integer> pidx = new Vector<>();
         for (int i = startPage; i <= endPage; i++) {
@@ -156,6 +161,7 @@ public class MyPageController {
         smap.put("joinPaging", joinPaging); // 검색 데이터 상세 정보 리스트 + 페이징
         smap.put("joined", joined); // 검색 데이터 상세 정보 리스트
         smap.put("pidx", pidx); // 페이징 인덱스번호
+        smap.put("rlist", rlist); // 리뷰 리스트
 
         return smap;
     }
@@ -165,6 +171,32 @@ public class MyPageController {
         Map<String, Object> map=new HashMap<>();
         map.put("p_num",p_num);
         return myPageMapper.getProductByP_num(map);
+    }
+
+    @PostMapping("/reviewinsert")
+    public void reviewInsert(@RequestBody ReviewDto dto){
+        System.out.println("p_num="+dto.getP_num());
+        System.out.println("u_num="+dto.getU_num());
+        System.out.println("content="+dto.getContent());
+        System.out.println("star="+dto.getStar());
+        myPageMapper.reviewInsert(dto);
+    }
+
+    @GetMapping("/reviewdetail")
+    public ReviewDto reviewDetail(int p_num, int u_num){
+        ReviewDto dto=new ReviewDto();
+        dto.setP_num(p_num);
+        dto.setU_num(u_num);
+        return myPageMapper.reviewDetail(dto);
+    }
+
+    @PutMapping("/reviewupdate")
+    public void reviewUpdate(@RequestBody ReviewDto dto){
+        System.out.println("r_num"+dto.getR_num());
+        System.out.println("content"+dto.getContent());
+        System.out.println("star"+dto.getStar());
+
+//        myPageMapper.reviewUpdate(dto);
     }
 
 }

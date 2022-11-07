@@ -29,6 +29,7 @@ public interface MyPageMapper {
 
     /* Review */
     public void reviewInsert(ReviewDto dto);
-
+    public ReviewDto reviewDetail(ReviewDto dto);
+    public void reviewUpdate(ReviewDto dto);
 
 }

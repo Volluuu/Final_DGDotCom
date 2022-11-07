@@ -75,4 +75,14 @@
     <insert id="reviewInsert" parameterType="ReviewDto">
         insert into review values (null, #{u_num}, #{p_num}, #{content}, #{star}, now())
     </insert>
+<!--    리뷰 수정하기 위한 디테일-->
+    <select id="reviewDetail" parameterType="ReviewDto" resultType="ReviewDto">
+        select * from review where p_num=#{p_num} and u_num=#{u_num}
+    </select>
+<!--    리뷰 수정-->
+    <update id="reviewUpdate" parameterType="ReviewDto">
+        update review set content=#{content}, star=#{star} where r_num=#{r_num}
+    </update>
+
+
 </mapper>
