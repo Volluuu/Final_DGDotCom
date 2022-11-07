@@ -85,4 +85,12 @@ public class ProductController {
 
         return smap;
     }
+
+    @GetMapping("/detail")
+    public ProductDto getProductDetail(@RequestParam int p_num)
+    {
+        System.out.println("p_num:"+p_num);
+
+        return productMapper.getProduct(p_num);
+    }
 }
