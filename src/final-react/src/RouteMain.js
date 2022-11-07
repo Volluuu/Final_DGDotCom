@@ -8,6 +8,7 @@ import ProductList from "./productlist/ProductList";
 import ProductDetail from "./productdetail/ProductDetail";
 import AdminForm from "./admin/AdminForm";
 import MypageRoute from "./mypage/MypageRoute";
+import MypageOrder from "./mypage/MypageOrder";
 
 function RouteMain(props) {
   return (
@@ -31,9 +32,11 @@ function RouteMain(props) {
         {/* 관리자 페이지 */}
         <Route path={"/admin"} element={<AdminForm />} />
         {/* 마이 페이지 이중 라우터 */}
-        <Route path={"/mypage/*"}>
-          <Route path={":path"} element={<MypageRoute />} />
-        </Route>
+        <Route path={"/mypage"}>
+                    <Route path={":path"} element={<MypageRoute/>}>
+                        <Route path={":currentPage"} element={<MypageRoute/>}/>
+                    </Route>
+                </Route>
         {/* 잘못된 주소*/}
         <Route
           path={"*"}
