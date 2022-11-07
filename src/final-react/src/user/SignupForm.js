@@ -102,7 +102,7 @@ export const SignupForm = () => {
                         <th>핸드폰 번호</th>
                         <td>
                             <div className='input-group' >
-                                <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                                <input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
                                        placeholder='xxx-xxxx-xxxx'
                                        value={hp}
                                        onChange={(e)=>{
@@ -135,7 +135,7 @@ export const SignupForm = () => {
                         <td>
                             <div className='input-group' >
                                 <input type={'text'}
-                                       onChange={(e)=>setU_name(e.target.value)}/>
+                                       onChange={(e)=>setAddr(e.target.value)}/>
                             </div>
                         </td>
                     </tr>
