@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useParams, Link} from "react-router-dom";
 import MypageOrderList from "./MypageOrderList";
+import {Close} from "@mui/icons-material";
 
 
 function MypageForm(props) {
@@ -11,7 +12,9 @@ function MypageForm(props) {
     const [userDto, setUserDto] = useState(''); // 세션의 u_num으로 받아온 유저 데이터
     const [tradeData, setTradeData] = useState({}); // 페이징 처리할 모든 데이터 담기
     const [pointStyle, setPointStyle] = useState('none'); // 모달 창 State
+    const [rowBackground, setRowBackGround]=useState('');
 
+    const productUrl=process.env.REACT_APP_URL+"/product/";
     // 세션의 u_name으로 받아오는 유저 정보
     const userByName = () => {
         let userByNameUrl = process.env.REACT_APP_URL + "/mypage/userbyname?u_name=" + u_name;
@@ -61,9 +64,9 @@ function MypageForm(props) {
                                         "*".repeat((userDto.email.split("@")[0].length) - 2) +
                                         userDto.email.charAt(userDto.email.indexOf("@") - 1) +
                                         "@" +
-                                        userDto.email.split("@")[1]}</p><a
-                                        data-v-3d1bcc82="" data-v-5acef129="" href="/mypage/profile"
-                                        className="btn btn outlinegrey small" type="button"> 프로필 수정 </a>
+                                        userDto.email.split("@")[1]}</p><Link
+                                        data-v-3d1bcc82="" data-v-5acef129="" to="/mypage/profile"
+                                        className="btn btn outlinegrey small" type="button"> 프로필 수정 </Link>
                                 </div>
                             </div>
                         </div>
@@ -75,24 +78,24 @@ function MypageForm(props) {
                                 data-v-5acef129=""
                                 className="title"> {userDto.gaip.substring(0, 10)} 가입 </p>
                             </a>
-                            <a data-v-5acef129="" href="#" className="membership_item"
+                            <Link data-v-5acef129="" to="#" className="membership_item"
                                onClick={() => {
                                    setPointStyle("")
                                }
                                }><strong
                                 data-v-5acef129="" className="info"> 0P </strong><p data-v-5acef129=""
                                                                                     className="title"> 적립금 </p>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div data-v-f263fda4="" className="inventory_box">
                         <div data-v-77bfdc51="" data-v-f263fda4="">
                             <div data-v-6752ceb2="" data-v-77bfdc51="" className="my_home_title"><h3
                                 data-v-6752ceb2=""
-                                className="title"> 주문 내역 </h3><a data-v-6752ceb2="" href="/mypage/order"
+                                className="title"> 주문 내역 </h3><Link data-v-6752ceb2="" to="/mypage/order"
                                                                  className="btn_more"><span
                                 data-v-6752ceb2="" className="btn_txt">더보기</span>
-                            </a></div>
+                            </Link></div>
                             <div data-v-77bfdc51="" className="purchase_list_tab inventory">
                                 <div data-v-77bfdc51="" className="tab_item total"><a data-v-77bfdc51=""
                                                                                       href="/mypage/order"
@@ -106,21 +109,21 @@ function MypageForm(props) {
                                                                                 className="tab_link">
                                     <dl data-v-77bfdc51="" className="tab_box">
                                         <dt data-v-77bfdc51="" className="title">배송 전</dt>
-                                        <dd data-v-77bfdc51="" className="count">{tradeData.stateCount && tradeData.stateCount[0]}</dd>
+                                        <dd data-v-77bfdc51="" className="count" style={{color:"#FF0000"}}>{tradeData.stateCount && tradeData.stateCount[0]}</dd>
                                     </dl>
                                 </a></div>
                                 <div data-v-77bfdc51="" className="tab_item"><a data-v-77bfdc51="" href="#"
                                                                                 className="tab_link">
                                     <dl data-v-77bfdc51="" className="tab_box">
                                         <dt data-v-77bfdc51="" className="title">배송 중</dt>
-                                        <dd data-v-77bfdc51="" className="count">{tradeData.stateCount && tradeData.stateCount[1]}</dd>
+                                        <dd data-v-77bfdc51="" className="count" style={{color:"#0000FF"}}>{tradeData.stateCount && tradeData.stateCount[1]}</dd>
                                     </dl>
                                 </a></div>
                                 <div data-v-77bfdc51="" className="tab_item"><a data-v-77bfdc51="" href="#"
                                                                                 className="tab_link">
                                     <dl data-v-77bfdc51="" className="tab_box">
                                         <dt data-v-77bfdc51="" className="title">배송 완료</dt>
-                                        <dd data-v-77bfdc51="" className="count">{tradeData.stateCount && tradeData.stateCount[2]}</dd>
+                                        <dd data-v-77bfdc51="" className="count" style={{color:"#A020F0"}}>{tradeData.stateCount && tradeData.stateCount[2]}</dd>
                                     </dl>
                                 </a></div>
                             </div>
@@ -150,9 +153,14 @@ function MypageForm(props) {
                                                     tradeData.joined.slice(0,5).map((jitem,idx)=>(
                                                         <React.Fragment key={idx}>
                                                             <span style={{fontWeight:"inherit"}}>{jitem.day}</span>
-                                                            <span style={{textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}><a href={`/product/detail/${jitem.p_num}`}>{jitem.p_name}</a></span>
+                                                            <span style={{color:jitem.state==="배송 전"?"#FF0000":jitem.state==="배송 중"?"#0000FF":"#A020F0",textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+                                                                <Link to={`/product/detail/${jitem.p_num}`}>
+                                                                <img alt={""} src={productUrl+jitem.photo} style={{maxWidth:"33px"}}/>&nbsp;
+                                                                    {jitem.p_name}
+                                                                </Link>
+                                                            </span>
                                                             <span style={{textAlign:"right"}}>{(jitem.lastprice*jitem.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span>
-                                                            <span>{jitem.state}</span>
+                                                            <span style={{color:jitem.state==="배송 전"?"#FF0000":jitem.state==="배송 중"?"#0000FF":"#A020F0"}}>{jitem.state}</span>
                                                         </React.Fragment>
                                                     ))
                                                 }
@@ -258,7 +266,7 @@ function MypageForm(props) {
                             </div>
                             <a data-v-28cabbb5="" data-v-1f7c6d3f="" href="#" className="btn_layer_close"
                                onClick={() => setPointStyle("none")}>
-                                닫기
+                                <Close/>
                             </a></div>
                     </div>
                 </div>

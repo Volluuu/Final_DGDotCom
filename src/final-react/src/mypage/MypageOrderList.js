@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useParams, Link} from "react-router-dom";
 
 function MypageOrderList(props) {
     const {currentPage} = useParams(); // currentPage 값 받아오기
@@ -29,8 +29,8 @@ function MypageOrderList(props) {
                     tradeData.plist &&
                     tradeData.plist.map((item, i) => (
                         <div key={i} data-v-3b925b8c="" data-v-0358dbdc="" className="search_result_item"
-                             ><a data-v-3b925b8c=""
-                                                         href={`/product/detail/${item.p_num}`}
+                             ><Link data-v-3b925b8c=""
+                                                         to={`/product/detail/${item.p_num}`}
                                                          className="item_inner">
                             <div data-v-edf7886c="" data-v-3b925b8c="" className="product"
                                  style={{backgroundColor: "rgb(244, 244, 244)"}}>
@@ -52,17 +52,17 @@ function MypageOrderList(props) {
                                     {/*<div data-v-3b925b8c="" className="desc"><p data-v-3b925b8c="">즉시 구매가</p></div>*/}
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                             <div data-v-3b925b8c="" className="interest_figure"><span data-v-3b925b8c=""
-                                                                                      className="wish_figure"><a
-                                data-v-150a7ea0="" data-v-3b925b8c="" href="#" aria-label="별점" className="btn_wish">
-                        {/*    아이콘 들어갈 자리 href 수정 */}별</a><span
+                                                                                      className="wish_figure"><Link
+                                data-v-150a7ea0="" data-v-3b925b8c="" to="#" aria-label="별점" className="btn_wish">
+                        {/*    아이콘 들어갈 자리 href 수정 */}별</Link><span
                                 data-v-3b925b8c="" className="text">0</span></span><span data-v-3b925b8c=""
-                                                                                         className="review_figure"><a
-                                data-v-3b925b8c="" href="/social/products/48860" className="review_link"
+                                                                                         className="review_figure"><Link
+                                data-v-3b925b8c="" to={`/product/detail/${item.p_num}`} className="review_link"
                                 aria-label="리뷰 개수">
                         {/*    아이콘 들어갈 자리 href 리뷰 보는 곳으로 */}리뷰
-                        </a><span
+                        </Link><span
                                 data-v-3b925b8c="" className="text">0</span></span></div>
                         </div>
                     ))

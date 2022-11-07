@@ -21,6 +21,9 @@
         select count(*)
         from trade
         where u_num = #{u_num}
+        <if test="startDate!=null and endDate!=null">
+            and (day between #{startDate} and #{endDate})
+        </if>
         <if test="state!=null">
             and state=#{state}
         </if>
@@ -30,6 +33,9 @@
         select sum(count * lastprice)
         from trade
         where u_num = #{u_num}
+        <if test="startDate!=null and endDate!=null">
+            and (day between #{startDate} and #{endDate})
+        </if>
     </select>
     <!--    검색한 목록 출력-->
     <select id="tradePagingByU_num" parameterType="Map" resultType="TradeDto">
@@ -64,4 +70,9 @@
         where p_num = #{p_num}
     </select>
 
+<!--    review(리뷰) CRUD-->
+<!--    리뷰 insert-->
+    <insert id="reviewInsert" parameterType="ReviewDto">
+        insert into review values (null, #{u_num}, #{p_num}, #{content}, #{star}, now())
+    </insert>
 </mapper>

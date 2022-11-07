@@ -1,10 +1,7 @@
 package data.mapper;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import data.dto.JoinDto;
-import data.dto.ProductDto;
-import data.dto.TradeDto;
-import data.dto.UserDto;
+import data.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.Date;
@@ -30,7 +27,8 @@ public interface MyPageMapper {
     /* Product */
     public ProductDto getProductByP_num(Map<String, Object> map); // p_num에 해당하는 상품내역 반환 메서드
 
-
+    /* Review */
+    public void reviewInsert(ReviewDto dto);
 
 
 }

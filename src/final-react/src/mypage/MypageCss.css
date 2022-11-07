@@ -8770,11 +8770,6 @@ a:hover {
     color: #ff7500
 }
 
-.period_calendar_wrapper {
-    display: -webkit-box;
-    display: flex
-}
-
 .period_btn_box {
     margin-left: 4px
 }
@@ -8796,13 +8791,10 @@ a:hover {
     cursor: pointer
 }
 
-.period_calendar .calendar_open .cal_input {
-    color: #222
-}
 
-.period_calendar .calendar_open .cal_btn {
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzIyMiIgZD0iTTkgMTFIN3YyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTItN2gtMVYyaC0ydjJIOFYySDZ2Mkg1Yy0xLjExIDAtMS45OS45LTEuOTkgMkwzIDIwYTIgMiAwIDAwMiAyaDE0YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bTAgMTZINVY5aDE0djExeiIvPjwvc3ZnPg==)
-}
+/*.period_calendar .calendar_open .cal_btn {*/
+/*    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzIyMiIgZD0iTTkgMTFIN3YyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTItN2gtMVYyaC0ydjJIOFYySDZ2Mkg1Yy0xLjExIDAtMS45OS45LTEuOTkgMkwzIDIwYTIgMiAwIDAwMiAyaDE0YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bTAgMTZINVY5aDE0djExeiIvPjwvc3ZnPg==)*/
+/*}*/
 
 .period_calendar .swung_dash {
     display: inline-block;
@@ -8812,24 +8804,17 @@ a:hover {
     color: rgba(34, 34, 34, .8)
 }
 
-.period_calendar .cal_input {
-    width: 100%;
-    font-size: 13px;
-    letter-spacing: -.07px;
-    color: rgba(34, 34, 34, .8);
-    cursor: default
-}
 
-.period_calendar .cal_btn {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    margin-top: -9px;
-    width: 18px;
-    height: 18px;
-    background-size: 18px 18px;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NiA1NiI+PHBhdGggZmlsbD0iI0JCQiIgZD0iTTIxIDI1LjY2N2gtNC42Njd2NC42NjZIMjF2LTQuNjY2em05LjMzMyAwaC00LjY2NnY0LjY2Nmg0LjY2NnYtNC42NjZ6bTkuMzM0IDBIMzV2NC42NjZoNC42Njd2LTQuNjY2em00LjY2Ni0xNi4zMzRINDJWNC42NjdoLTQuNjY3djQuNjY2SDE4LjY2N1Y0LjY2N0gxNHY0LjY2NmgtMi4zMzNjLTIuNTkgMC00LjY0NCAyLjEtNC42NDQgNC42NjdMNyA0Ni42NjdhNC42NjYgNC42NjYgMCAwMDQuNjY3IDQuNjY2aDMyLjY2NkE0LjY4IDQuNjggMCAwMDQ5IDQ2LjY2N1YxNGE0LjY4IDQuNjggMCAwMC00LjY2Ny00LjY2N3ptMCAzNy4zMzRIMTEuNjY3VjIxaDMyLjY2NnYyNS42Njd6Ii8+PC9zdmc+)
-}
+/*.period_calendar .cal_btn {*/
+/*    position: absolute;*/
+/*    top: 50%;*/
+/*    right: 12px;*/
+/*    margin-top: -9px;*/
+/*    width: 18px;*/
+/*    height: 18px;*/
+/*    background-size: 18px 18px;*/
+/*    !*background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NiA1NiI+PHBhdGggZmlsbD0iI0JCQiIgZD0iTTIxIDI1LjY2N2gtNC42Njd2NC42NjZIMjF2LTQuNjY2em05LjMzMyAwaC00LjY2NnY0LjY2Nmg0LjY2NnYtNC42NjZ6bTkuMzM0IDBIMzV2NC42NjZoNC42Njd2LTQuNjY2em00LjY2Ni0xNi4zMzRINDJWNC42NjdoLTQuNjY3djQuNjY2SDE4LjY2N1Y0LjY2N0gxNHY0LjY2NmgtMi4zMzNjLTIuNTkgMC00LjY0NCAyLjEtNC42NDQgNC42NjdMNyA0Ni42NjdhNC42NjYgNC42NjYgMCAwMDQuNjY3IDQuNjY2aDMyLjY2NkE0LjY4IDQuNjggMCAwMDQ5IDQ2LjY2N1YxNGE0LjY4IDQuNjggMCAwMC00LjY2Ny00LjY2N3ptMCAzNy4zMzRIMTEuNjY3VjIxaDMyLjY2NnYyNS42Njd6Ii8+PC9zdmc+)*!*/
+/*}*/
 
 .period_calendar .vc-popover-content-wrapper {
     -webkit-transform: translate(-1px, 30px) !important;
@@ -9999,26 +9984,13 @@ a:hover {
     position: relative
 }
 
-.period_calendar .calendar_wrap {
-    position: relative;
-    padding: 0 30px 0 12px;
-    display: inline-block;
-    width: 120px;
-    height: 32px;
-    line-height: 30px;
-    vertical-align: top;
-    border: 1px solid #ebebeb;
-    background-color: #fff;
-    cursor: pointer
-}
-
 .period_calendar .calendar_open .cal_input {
     color: #222
 }
 
-.period_calendar .calendar_open .cal_btn {
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzIyMiIgZD0iTTkgMTFIN3YyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTItN2gtMVYyaC0ydjJIOFYySDZ2Mkg1Yy0xLjExIDAtMS45OS45LTEuOTkgMkwzIDIwYTIgMiAwIDAwMiAyaDE0YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bTAgMTZINVY5aDE0djExeiIvPjwvc3ZnPg==)
-}
+/*.period_calendar .calendar_open .cal_btn {*/
+/*    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzIyMiIgZD0iTTkgMTFIN3YyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTQgMGgtMnYyaDJ2LTJ6bTItN2gtMVYyaC0ydjJIOFYySDZ2Mkg1Yy0xLjExIDAtMS45OS45LTEuOTkgMkwzIDIwYTIgMiAwIDAwMiAyaDE0YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bTAgMTZINVY5aDE0djExeiIvPjwvc3ZnPg==)*/
+/*}*/
 
 .period_calendar .swung_dash {
     display: inline-block;
@@ -10033,18 +10005,18 @@ a:hover {
     font-size: 13px;
     letter-spacing: -.07px;
     color: rgba(34, 34, 34, .8);
-    cursor: default
+    cursor: pointer;
 }
 
 .period_calendar .cal_btn {
     position: absolute;
     top: 50%;
     right: 12px;
-    margin-top: -9px;
+    margin-top: -14px;
     width: 18px;
     height: 18px;
     background-size: 18px 18px;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NiA1NiI+PHBhdGggZmlsbD0iI0JCQiIgZD0iTTIxIDI1LjY2N2gtNC42Njd2NC42NjZIMjF2LTQuNjY2em05LjMzMyAwaC00LjY2NnY0LjY2Nmg0LjY2NnYtNC42NjZ6bTkuMzM0IDBIMzV2NC42NjZoNC42Njd2LTQuNjY2em00LjY2Ni0xNi4zMzRINDJWNC42NjdoLTQuNjY3djQuNjY2SDE4LjY2N1Y0LjY2N0gxNHY0LjY2NmgtMi4zMzNjLTIuNTkgMC00LjY0NCAyLjEtNC42NDQgNC42NjdMNyA0Ni42NjdhNC42NjYgNC42NjYgMCAwMDQuNjY3IDQuNjY2aDMyLjY2NkE0LjY4IDQuNjggMCAwMDQ5IDQ2LjY2N1YxNGE0LjY4IDQuNjggMCAwMC00LjY2Ny00LjY2N3ptMCAzNy4zMzRIMTEuNjY3VjIxaDMyLjY2NnYyNS42Njd6Ii8+PC9zdmc+)
+    /*background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA1NiA1NiI+PHBhdGggZmlsbD0iI0JCQiIgZD0iTTIxIDI1LjY2N2gtNC42Njd2NC42NjZIMjF2LTQuNjY2em05LjMzMyAwaC00LjY2NnY0LjY2Nmg0LjY2NnYtNC42NjZ6bTkuMzM0IDBIMzV2NC42NjZoNC42Njd2LTQuNjY2em00LjY2Ni0xNi4zMzRINDJWNC42NjdoLTQuNjY3djQuNjY2SDE4LjY2N1Y0LjY2N0gxNHY0LjY2NmgtMi4zMzNjLTIuNTkgMC00LjY0NCAyLjEtNC42NDQgNC42NjdMNyA0Ni42NjdhNC42NjYgNC42NjYgMCAwMDQuNjY3IDQuNjY2aDMyLjY2NkE0LjY4IDQuNjggMCAwMDQ5IDQ2LjY2N1YxNGE0LjY4IDQuNjggMCAwMC00LjY2Ny00LjY2N3ptMCAzNy4zMzRIMTEuNjY3VjIxaDMyLjY2NnYyNS42Njd6Ii8+PC9zdmc+)*/
 }
 
 .period_calendar .vc-popover-content-wrapper {
@@ -10313,4 +10285,8 @@ a:hover {
 .sm .period_search {
     padding-left: 16px;
     padding-right: 16px
+}
+
+.rowident1-1:hover,.rowident1-2:hover,.rowident1-3:hover,.rowident1-4:hover{
+    background-color: #ddd;
 }
