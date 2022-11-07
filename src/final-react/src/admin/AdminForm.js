@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsivePie} from "@nivo/pie";
+// import { ResponsivePie} from "@nivo/pie";
 import './admin.css';
 
 
