@@ -1,6 +1,6 @@
 import React from "react";
 import Menu from "./home/menu";
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import Home from "./home/Home";
 import LoginForm from "./user/LoginForm";
 import SignupForm from "./user/SignupForm";
@@ -12,7 +12,8 @@ import MypageRoute from "./mypage/MypageRoute";
 function RouteMain(props) {
 
     return (
-        <div style={{marginLeft: '100px', marginTop: '50px'}}>
+            <div>
+         {/*<div style={{marginLeft: '100px', marginTop: '50px'}}>*/}
             <Menu/>
             <br style={{clear: 'both'}}/><br/>
             <Routes>
