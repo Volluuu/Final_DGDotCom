@@ -1,9 +1,10 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import {NavLink, useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -33,6 +34,7 @@ export default function TransitionsModal() {
     //검색 리스트를 가져오는 이벤트 **********************************
     const [word, setWord] = useState('');
     const navigate = useNavigate();
+    const [searchList, setSearchList] = useState([]);
     const changeWord = useCallback(
         (e) => {
             setWord(e.target.value);
@@ -56,6 +58,19 @@ export default function TransitionsModal() {
         },
         [],
     );
+    useEffect(() => {
+        if(!word.equal('')) {
+            const debounce = setTimeout(()=>{
+                if(word) updateData();
+            },200)
+            return () => {
+                clearTimeout(debounce);
+            }
+            axios.get("http://localhost:9003/list/search").then(res=>{
+                setSearchList(res.data);
+            },)
+        }
+    }, [word]);
 
     return (
         <div>
@@ -89,7 +104,11 @@ export default function TransitionsModal() {
                                 <button type={"submit"}
                                         style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
                                 </button>
-                                <div style={{width: "768px", height: "600px"}}></div>
+                                <div style={{width: "768px", height: "600px"}}>
+                                    {
+                                        searchList.map((product, idx)=><p key={idx}>{product.p_name}</p>)
+                                    }
+                                </div>
                                 <NavLink to={"/product/list/1"} onClick={handleClose}>리스트로 이동</NavLink><br/>
                             </form>
                         </p>
