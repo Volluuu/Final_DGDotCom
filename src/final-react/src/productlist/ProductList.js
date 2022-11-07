@@ -58,9 +58,14 @@ function ProductList(props) {
               <br />
               <span>{pl.p_name}</span>
               <br />
-              <span>{pl.price}</span>
+              <span>
+                {Number(pl.price)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                원
+              </span>
               <br />
-              <span>{pl.discount}</span>
+              {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
             </div>
           </Link>
         ))}
