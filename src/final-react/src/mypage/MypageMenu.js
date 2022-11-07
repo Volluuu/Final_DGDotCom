@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {useParams, Link} from "react-router-dom";
+import {Link, NavLink, useParams} from "react-router-dom";
+
 
 function MypageMenu(props) {
     const {path} = useParams();
@@ -17,12 +18,17 @@ function MypageMenu(props) {
                     <ul data-v-4d11470e="" data-v-7bcac446="" className="snb_menu">
                         <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e="" to="/mypage/order"
                                                                         className="menu_link"
-                        style={{color:path==="order"?"#0A58CA":""}}> 주문 내역 </Link>
+
+                                                                        style={{color: path === "order" ? "#0A58CA" : ""}}> 주문
+                            내역 </Link>
+
                         </li>
                         <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e=""
                                                                         to="/mypage/basket"
                                                                         className="menu_link"
-                                                                        style={{color:path==="basket"?"#0A58CA":""}}> 장바구니 </Link>
+
+                                                                        style={{color: path === "basket" ? "#0A58CA" : ""}}> 장바구니 </a>
+
                         </li>
                     </ul>
                 </div>
@@ -33,14 +39,14 @@ function MypageMenu(props) {
                         <li data-v-4d11470e="" className="menu_item"><Link data-v-4d11470e=""
                                                                         to="/mypage/profile"
                                                                         className="menu_link"
-                                                                        style={{color:path==="profile"?"#0A58CA":""}}> 프로필 정보 </Link>
+                                                                        style={{color: path === "profile" ? "#0A58CA" : ""}}> 프로필
+                            정보 </a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </div>
-    )
-        ;
+    ) ;
 }
 
 export default MypageMenu;
