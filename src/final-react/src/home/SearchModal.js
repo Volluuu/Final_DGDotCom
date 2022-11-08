@@ -5,7 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import {NavLink, useNavigate} from "react-router-dom";
 import axios from "axios";
-
+import SearchCard from "./SearchCard";
 const useStyles = makeStyles((theme) => ({
     modal: {
         display       : 'flex',
@@ -30,6 +30,7 @@ export default function TransitionsModal() {
 
     const handleClose = () => {
         setOpen(false);
+        setWord('');
     };
     //검색 리스트를 가져오는 이벤트 **********************************
     const [word, setWord] = useState('');
@@ -42,40 +43,37 @@ export default function TransitionsModal() {
         [],
     );
 
-    const selectList = useCallback(
-        (e) => {
-            //axios 호출
-        },
-        [],
-    );
-
     const onSubmit = useCallback(
         (e) => {
             e.preventDefault();
             setOpen(false);
-            setWord(e.target.value);
+            setWord('');
             navigate("/product/list/1");
         },
         [],
     );
-    // useEffect(() => {
-    //     if(!word.equal('')) {
-    //         const debounce = setTimeout(()=>{
-    //             if(word) updateData();
-    //         },200)
-    //         return () => {
-    //             clearTimeout(debounce);
-    //         }
-    //         axios.get("http://localhost:9003/list/search").then(res=>{
-    //             setSearchList(res.data);
-    //         },)
-    //     }
-    // }, [word]);
+    const updateData = async() => {
+        const res = await axios.get(`http://localhost:9003/list/search?word=${word}`).then(res=>{
+            setSearchList(res.data);
+        })
+    }
+
+    useEffect(() => {
+            const debounce = setTimeout(()=>{
+                if(word){updateData();} else{
+                    setSearchList([]);
+                }
+            },200)
+            return () => {
+                clearTimeout(debounce);
+            }
+    }, [word]);
+
 
     return (
-        <div>
+        <>
             <button type="button" onClick={handleOpen}
-                    style={{width: "100px", height: "100px", border: "3px solid black"}}>
+                    style={{width: "50px", height: "30px", border: "3px solid black"}}>
                 검색
             </button>
             <Modal
@@ -95,6 +93,7 @@ export default function TransitionsModal() {
                         <h2 id="transition-modal-title">찾으시는 상품의 상품명을 입력해주세요</h2>
                         <p id="transition-modal-description">
                             <form onSubmit={onSubmit}>
+                                <div style={{width:'768px', display:"flex", justifyContent:"space-between"}}>
                                 <input type="text" placeholder={"상품명 입력"} style={{
                                     border     : "1px solid #ccc",
                                     width      : "90%",
@@ -104,9 +103,10 @@ export default function TransitionsModal() {
                                 <button type={"submit"}
                                         style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
                                 </button>
-                                <div style={{width: "768px", height: "600px"}}>
-                                    {
-                                        searchList.map((product, idx)=><p key={idx}>{product.p_name}</p>)
+                                </div>
+                                <div style={{width: "768px", height: "600px", overflowY:"scroll"}}>
+                                    {   searchList.length < 1 ? <div>no result</div> :
+                                        searchList.map((product, idx)=><SearchCard key={idx} product={product}/>)
                                     }
                                 </div>
                                 <NavLink to={"/product/list/1"} onClick={handleClose}>리스트로 이동</NavLink><br/>
@@ -115,6 +115,6 @@ export default function TransitionsModal() {
                     </div>
                 </Fade>
             </Modal>
-        </div>
+        </>
     );
 }

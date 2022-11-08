@@ -2,10 +2,11 @@ import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
+import {Announcement} from "@material-ui/icons";
 
 const Menubar = styled.div`
-  background-color: #eee;
-  border: 1px solid black;
+  padding-top: 10px;
+  border-bottom: 2px solid #eee;
   display: flex;
   justify-content: right;
   margin-bottom: 10px;
@@ -13,10 +14,9 @@ const Menubar = styled.div`
 const Searchbar = styled.div`
   display: flex;
   justify-content: space-between;
-  
 `
 const Category = styled(NavLink)`
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   cursor: pointer;
   white-space: pre;
   text-decoration: none;
@@ -37,9 +37,25 @@ const Category = styled(NavLink)`
     }
   }
 
-  & + & {
-    margin-left: 8rem;
+  & + .up {
+    margin-left: 4rem;
+
+    :last-child {
+      margin-right: 2rem;
+    }
   }
+
+  & + .down {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+`
+const AnnouncementBar = styled.div`
+  height: 30px;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
 `
 
 function Menu(props) {
@@ -53,12 +69,10 @@ function Menu(props) {
         <>
             <Menubar>
 
-                <Category to={"/user/login"}>로그인</Category>
-                <Category to={"/user/signup"}>회원가입</Category>
-                <Category to={"/product/list/1"}>상품 리스트</Category>
-                <Category to={"/product/detail/1703"}>상품 상세</Category>
-                <Category to={"/admin"}>관리자페이지</Category>
-                <Category to={"/mypage/all"}>마이페이지</Category>
+                <Category to={"/user/login"} className={"up"}>로그인</Category>
+                <Category to={"/user/signup"} className={"up"}>회원가입</Category>
+                <Category to={"/product/detail/1703"} className={"up"}>상품 상세</Category>
+                <Category to={"/admin"} className={"up"}>관리자페이지</Category>
 
                 {/*<button type={'button'} onClick={()=>{*/}
                 {/*    sessionStorage.removeItem("u_name");*/}
@@ -67,12 +81,15 @@ function Menu(props) {
                 {/* 세션 바꿔도 바로 안 바뀜 */}
             </Menubar>
             <Searchbar>
-                <NavLink to={"/"}>홈(메인)</NavLink>
-                <span>
+                <NavLink to={"/"}><b style={{fontSize: "30px"}}>동건닷컴</b></NavLink>
+                <span style={{marginRight: "20px"}}>
+                    <Category to={"/product/list/1"} className={"down"}>상품 리스트</Category>
+                    <Category to={"/mypage/all"} className={"down"}>마이페이지</Category>
                     <TransitionsModal/>
-                    [{u_name}]님
                 </span>
-            </Searchbar>    
+            </Searchbar>
+            <AnnouncementBar>공지사항 공지사항 칠지사항 빵지사항</AnnouncementBar>
+
         </>
     );
 }

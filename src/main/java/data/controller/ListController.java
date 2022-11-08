@@ -17,13 +17,9 @@ public class ListController {
 	ProductMapper productMapper;
 	@Autowired
 	ListMapper listMapper;
-//    페이징처리 리스트 출력
-
 	@GetMapping("/search")
 	public List<ProductDto> getProductList(@RequestParam String word)
 	{
-		List<ProductDto> list = listMapper.getSearchList(word);
-		System.out.println(list);
-		return list;
+		return listMapper.getSearchList(word);
 	}
 }
