@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.CartMapper">
+    <!--    총 수량 얻기 ( 페이징처리)-->
+    <select id="getCartCount" resultType="int">
+        select count(*) from cart
+    </select>
+
+    <insert id="insertCart" parameterType="CartDto">
+        insert into cart values (null,#{u_num},#{p_num},#{size},#{amount},now())
+    </insert>
+    <!-- list 출력 및 페이징 처리용-->
+    <select id="getCartList" parameterType="Map" resultType="CartDto">
+        select * from cart order by c_num desc limit #{startNum},#{perPage}
+    </select>
+    <!-- p_num으로 데이터 얻어오기-->
+    <select id="getData" parameterType="int" resultType="CartDto">
+        select * from cart where c_num=#{c_num}
+    </select>
+
+    <delete id="deleteCart" parameterType="int">
+        delete from cart where c_num=#{c_num}
+    </delete>
+
+</mapper>

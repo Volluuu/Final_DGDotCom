@@ -69,6 +69,7 @@ export default function TransitionsModal() {
             }
     }, [word]);
 
+
     return (
         <>
             <button type="button" onClick={handleOpen}

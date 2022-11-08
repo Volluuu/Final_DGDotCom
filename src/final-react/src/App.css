@@ -1,39 +1,38 @@
-*{
-  font-family: 'Anton';
+* {
+  font-family: "Anton";
 }
 
-ul.menu{
-  list-style:none;
+ul.menu {
+  list-style: none;
 }
 
-ul.menu li{
-  float:left;
-  width:150px;
-  height:60px;
+ul.menu li {
+  float: left;
+  width: 150px;
+  height: 60px;
   line-height: 60px;
   border: 1px solid black;
-  text-align:center;
+  text-align: center;
   font-size: 22px;
-  margin-right:10px;
+  margin-right: 10px;
   border-radius: 10px;
 }
 
-ul.menu li a{
+ul.menu li a {
   text-decoration: none;
-  color:black;
-  cursor:pointer;
-
+  color: black;
+  cursor: pointer;
 }
 
-ul.menu li:hover{
+ul.menu li:hover {
   background-color: darkcyan;
 }
 
-ul.menu li a:hover{
-  color:aliceblue;
+ul.menu li a:hover {
+  color: aliceblue;
 }
 
-img.foodphoto{
+img.foodphoto {
   width: 100px;
   height: 100px;
   border: 2px solid gray;
@@ -42,41 +41,55 @@ img.foodphoto{
   margin-right: 10px;
 }
 
-div.login{
-  margin:100px 100px;
+div.login {
+  margin: 100px 100px;
   border: 5px solid gray;
-  width:320px;
+  width: 320px;
   border-radius: 10px;
 }
 
-.board .smallphoto{
-  width:60px;
-  height:60px;
+.board .smallphoto {
+  width: 60px;
+  height: 60px;
   border: 1px solid gray;
-  margin-right:10px;
+  margin-right: 10px;
   border-radius: 10px;
 }
-.board a{
+.board a {
   text-decoration: none;
   color: black;
 }
-.board a:hover{
+.board a:hover {
   text-decoration: underline;
   color: blue;
 }
 
-a.pagenum{
+a.pagenum {
   text-decoration: none;
 }
 
-a.pagenum b{
-  margin-right:5px;
+a.pagenum b {
+  margin-right: 5px;
 }
 
-.largephoto{
+.largephoto {
   width: 300px;
   height: 300px;
   border: 1px solid gray;
-  margin-right:10px;
+  margin-right: 10px;
   border-radius: 10px;
+}
+
+select.sizeselect {
+  width: 300px;
+}
+
+button.purchasebtn {
+  width: 200px;
+}
+button.cartbtn {
+  width: 200px;
+}
+input.amountsel {
+  width: 300px;
 }

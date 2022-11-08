@@ -1,7 +1,8 @@
 package data.controller;
 
+import data.dto.CartDto;
 import data.dto.ProductDto;
-import data.mapper.ProductMapper;
+import data.mapper.CartMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,21 +13,26 @@ import java.util.Vector;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/product")
-public class ProductController {
+@RequestMapping("/cart")
+public class Cartcontroller {
 
     @Autowired
-    ProductMapper productMapper;
-    
-//    페이징처리 리스트 출력
+    CartMapper cartMapper;
+
+
+    @PostMapping("/insert")
+    public void insertBoard(@RequestBody CartDto dto)
+    {
+        cartMapper.insertCart(dto);
+    }
 
     @GetMapping("/list")
-    public Map<String,Object> getProductList(@RequestParam (defaultValue = "1") int currentPage)
+    public Map<String,Object> getCartList(@RequestParam (defaultValue = "1") int currentPage)
     {
         System.out.println("ProCP:"+currentPage);
 
         //페이징처리
-        int totalCount=productMapper.getTotalCount();
+        int totalCount= cartMapper.getCartCount();
 
         System.out.println("tot:"+totalCount);
         int perPage=10;//한 페이지당 보여질 글의 갯수
@@ -64,33 +70,25 @@ public class ProductController {
         map.put("startNum",startNum);
         map.put("perPage",perPage);
 
-        List<ProductDto> list=productMapper.getProductList(map);
+        List<CartDto> list=cartMapper.getCartList(map);
 
         //풀력할 페이지 번호들 vector로 담아서 보내기
         //리액트에서 출력할때 parr로 출력하면됨
-        Vector<Integer> parr=new Vector<>();
+        Vector<Integer> carr=new Vector<>();
         for(int i=startPage;i<=endPage;i++){
-            parr.add(i);
+            carr.add(i);
         }
 
         //리액트로 필요한 변수들을 Map에 담아서 보낸가
         Map<String,Object> smap=new HashMap<>();
         smap.put("list",list);
         smap.put("totalCount",totalCount);
-        smap.put("parr",parr);
+        smap.put("carr",carr);
         smap.put("startPage",startPage);
         smap.put("endPage",endPage);
         smap.put("no",no);
         smap.put("totalPage",totalPage); //다음페이지 생성 여부 확인
 
         return smap;
-    }
-
-    @GetMapping("/detail")
-    public ProductDto getProductDetail(@RequestParam int p_num)
-    {
-        System.out.println("p_num:"+p_num);
-
-        return productMapper.getProduct(p_num);
     }
 }
