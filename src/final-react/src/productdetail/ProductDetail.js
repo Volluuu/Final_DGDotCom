@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
-import DetailRowItem from "./DetailRowItem";
 
 function ProductDetail(props) {
   const { p_num } = useParams();
