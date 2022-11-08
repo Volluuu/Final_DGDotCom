@@ -1,17 +1,10 @@
 package data.controller;
 
-import data.dto.JoinDto;
-import data.dto.ProductDto;
-import data.dto.TradeDto;
-import data.dto.UserDto;
+import data.dto.*;
 import data.mapper.MyPageMapper;
-import data.mapper.UserMapper;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -36,7 +29,7 @@ public class MyPageController {
     public Map<String, Object> orderPagingList(@RequestParam(defaultValue = "1") int currentPage, int u_num,
                                                @RequestParam(required = false) String startDate,
                                                @RequestParam(required = false) String endDate) {
-        System.out.println("currentPage="+currentPage);
+//        System.out.println("currentPage="+currentPage);
 //        System.out.println("startDate="+startDate);
 //        System.out.println("endDate="+endDate);
         int perPage = 10; // 한 페이지당 출력할 글 갯수
@@ -97,6 +90,14 @@ public class MyPageController {
             joinPaging = myPageMapper.joinTradeProductByU_num(pmap);
         }
 
+        List<ReviewDto> rlist=new ArrayList<>();
+        for(int i=0;i<joinPaging.size();i++){
+            int p_num=joinPaging.get(i).getP_num();
+            ReviewDto dto=new ReviewDto();
+            dto.setP_num(p_num);
+            dto.setU_num(u_num);
+            rlist.add(myPageMapper.reviewDetail(dto));
+        }
         //출력할 페이지번호들을 Vector에 담아서 보내기
         Vector<Integer> pidx = new Vector<>();
         for (int i = startPage; i <= endPage; i++) {
@@ -108,8 +109,7 @@ public class MyPageController {
         List<JoinDto> joined = myPageMapper.joinTradeProductByU_num(jmap);
 
         // 유저 이름도 반환
-        UserDto dto = myPageMapper.userByNum(u_num);
-        String u_name = dto.getU_name();
+        UserDto userDto = myPageMapper.userByNum(u_num);
 
         // 배송 전, 중, 완료 갯수 구하기
 
@@ -140,7 +140,7 @@ public class MyPageController {
 
         //리액트에서 필요한 변수들을 Map에 담아서 보낸다
         Map<String, Object> smap = new HashMap<>();
-        smap.put("u_name", u_name); // 이름 반환
+        smap.put("user",userDto); // userDto 반환
         smap.put("minDate", minDate); // 최초 거래 일자 반환
         smap.put("totalPrice", totalPrice); // 총 결제 금액 반환
         smap.put("totalCount", totalCount); //데이터 총 갯수
@@ -156,6 +156,7 @@ public class MyPageController {
         smap.put("joinPaging", joinPaging); // 검색 데이터 상세 정보 리스트 + 페이징
         smap.put("joined", joined); // 검색 데이터 상세 정보 리스트
         smap.put("pidx", pidx); // 페이징 인덱스번호
+        smap.put("rlist", rlist); // 리뷰 리스트
 
         return smap;
     }
@@ -165,6 +166,32 @@ public class MyPageController {
         Map<String, Object> map=new HashMap<>();
         map.put("p_num",p_num);
         return myPageMapper.getProductByP_num(map);
+    }
+
+    @PostMapping("/reviewinsert")
+    public void reviewInsert(@RequestBody ReviewDto dto){
+        // 리뷰 작성 이벤트
+        myPageMapper.reviewInsert(dto);
+
+        // 리뷰 작성 시 1,000P 지급 이벤트
+        myPageMapper.awardPoint(dto.getU_num());
+    }
+
+    @GetMapping("/reviewdetail")
+    public ReviewDto reviewDetail(int p_num, int u_num, int r_num){
+        ReviewDto dto=new ReviewDto();
+        dto.setP_num(p_num);
+        dto.setU_num(u_num);
+        dto.setR_num(r_num);
+        return myPageMapper.reviewDetail(dto);
+    }
+
+    @PutMapping("/reviewupdate")
+    public void reviewUpdate(@RequestBody ReviewDto dto){
+//        System.out.println("r_num"+dto.getR_num());
+//        System.out.println("content"+dto.getContent());
+//        System.out.println("star"+dto.getStar());
+        myPageMapper.reviewUpdate(dto);
     }
 
 }
