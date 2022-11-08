@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Shipping(props) {
+function Banner(props) {
     return (
         <div>
-gdgd
+            배너관리
         </div>
     );
 }
 
-export default Shipping;
+export default Banner;
