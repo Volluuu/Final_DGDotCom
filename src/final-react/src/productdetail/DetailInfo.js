@@ -1,34 +1,56 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import {
+  AddCircleOutlineRounded,
+  RemoveCircleOutline,
+} from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 
 function DetailInfo(props) {
+  // DetailDto
   const { row } = props;
-  const [sum, setSum] = useState(0);
+
+  //로그인한 u_num
   const u_num = sessionStorage.u_num;
   console.log("u_num:" + Number(u_num));
-  const [addlist, setAddlist] = useState([
-    {
-      ...row,
-      size: "",
-      amount: "",
-    },
-  ]);
-  const [itemlist, setItemlist] = useState([]);
 
+  //size
+  const [size, setSize] = useState("");
+
+  //amount(수량)
+  const [amount, setAmount] = useState(1);
+
+  //수량 증가
+  const addamount = () => {
+    if (amount < 5) {
+      setAmount(amount + 1);
+    }
+    setItemlist({ ...itemlist, amount });
+  };
+  //수량 감소
+  const subamount = () => {
+    if (amount > 1) {
+      setAmount(amount - 1);
+    }
+    setItemlist({ ...itemlist, amount });
+  };
+
+  //데이터를 담을 배열
+  const [itemlist, setItemlist] = useState({
+    ...row,
+    size: "",
+    amount: amount,
+  });
   console.log("1. itemlist:" + JSON.stringify(itemlist));
 
-  const arritem = (e) => setItemlist(itemlist.concat(addlist));
-
+  //데이터 담는 함수
   const additemlist = (e) => {
-    setAddlist([
-      {
-        ...row,
-        size: e.target.selected,
-        amount: e.target.value,
-      },
-      setItemlist(addlist),
-    ]);
+    setItemlist({
+      ...row,
+      size: e.target.value,
+      amount,
+    });
   };
+
+  // select 양식 함수
   function selectform() {
     const category = row.category;
     switch (category) {
@@ -44,9 +66,11 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={arritem}
+            onClick={additemlist}
           >
-            <option value="F">Free</option>
+            <option value="F" selected>
+              Free
+            </option>
           </select>
         );
       case "자켓":
@@ -64,9 +88,12 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={arritem}
+            onChange={additemlist}
+            defaultValue={size}
           >
-            <option value="S">S</option>
+            <option value="S" selected>
+              S
+            </option>
             <option value="M">M</option>
             <option value="L">L</option>
             <option value="XL">XL</option>
@@ -81,9 +108,12 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={additemlist}
+            onClick={additemlist}
+            defaultValue={size}
           >
-            <option value="230">230mm</option>
+            <option value="230" selected>
+              230mm
+            </option>
             <option value="240">240mm</option>
             <option value="250">250mm</option>
             <option value="260">260mm</option>
@@ -93,7 +123,11 @@ function DetailInfo(props) {
         );
       default:
         return (
-          <select className="form-select sizeselect">
+          <select
+            className="form-select sizeselect"
+            onClick={additemlist}
+            defaultValue={size}
+          >
             <option selected disabled>
               재고 없음
             </option>
@@ -111,7 +145,6 @@ function DetailInfo(props) {
       <br />
       <span>{row.category}</span>
       <br />
-      <div>{selectform(row.category)}</div>
       <span>
         {Number(row.price)
           .toString()
@@ -120,25 +153,32 @@ function DetailInfo(props) {
       </span>
       <br />
       <div>
-        11
-        {itemlist !== null ? (
-          <div>
-            <span>{itemlist.p_name}</span>
-            <br />
-            <input
-              type={"number"}
-              step={1}
-              name="amount"
-              className="form-control"
-              onChange={(e) => setAddlist({ size: e.target.value })}
-            />
-            <br />
-          </div>
-        ) : (
-          <></>
-        )}
+        <span>옵션 선택</span>
+        {selectform(row.category)}
       </div>
-      <br />
+      <div>
+        <span>수량</span>
+        <br />
+        <span onClick={subamount} onChange={additemlist}>
+          <RemoveCircleOutline />
+        </span>
+        &nbsp;<span>{amount}</span>&nbsp;
+        <span
+          onClick={addamount}
+          // onChange={additemlist}
+        >
+          <AddCircleOutlineRounded />
+        </span>
+      </div>
+      <div>
+        <h1>
+          총 결제 금액 : {itemlist.amount && itemlist.amount} //
+          {Number(row.price * amount)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          원
+        </h1>
+      </div>
       <button type="button" className="btn btn-outline-danger purchasebtn">
         구매
       </button>
@@ -146,6 +186,7 @@ function DetailInfo(props) {
       <button type="button" className="btn btn-outline-success cartbtn">
         장바구니
       </button>
+      <br />
     </div>
   );
 }
