@@ -8,19 +8,20 @@ import {
 function MypageOrder(props) {
     // const [currentPage, setCurrentPage]=useState(1);
     let {currentPage} = useParams();
-    if (currentPage === undefined)
-        currentPage = 1;
+    if (currentPage === undefined) currentPage = 1;
     const navi = useNavigate();
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
     const [tradeData, setTradeData] = useState({}); // 페이징 처리할 모든 데이터 담기
     const [alertStyle, setAlertStyle] = useState('none'); // 조회 기간 창 state
     const [reviewModal, setReviewModal] = useState('none'); // 리뷰 모달 창 state
+    const [updateReviewModal, setUpdateReviewModal] = useState('none'); // 리뷰 수정 모달 창 state
     const [productDto, setProductDto] = useState({}); // 리뷰 작성할 때 값 받아오기
     const [reviewDto, setReviewDto] = useState(''); // 리뷰 수정할 때 값 받아오기
     const [star, setStar] = useState([false, false, false, false, false]); // 별점
     const [updateStar, setUpdateStar] = useState([false, false, false, false, false]); // 수정 폼 별점
-    const [p_num, setP_num] = useState('');
+    const [p_num, setP_num] = useState(''); // 리뷰 작성, 수정할 때 p_num 넘기기 위함
     const textRef = useRef(''); // 리뷰 쓸 때 textarea 값
+    const updateRef = useRef('') // 리뷰 수정 할 때 textarea 값
     const productUrl = localStorage.url + "/product/";
 
     const [startDate, setStartDate] = useState('');
@@ -46,6 +47,7 @@ function MypageOrder(props) {
             .then(res => setProductDto(res.data))
     }
 
+    // 리뷰 작성 액션
     const reviewInsert = () => {
         let score = star.filter(Boolean).length;
         if (score === 0) {
@@ -62,42 +64,49 @@ function MypageOrder(props) {
         }
         let reviewInsertUrl = process.env.REACT_APP_URL + "/mypage/reviewinsert";
         axios.post(reviewInsertUrl, {u_num, p_num, content: textRef.current.value, star: score})
-            .then(res => alert("리뷰 작성 완료"))
-    }
-
-    const onUpdateModal = (p_num) => {
-        let updateModalUrl = process.env.REACT_APP_URL + "/mypage/reviewdetail?p_num=" + p_num + "&u_num=" + u_num;
-        axios.get(updateModalUrl)
             .then(res => {
-                alert("리뷰 디테일 들고 왔다");
-                    setReviewDto(res.data);
-                    let starStates = [...updateStar];
-                    console.dir(starStates);
-                    for (let i = 0; i < 5; i++) {
-                        starStates[i] = i <= (res.data.star - 1) ? true : false;
-                    }
-                    console.dir(starStates);
-                    setUpdateStar(starStates);
-                    console.dir(updateStar);
-
-                }
-            )
+                alert("소중한 리뷰 감사합니다.")
+                // 작성 후 리로드
+                window.location.reload();
+            })
     }
 
+    // 리뷰 수정 버튼 눌렀을 때 값 넣기
+    const onUpdateModal = async (p_num, r_num) => {
+        let updateModalUrl = process.env.REACT_APP_URL + "/mypage/reviewdetail?p_num=" + p_num + "&r_num=" + r_num + "&u_num" + u_num;
+        // 동기 처리를 위한 async await
+        await axios.get(updateModalUrl)
+            .then(res => {
+                //리뷰 내역을 들고 오면 ReviewDto에 담기
+                setReviewDto(res.data);
+                updateRef.current.value = res.data.content;
+                let starStates = [...updateStar];
+                for (let i = 0; i < 5; i++) {
+                    starStates[i] = i <= (res.data.star - 1) ? true : false;
+                }
+                setUpdateStar(starStates);
+            })
+    }
+
+    // 리뷰 수정 액션
     const reviewUpdate = () => {
         let score = updateStar.filter(Boolean).length;
-        if (textRef.current.value === "") {
+        if (updateRef.current.value === "") {
             alert("내용을 입력하세요");
-            setStar([false, false, false, false, false]);
-            textRef.current.value = "";
-            setReviewDto('');
+            setUpdateStar([false, false, false, false, false]);
+            updateRef.current.value = "";
             return;
         }
         let reviewUpdateUrl = process.env.REACT_APP_URL + "/mypage/reviewupdate";
-        axios.post(reviewUpdateUrl, {content: textRef.current.value, star: score, r_num: reviewDto.r_num})
-            .then(res => alert("리뷰 수정 완료"))
+        axios.put(reviewUpdateUrl, {content: updateRef.current.value, star: score, r_num: reviewDto.r_num})
+            .then(res => {
+                alert("리뷰 수정이 완료되었습니다.");
+                // 수정 후 리로드
+                window.location.reload();
+            })
     }
 
+    // 리뷰 [작성] 할 때 별점 선택
     const starClick = (index) => {
         let starStates = [...star]
         for (let i = 0; i < 5; i++) {
@@ -106,72 +115,90 @@ function MypageOrder(props) {
         setStar(starStates);
     }
 
+    //리뷰 [수정] 할 때 별점 선택
     const updateStarClick = (index) => {
         let starStates = [...star]
         for (let i = 0; i < 5; i++) {
             starStates[i] = i <= index ? true : false;
         }
-        setStar(starStates);
+        setUpdateStar(starStates);
     }
-
 
     return (
         <div data-v-39b2348a="" className="content_area">
             <div className="my_purchase">
                 <div data-v-88eb18f6="" className="content_title">
-                    <div data-v-88eb18f6="" className="title"><h3 data-v-88eb18f6=""><b>주문 내역</b><span
-                        style={{fontSize: "0.6em"}}>{tradeData.u_name && tradeData.u_name} 님의 주문내역을 한 눈에 볼 수 있습니다!</span>
-                    </h3>
+                    <div data-v-88eb18f6="" className="title">
+                        <h3 data-v-88eb18f6=""><b>주문 내역</b>
+                            <span style={{fontSize: "0.6em"}}>{tradeData.user && tradeData.user.u_name} 님의 주문내역을 한 눈에 볼 수 있습니다!</span>
+                        </h3>
                     </div>
                 </div>
                 <div data-v-0c307fea="" className="purchase_list_tab sell detail_tab">
-                    <div data-v-0c307fea="" className="tab_item tab_on"><a data-v-0c307fea="" href="#!"
-                                                                           className="tab_link">
-                        <dl data-v-0c307fea="" className="tab_box">
-                            <dt data-v-0c307fea="" className="title">결제 금액</dt>
-                            <dd data-v-0c307fea=""
-                                className="count">{tradeData.totalPrice && tradeData.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
-                            </dd>
-                        </dl>
-                    </a></div>
-                    <div data-v-0c307fea="" className="tab_item"><a data-v-0c307fea="" href="#!" className="tab_link">
-                        <dl data-v-0c307fea="" className="tab_box">
-                            <dt data-v-0c307fea="" className="title">내역</dt>
-                            <dd data-v-0c307fea="" className="count">{tradeData.totalCount && tradeData.totalCount}건
-                            </dd>
-                        </dl>
-                    </a></div>
-                    <div data-v-0c307fea="" className="tab_item"><a data-v-0c307fea="" href="#!" className="tab_link">
-                        <dl data-v-0c307fea="" className="tab_box">
-                            <dt data-v-0c307fea="" className="title">배송 전</dt>
-                            <dd data-v-0c307fea="" className="count">{tradeData.stateCount && tradeData.stateCount[0]}건
-                            </dd>
-                        </dl>
-                    </a></div>
+                    <div data-v-0c307fea="" className="tab_item tab_on">
+                        <Link data-v-0c307fea="" to="#!" className="tab_link">
+                            <dl data-v-0c307fea="" className="tab_box">
+                                <dt data-v-0c307fea="" className="title">결제 금액</dt>
+                                <dd data-v-0c307fea="" className="count">
+                                    {tradeData.totalPrice && tradeData.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                                </dd>
+                            </dl>
+                        </Link>
+                    </div>
+                    <div data-v-0c307fea="" className="tab_item tab_on">
+                        <Link data-v-0c307fea="" to="#!" className="tab_link">
+                            <dl data-v-0c307fea="" className="tab_box">
+                                <dt data-v-0c307fea="" className="title">내역</dt>
+                                <dd data-v-0c307fea="" className="count"
+                                    style={{color: "#0000FF"}}>
+                                    {tradeData.totalCount && tradeData.totalCount}
+                                </dd>
+                            </dl>
+                        </Link>
+                    </div>
+                    <div data-v-0c307fea="" className="tab_item tab_on">
+                        <Link data-v-0c307fea="" to="#!" className="tab_link">
+                            <dl data-v-0c307fea="" className="tab_box">
+                                <dt data-v-0c307fea="" className="title">배송 전</dt>
+                                <dd data-v-0c307fea="" className="count"
+                                style={{color:"#FF0000"}}>
+                                    {tradeData.stateCount && tradeData.stateCount[0]}
+                                </dd>
+
+                            </dl>
+                        </Link>
+                    </div>
                 </div>
                 <div className="period_search">
                     <div className="period_month">
                         <ul className="month_list">
-                            <li className="month_item"><Link to="#" className="month_link"
-                                                             onClick={() => {
-                                                                 setStartDate(tradeData.minDate.slice(0, 10));
-                                                                 setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>전체</Link></li>
-                            <li className="month_item"><Link to="#" className="month_link"
-                                                             onClick={() => {
-                                                                 setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString().slice(0, 10));
-                                                                 setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>최근 2개월</Link></li>
-                            <li className="month_item"><Link to="#" className="month_link"
+                            <li className="month_item">
+                                <Link to="#" className="month_link"
+                                      onClick={() => {
+                                          setStartDate(tradeData.minDate.slice(0, 10));
+                                          setEndDate(today.toISOString().slice(0, 10));
+                                      }}>전체</Link>
+                            </li>
+                            <li className="month_item">
+                                <Link to="#" className="month_link"
+                                      onClick={() => {
+                                          setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString().slice(0, 10));
+                                          setEndDate(today.toISOString().slice(0, 10));
+                                      }}>최근 2개월</Link></li>
+                            <li className="month_item">
+                                <Link to="#" className="month_link"
                                                              onClick={() => {
                                                                  setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 4)).toISOString().slice(0, 10));
                                                                  setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>4개월</Link></li>
-                            <li className="month_item"><Link to="#" className="month_link"
+                                                             }}>4개월</Link>
+                            </li>
+                            <li className="month_item">
+                                <Link to="#" className="month_link"
                                                              onClick={() => {
                                                                  setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().slice(0, 10));
                                                                  setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>6개월</Link></li>
+                                                             }}>6개월</Link>
+                            </li>
                             <li className="month_item custom"></li>
                         </ul>
                     </div>
@@ -226,79 +253,65 @@ function MypageOrder(props) {
                             <div style={{gridColumn: "1/7", gridRow: "3/4"}}>
                                 <hr/>
                             </div>
-                            {
-                                tradeData.joinPaging &&
-                                tradeData.joinPaging.map((jitem, idx) => (
-                                    <React.Fragment key={idx}>
-                                        <span>{jitem.day.substring(0, 10)}</span>
-                                        <span style={{
-                                            textAlign: "left",
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"
-                                        }}><Link to={`/product/detail/${jitem.p_num}`}>
+                            {tradeData.joinPaging && tradeData.joinPaging.map((jitem, idx) => (
+                                <React.Fragment key={idx}>
+                                    <span>{jitem.day.substring(0, 10)}</span>
+                                    <span style={{
+                                        textAlign: "left",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"
+                                    }}><Link to={`/product/detail/${jitem.p_num}`}>
                                             <img alt={""} src={productUrl + jitem.photo}
                                                  style={{maxWidth: "33px"}}/>&nbsp;
-                                            {jitem.p_name}
+                                        {jitem.p_name}
                                         </Link>
                                         </span>
-                                        <span><span style={{float: "right"}}>*{jitem.count}개</span><span
-                                            style={{float: "right"}}>{jitem.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span></span>
-                                        <span
-                                            style={{textAlign: "right"}}>{(jitem.lastprice * jitem.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span>
-                                        <span
-                                            style={{color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"}}>{jitem.state}</span>
-                                        <span>
-                                            {
-                                                jitem.state === "배송 완료" && tradeData.rlist[idx] === null ?
+                                    <span><span style={{float: "right"}}>*{jitem.count}개</span><span
+                                        style={{float: "right"}}>{jitem.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span></span>
+                                    <span
+                                        style={{textAlign: "right"}}>{(jitem.lastprice * jitem.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span>
+                                    <span
+                                        style={{color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"}}>{jitem.state}</span>
+                                    <span>
+                                            {jitem.state === "배송 완료" && tradeData.rlist[idx] === null ?
+                                                <button type={"button"} style={{float: "left"}}
+                                                        className={"btn btn-primary btn-sm"}
+                                                        onClick={() => {
+                                                            setReviewModal("");
+                                                            onReviewModal(jitem.p_num);
+                                                            setP_num(jitem.p_num);
+                                                        }}>작성</button> : jitem.state === "배송 완료" && tradeData.rlist[idx] !== null ?
                                                     <button type={"button"} style={{float: "left"}}
-                                                            className={"btn btn-primary btn-sm"}
+                                                            className={"btn btn-success btn-sm"}
                                                             onClick={() => {
-                                                                setReviewModal("");
+                                                                setUpdateReviewModal("");
                                                                 onReviewModal(jitem.p_num);
+                                                                onUpdateModal(jitem.p_num, tradeData.rlist[idx].r_num);
                                                                 setP_num(jitem.p_num);
-                                                            }}>작성</button>
-                                                    : jitem.state === "배송 완료" && tradeData.rlist[idx] !== null ?
-                                                        <button type={"button"} style={{float: "left"}}
-                                                                className={"btn btn-primary btn-sm"}
-                                                                onClick={() => {
-                                                                    setReviewModal("");
-                                                                    onReviewModal(jitem.p_num);
-                                                                    onUpdateModal(jitem.p_num);
-                                                                    setP_num(jitem.p_num);
-                                                                }}>수정</button>
-                                                        : <button type={"button"}
-                                                                  style={{float: "left", cursor: "wait"}}
-                                                                  className={"btn btn-light btn-sm"}
-                                                                  disabled>불가</button>
-                                            }
+                                                            }}>수정</button> : <button type={"button"}
+                                                                                     style={{
+                                                                                         float: "left",
+                                                                                         cursor: "wait"
+                                                                                     }}
+                                                                                     className={"btn btn-light btn-sm"}
+                                                                                     disabled>불가</button>}
                                         </span>
-                                    </React.Fragment>
-                                ))
-                            }
+                                </React.Fragment>))}
                             <div style={{gridColumn: "1/7", gridRow: "14/15"}}>
-                                {
-                                    tradeData &&
-                                    tradeData.startPage > 1 ?
-                                        <Link className={'pagenum'} to={`/mypage/order/${tradeData.startPage - 1}`}
-                                        ><b style={{color: 'black'}}>이전</b></Link> : <></>
-                                }
-                                {
-                                    tradeData.pidx &&
-                                    tradeData.pidx.map((n, i) =>
-                                        <NavLink key={i} className={'pagenum'}
-                                                 style={{color: n === Number(currentPage) ? 'red' : 'blue'}}
-                                                 to={`/mypage/order/${n}`}
-                                        ><b>{n}</b></NavLink>)
+                                {tradeData && tradeData.startPage > 1 ?
+                                    <Link className={'pagenum'} to={`/mypage/order/${tradeData.startPage - 1}`}
+                                    ><b style={{color: 'black'}}>이전</b></Link> : <></>}
+                                {tradeData.pidx && tradeData.pidx.map((n, i) => <NavLink key={i} className={'pagenum'}
+                                                                                         style={{color: n === Number(currentPage) ? 'red' : 'blue'}}
+                                                                                         to={`/mypage/order/${n}`}
+                                ><b>{n}</b></NavLink>)
 
                                 }
-                                {
-                                    tradeData &&
-                                    tradeData.endPage < tradeData.totalPage ?
-                                        <Link className={'pagenum'} to={`/mypage/order/${tradeData.endPage + 1}`}
-                                        ><b style={{color: 'black'}}>다음</b></Link> : <></>
-                                }
+                                {tradeData && tradeData.endPage < tradeData.totalPage ?
+                                    <Link className={'pagenum'} to={`/mypage/order/${tradeData.endPage + 1}`}
+                                    ><b style={{color: 'black'}}>다음</b></Link> : <></>}
                             </div>
                         </div>
                     </div>
@@ -308,6 +321,8 @@ function MypageOrder(props) {
                     <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">첫 주문 일자 이후부터 조회 가능합니다.</p>
                     </li>
                     <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">주문 내역은 최근 날짜 기준으로 노출됩니다.</p>
+                    </li>
+                    <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">후기 작성 시 1,000P를 지급해드립니다.</p>
                     </li>
                 </ul>
                 <div data-v-50c8b1d2="" className="purchase_list bidding ask">
@@ -326,94 +341,105 @@ function MypageOrder(props) {
                                                                          className="title"><br/><br/>조회 기간을 입력해주세요.</h2>
                     </div>
                     <div data-v-1f7c6d3f="" className="layer_content">
-                        <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><a
+                        <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><Link
                             data-v-3d1bcc82=""
                             data-v-28cabbb5=""
-                            href="#!"
+                            to="#!"
                             className="btn outline medium"
                             data-v-1f7c6d3f=""
-                            onClick={() => setAlertStyle("none")}> 확인 </a>
+                            onClick={() => setAlertStyle("none")}> 확인 </Link>
                         </div>
                     </div>
-                    <a data-v-28cabbb5="" data-v-1f7c6d3f="" href="#!" className="btn_layer_close"
-                       onClick={() => setAlertStyle("none")}>
+                    <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
+                          onClick={() => setAlertStyle("none")}>
                         <Close/>
-                    </a>
+                    </Link>
                 </div>
             </div>
             {/* 후기 작성을 위한 Modal 창 */}
-            {
-                reviewDto === "" ?
-                    <div data-v-1f7c6d3f="" data-v-28cabbb5="" data-v-f263fda4="" className="layer_point layer lg"
-                         style={{display: reviewModal}}>
-                        <div data-v-1f7c6d3f="" className="layer_container">
-                            <div data-v-1f7c6d3f="" className="layer_header"><h2 data-v-28cabbb5=""
-                                                                                 data-v-1f7c6d3f=""
-                                                                                 className="title">후기 작성</h2>
-                            </div>
-                            <div data-v-1f7c6d3f="" className="layer_content">
-                                <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_wrap">
-                                    <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_point">
-                                        <h3 data-v-28cabbb5="" data-v-1f7c6d3f="" className="title">
-                                            <img alt={''} src={productUrl + productDto.photo}
-                                                 style={{maxWidth: "100px"}}/>
-                                        </h3><p
-                                        data-v-28cabbb5="" data-v-1f7c6d3f="" className="point_box" style={{
-                                        fontSize: "0.9em", whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis"
-                                    }}>{productDto.p_name}
-                                    </p>
-                                        <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="point_info">
-                                            <p data-v-28cabbb5="" data-v-1f7c6d3f=""
-                                               className="info_item"> {productDto.brand} / {productDto.price && productDto.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원 </p>
-                                        </div>
+            {reviewModal === "" ?
+                <div data-v-1f7c6d3f="" data-v-28cabbb5="" data-v-f263fda4="" className="layer_point layer lg"
+                     style={{display: reviewModal}}>
+                    <div data-v-1f7c6d3f="" className="layer_container">
+                        <div data-v-1f7c6d3f="" className="layer_header"><h2 data-v-28cabbb5=""
+                                                                             data-v-1f7c6d3f=""
+                                                                             className="title">후기 작성</h2>
+                        </div>
+                        <div data-v-1f7c6d3f="" className="layer_content">
+                            <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_wrap">
+                                <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_point">
+                                    <h3 data-v-28cabbb5="" data-v-1f7c6d3f="" className="title">
+                                        <img alt={''} src={productUrl + productDto.photo}
+                                             style={{maxWidth: "100px"}}/>
+                                    </h3><p
+                                    data-v-28cabbb5="" data-v-1f7c6d3f="" className="point_box" style={{
+                                    fontSize: "0.9em",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis"
+                                }}>{productDto.p_name}
+                                </p>
+                                    <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="point_info">
+                                        <p data-v-28cabbb5="" data-v-1f7c6d3f=""
+                                           className="info_item"> {productDto.brand} / {productDto.price && productDto.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원 </p>
                                     </div>
-                                    별점 :{star.map((ele, idx) => (
-                                    ele ? <StarRounded style={{cursor: "pointer", color: "#F1C40F"}}
-                                                       onClick={() => starClick(idx)}/> :
-                                        <StarBorderRounded style={{cursor: "pointer", color: "#F1C40F"}}
-                                                           onClick={() => starClick(idx)}/>
-                                ))}
-                                    <br/>
-                                    <textarea style={{width: "380px", height: "100px", border: "1px solid black"}}
-                                              ref={textRef} required>
+                                </div>
+                                별점 :{star.map((ele, idx) => (ele ?
+                                <StarRounded style={{cursor: "pointer", color: "#F1C40F"}}
+                                             onClick={() => starClick(idx)}/> :
+                                <StarBorderRounded style={{cursor: "pointer", color: "#F1C40F"}}
+                                                   onClick={() => starClick(idx)}/>))}
+                                <br/>
+                                <textarea style={{width: "380px", height: "100px", border: "1px solid black"}}
+                                          ref={textRef} required>
 
                             </textarea>
-                                </div>
-                                <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><a
-                                    data-v-3d1bcc82=""
-                                    data-v-28cabbb5=""
-                                    href="#!"
-                                    className="btn outline medium"
-                                    data-v-1f7c6d3f=""
-                                    onClick={() => {
-                                        if (window.confirm("리뷰를 등록 하시겠습니까?")) {
-                                            reviewInsert();
-                                            setReviewModal("none");
-                                            textRef.current.value = "";
-                                            setP_num('');
-                                            setStar([false, false, false, false, false]);
-                                        }
-                                    }}> 리뷰 등록 </a>
-                                </div>
+                                <ul data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_list">
+
+                                    <li data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_item">
+                                        별점, 내용을 필수로 입력해주세요.
+                                    </li>
+                                    <li data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_item">
+                                        후기 작성 후 삭제는 불가능합니다.
+                                    </li>
+                                    <li data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_item">
+                                        후기 작성 시 1,000P를 지급합니다. (아직 ㅎ)
+                                    </li>
+                                </ul>
                             </div>
-                            <a data-v-28cabbb5="" data-v-1f7c6d3f="" href="#!" className="btn_layer_close"
-                               onClick={() => {
-                                   if (window.confirm("리뷰 작성을 취소하시겠습니까?")) {
-                                       setReviewModal("none");
-                                       textRef.current.value = "";
-                                       setP_num('');
-                                       setStar([false, false, false, false, false]);
-                                   }
-                               }}>
-                                <Close/>
-                            </a>
+                            <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><Link
+                                data-v-3d1bcc82=""
+                                data-v-28cabbb5=""
+                                to="#!"
+                                className="btn outline medium"
+                                data-v-1f7c6d3f=""
+                                onClick={() => {
+                                    if (window.confirm("리뷰를 등록 하시겠습니까?")) {
+                                        reviewInsert();
+                                        setReviewModal("none");
+                                        textRef.current.value = "";
+                                        setP_num('');
+                                        setStar([false, false, false, false, false]);
+                                    }
+                                }}> 리뷰 등록 </Link>
+                            </div>
                         </div>
+                        <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
+                              onClick={() => {
+                                  if (window.confirm("리뷰 작성을 취소하시겠습니까?")) {
+                                      setReviewModal("none");
+                                      textRef.current.value = "";
+                                      setP_num('');
+                                      setStar([false, false, false, false, false]);
+                                  }
+                              }}>
+                            <Close/>
+                        </Link>
                     </div>
-                    :
+                </div> :
+                updateReviewModal === "" ?
                     <div data-v-1f7c6d3f="" data-v-28cabbb5="" data-v-f263fda4="" className="layer_point layer lg"
-                         style={{display: reviewModal}}>
+                         style={{display: updateReviewModal}}>
                         <div data-v-1f7c6d3f="" className="layer_container">
                             <div data-v-1f7c6d3f="" className="layer_header"><h2 data-v-28cabbb5=""
                                                                                  data-v-1f7c6d3f=""
@@ -427,7 +453,8 @@ function MypageOrder(props) {
                                                  style={{maxWidth: "100px"}}/>
                                         </h3><p
                                         data-v-28cabbb5="" data-v-1f7c6d3f="" className="point_box" style={{
-                                        fontSize: "0.9em", whiteSpace: "nowrap",
+                                        fontSize: "0.9em",
+                                        whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis"
                                     }}>{productDto.p_name}
@@ -437,53 +464,57 @@ function MypageOrder(props) {
                                                className="info_item"> {productDto.brand} / {productDto.price && productDto.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원 </p>
                                         </div>
                                     </div>
-                                    별점 : {updateStar.map((ele, idx) => (
-                                    ele ? <StarRounded style={{cursor: "pointer", color: "#F1C40F"}}
-                                                       onClick={() => updateStarClick(idx)}/> :
-                                        <StarBorderRounded style={{cursor: "pointer", color: "#F1C40F"}}
-                                                           onClick={() => updateStarClick(idx)}/>
-                                ))}
+                                    별점 : {updateStar.map((ele, idx) => (ele ?
+                                    <StarRounded style={{cursor: "pointer", color: "#F1C40F"}}
+                                                 onClick={() => updateStarClick(idx)}/> :
+                                    <StarBorderRounded style={{cursor: "pointer", color: "#F1C40F"}}
+                                                       onClick={() => updateStarClick(idx)}/>))}
                                     <br/>
                                     <textarea style={{width: "380px", height: "100px", border: "1px solid black"}}
-                                              ref={textRef} required value={reviewDto.content}>
+                                              ref={updateRef} required>
 
-                            </textarea>
+                                </textarea>
+                                    <ul data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_list">
+                                        <li data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_item">
+                                            동일 상품에 대한 후기 작성은 한 번만 가능합니다.
+                                        </li>
+                                        <li data-v-28cabbb5="" data-v-1f7c6d3f="" className="usable_item">
+                                            후기 삭제는 불가합니다.&emsp;(&nbsp;단&nbsp;,&nbsp;회원 탈퇴 시 삭제 처리)
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><a
+                                <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn"><Link
                                     data-v-3d1bcc82=""
                                     data-v-28cabbb5=""
-                                    href="#!"
+                                    to="#!"
                                     className="btn outline medium"
                                     data-v-1f7c6d3f=""
                                     onClick={() => {
                                         if (window.confirm("리뷰를 수정 하시겠습니까?")) {
                                             reviewUpdate();
-                                            setReviewModal("none");
-                                            textRef.current.value = "";
+                                            setUpdateReviewModal("none");
+                                            updateRef.current.value = "";
                                             setP_num('');
                                             setUpdateStar([false, false, false, false, false]);
-                                            setReviewDto('');
                                         }
-                                    }}> 리뷰 등록 </a>
+                                    }}> 리뷰 수정 </Link>
                                 </div>
                             </div>
-                            <a data-v-28cabbb5="" data-v-1f7c6d3f="" href="#!" className="btn_layer_close"
-                               onClick={() => {
-                                   if (window.confirm("리뷰 수정을 취소하시겠습니까?")) {
-                                       setReviewModal("none");
-                                       textRef.current.value = "";
-                                       setP_num('');
-                                       setUpdateStar([false, false, false, false, false]);
-                                       setReviewDto('');
-                                   }
-                               }}>
+                            <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
+                                  onClick={() => {
+                                      if (window.confirm("리뷰 수정을 취소하시겠습니까?")) {
+                                          setUpdateReviewModal("none");
+                                          updateRef.current.value = "";
+                                          setP_num('');
+                                          setUpdateStar([false, false, false, false, false]);
+                                      }
+                                  }}>
                                 <Close/>
-                            </a>
+                            </Link>
                         </div>
-                    </div>
+                    </div> : <></>
             }
-        </div>
-    );
+        </div>);
 }
 
 export default MypageOrder;

@@ -2,13 +2,9 @@ package data.controller;
 
 import data.dto.*;
 import data.mapper.MyPageMapper;
-import data.mapper.UserMapper;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -113,8 +109,7 @@ public class MyPageController {
         List<JoinDto> joined = myPageMapper.joinTradeProductByU_num(jmap);
 
         // 유저 이름도 반환
-        UserDto dto = myPageMapper.userByNum(u_num);
-        String u_name = dto.getU_name();
+        UserDto userDto = myPageMapper.userByNum(u_num);
 
         // 배송 전, 중, 완료 갯수 구하기
 
@@ -145,7 +140,7 @@ public class MyPageController {
 
         //리액트에서 필요한 변수들을 Map에 담아서 보낸다
         Map<String, Object> smap = new HashMap<>();
-        smap.put("u_name", u_name); // 이름 반환
+        smap.put("user",userDto); // userDto 반환
         smap.put("minDate", minDate); // 최초 거래 일자 반환
         smap.put("totalPrice", totalPrice); // 총 결제 금액 반환
         smap.put("totalCount", totalCount); //데이터 총 갯수
@@ -175,28 +170,28 @@ public class MyPageController {
 
     @PostMapping("/reviewinsert")
     public void reviewInsert(@RequestBody ReviewDto dto){
-        System.out.println("p_num="+dto.getP_num());
-        System.out.println("u_num="+dto.getU_num());
-        System.out.println("content="+dto.getContent());
-        System.out.println("star="+dto.getStar());
+        // 리뷰 작성 이벤트
         myPageMapper.reviewInsert(dto);
+
+        // 리뷰 작성 시 1,000P 지급 이벤트
+        myPageMapper.awardPoint(dto.getU_num());
     }
 
     @GetMapping("/reviewdetail")
-    public ReviewDto reviewDetail(int p_num, int u_num){
+    public ReviewDto reviewDetail(int p_num, int u_num, int r_num){
         ReviewDto dto=new ReviewDto();
         dto.setP_num(p_num);
         dto.setU_num(u_num);
+        dto.setR_num(r_num);
         return myPageMapper.reviewDetail(dto);
     }
 
     @PutMapping("/reviewupdate")
     public void reviewUpdate(@RequestBody ReviewDto dto){
-        System.out.println("r_num"+dto.getR_num());
-        System.out.println("content"+dto.getContent());
-        System.out.println("star"+dto.getStar());
-
-//        myPageMapper.reviewUpdate(dto);
+//        System.out.println("r_num"+dto.getR_num());
+//        System.out.println("content"+dto.getContent());
+//        System.out.println("star"+dto.getStar());
+        myPageMapper.reviewUpdate(dto);
     }
 
 }

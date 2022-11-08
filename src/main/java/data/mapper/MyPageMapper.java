@@ -31,5 +31,5 @@ public interface MyPageMapper {
     public void reviewInsert(ReviewDto dto);
     public ReviewDto reviewDetail(ReviewDto dto);
     public void reviewUpdate(ReviewDto dto);
-
+    public void awardPoint(int u_num);
 }

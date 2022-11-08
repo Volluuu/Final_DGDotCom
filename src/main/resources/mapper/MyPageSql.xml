@@ -78,11 +78,17 @@
 <!--    리뷰 수정하기 위한 디테일-->
     <select id="reviewDetail" parameterType="ReviewDto" resultType="ReviewDto">
         select * from review where p_num=#{p_num} and u_num=#{u_num}
+        <if test="r_num!=null and r_num!=0">
+            and r_num=#{r_num}
+        </if>
     </select>
 <!--    리뷰 수정-->
     <update id="reviewUpdate" parameterType="ReviewDto">
         update review set content=#{content}, star=#{star} where r_num=#{r_num}
     </update>
-
+<!--    리뷰 작성 시 1,000포인트 지급-->
+    <update id="awardPoint" parameterType="int">
+        update user set point=point+1000 where u_num=#{u_num}
+    </update>
 
 </mapper>
