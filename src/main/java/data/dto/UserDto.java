@@ -20,4 +20,5 @@ public class UserDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
     private Timestamp gaip;
     private int point;
+    private String search;
 }
