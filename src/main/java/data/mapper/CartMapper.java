@@ -11,6 +11,8 @@ public interface CartMapper {
 
 //    총 수량
     public int getCartCount();
+    // u_num 총 수향
+    public int getUserCartCount(int u_num);
 //    장바구니 추가
     public void insertCart(CartDto dto);
 //    리스트 출력

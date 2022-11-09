@@ -27,7 +27,7 @@ public class Cartcontroller {
     }
 
     @GetMapping("/list")
-    public Map<String,Object> getCartList(@RequestParam (defaultValue = "1") int currentPage)
+    public Map<String,Object> getCartList(@RequestParam (defaultValue = "1") int currentPage,int u_num)
     {
         System.out.println("ProCP:"+currentPage);
 
@@ -42,7 +42,9 @@ public class Cartcontroller {
         int endPage;//각 블럭당 보여질 끝페이지
         int totalPage;//총 페이지수
         int no;//각 페이지당 출력할 시작번호
+        int Ucnt=cartMapper.getUserCartCount(u_num);
 
+        System.out.println("Ucnt:"+Ucnt);
         //총 페이지수를 구한다
         //총글의갯수/한페이지당보여질갯수로 나눔(7/5=1)
         //나머지가 1이라도 있으면 무조건 1페이지 추가(1+1=2페이지가 필요)
@@ -67,11 +69,11 @@ public class Cartcontroller {
 
         //페이지에서 보여질 글만 가져오기
         Map<String,Integer> map=new HashMap<>();
+        map.put("u_num",u_num);
         map.put("startNum",startNum);
         map.put("perPage",perPage);
 
         List<CartDto> list=cartMapper.getCartList(map);
-
         //풀력할 페이지 번호들 vector로 담아서 보내기
         //리액트에서 출력할때 parr로 출력하면됨
         Vector<Integer> carr=new Vector<>();
@@ -88,6 +90,7 @@ public class Cartcontroller {
         smap.put("endPage",endPage);
         smap.put("no",no);
         smap.put("totalPage",totalPage); //다음페이지 생성 여부 확인
+        smap.put("Ucnt",Ucnt);
 
         return smap;
     }

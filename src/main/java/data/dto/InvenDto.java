@@ -12,6 +12,6 @@ public class InvenDto {
     private int i_num;
     private int p_num;
     private int sellamount;
-    private String size;
+    private String p_size;
     private int amount;
 }

@@ -73,7 +73,7 @@ function MypageOrder(props) {
 
     // 리뷰 수정 버튼 눌렀을 때 값 넣기
     const onUpdateModal = async (p_num, r_num) => {
-        let updateModalUrl = process.env.REACT_APP_URL + "/mypage/reviewdetail?p_num=" + p_num + "&r_num=" + r_num + "&u_num" + u_num;
+        let updateModalUrl = process.env.REACT_APP_URL + "/mypage/reviewdetail?p_num=" + p_num + "&r_num=" + r_num + "&u_num=" + u_num;
         // 동기 처리를 위한 async await
         await axios.get(updateModalUrl)
             .then(res => {
