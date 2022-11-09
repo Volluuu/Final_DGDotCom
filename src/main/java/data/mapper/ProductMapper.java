@@ -11,7 +11,7 @@ public interface ProductMapper {
 //    총 수향 출력
     public int getTotalCount();
     //페이징처리 리스트 호출
-    public List<ProductDto> getProductList(Map<String,Integer>map);
+    public List<ProductDto> getProductList(Map<String,Object>map);
 //    상품 데이터 출력
     public ProductDto getProduct(int p_num);
 }

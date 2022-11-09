@@ -25,6 +25,101 @@ public class ProductController {
     {
         System.out.println("ProCP:"+currentPage);
 
+        // 카테고리
+        for (int index = 0; categories != null && index < categories.length; index++) {
+            String category = categories[index];
+            switch (category) {
+                case "jacket": {
+                    categories[index] = "자켓";
+                    break;
+                }
+                case "hood": {
+                    categories[index] = "후드";
+                    break;
+                }
+                case "sweatshirt": {
+                    categories[index] = "스웨트셔츠";
+                    break;
+                }
+                case "neat": {
+                    categories[index] = "니트웨어";
+                    break;
+                }
+                case "longtshirt": {
+                    categories[index] = "긴팔 티셔츠";
+                    break;
+                }
+                case "tshirt": {
+                    categories[index] = "반팔 티셔츠";
+                    break;
+                }
+                case "shirt": {
+                    categories[index] = "셔츠";
+                    break;
+                }
+                case "padding": {
+                    categories[index] = "패딩";
+                    break;
+                }
+                case "coat": {
+                    categories[index] = "코트";
+                    break;
+                }
+                case "pants": {
+                    categories[index] = "바지";
+                    break;
+                }
+                case "shortpants": {
+                    categories[index] = "반바지";
+                    break;
+                }
+                case "sneakers": {
+                    categories[index] = "스니커즈";
+                    break;
+                }
+                case "loafer": {
+                    categories[index] = "로퍼";
+                    break;
+                }
+                case "sandal": {
+                    categories[index] = "샌들";
+                    break;
+                }
+                case "watch": {
+                    categories[index] = "시계";
+                    break;
+                }
+                case "bag": {
+                    categories[index] = "가방";
+                    break;
+                }
+                case "leather": {
+                    categories[index] = "스몰레더";
+                    break;
+                }
+                case "jewelry": {
+                    categories[index] = "주얼리";
+                    break;
+                }
+                case "cap": {
+                    categories[index] = "모자";
+                    break;
+                }
+                case "scarf": {
+                    categories[index] = "스카프";
+                    break;
+                }
+                case "belt": {
+                    categories[index] = "벨트";
+                    break;
+                }
+                case "etc": {
+                    categories[index] = "기타";
+                    break;
+                }
+            }
+        }
+
         //페이징처리
         int totalCount=productMapper.getTotalCount();
 
@@ -60,7 +155,7 @@ public class ProductController {
         no=totalCount-(currentPage-1)*perPage;
 
         //페이지에서 보여질 글만 가져오기
-        Map<String,Integer> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>();
         map.put("startNum",startNum);
         map.put("perPage",perPage);
 
