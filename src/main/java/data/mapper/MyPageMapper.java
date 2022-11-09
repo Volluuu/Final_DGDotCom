@@ -32,4 +32,11 @@ public interface MyPageMapper {
     public ReviewDto reviewDetail(ReviewDto dto);
     public void reviewUpdate(ReviewDto dto);
     public void awardPoint(int u_num);
+
+    /* Inven */
+    public List<ProductDto> selectAllProduct(); // product 데이터 다 받아오기
+    public int checkInven(Map<String, Object> map); // inven 에 없는 데이터인지 확인
+    public void insertInven(InvenDto dto);
+
+
 }

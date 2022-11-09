@@ -91,4 +91,15 @@
         update user set point=point+1000 where u_num=#{u_num}
     </update>
 
+<!--    Inven 데이터 넣기-->
+<!--    상품 정보 다 들고 오기-->
+    <select id="selectAllProduct" resultType="ProductDto">
+        select * from product
+    </select>
+    <select id="checkInven" parameterType="Map" resultType="int">
+        select count(*) from inven where p_num=#{p_num} and p_size=#{p_size}
+    </select>
+    <insert id="insertInven" parameterType="InvenDto">
+        insert into inven values (null, #{p_num}, 0, #{p_size}, #{amount})
+    </insert>
 </mapper>
