@@ -8,7 +8,25 @@
     <!-- list 출력 및 페이징 처리용-->
     <select id="getProductList" parameterType="Map" resultType="ProductDto">
         select * from product
-        where category in (#{category})
+        where 1 = 1
+        <if test="categories != null and categories.length > 0">
+            and category in
+            <foreach collection="categories" item="category" index="index" separator=", " open="(" close=")">
+                #{category}
+            </foreach>
+        </if>
+        <if test="brands != null and brands.length > 0">
+            and brand in
+            <foreach collection="brands" item="brand" index="index" separator=", " open="(" close=")">
+                #{brand}
+            </foreach>
+        </if>
+        <if test="genders != null and genders.length > 0">
+            and gender in
+            <foreach collection="genders" item="gender" index="index" separator=", " open="(" close=")">
+                #{gender}
+            </foreach>
+        </if>
         order by p_num desc limit #{startNum},#{perPage}
     </select>
     <!-- p_num으로 데이터 얻어오기-->
