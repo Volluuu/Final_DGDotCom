@@ -6,6 +6,7 @@ import data.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface AdminMapper {
@@ -15,6 +16,9 @@ public interface AdminMapper {
 
     /* 회원정보를 불러오기위한 메서드 */
     public List<UserDto> AdminGetAllUser();
+
+    /* 회원정보 페이징을위한 메서드 */
+    public List<UserDto> AdminUserPaging(Map<String,Integer> map);
 
     /* 회원정보를 삭제하기위한 메서드 */
     public void DeleteUser(int u_num);

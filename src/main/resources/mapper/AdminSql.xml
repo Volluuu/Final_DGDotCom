@@ -5,13 +5,13 @@
     <!--=================================유저시작=============================================-->
 
 <!--    총 유저수-->
-    <select id="TotalUser" parameterType="int" resultType="UserDto">
+    <select id="TotalUser" resultType="int">
         select count(*) from user
     </select>
 <!--회원정보-->
 
-    <select id="AdminGetAllUser" parameterType="int" resultType="UserDto">
-        select * from user where u_num = #{u_num}
+    <select id="AdminGetAllUser" resultType="UserDto">
+        select * from user
     </select>
 
 <!--회원삭제-->
@@ -19,6 +19,10 @@
         delete from user where user_num = #{u_num}
     </delete>
 
+<!--회원 페이징처리-->
+    <select id="AdminUserPaging" parameterType="Map" resultType="UserDto">
+        select * from user order by u_num desc limit #{startnum}, #{perpage}
+    </select>
     <!--=================================상품시작=============================================-->
 <!--총 상품수-->
     <select id="TotalProduct" parameterType="int" resultType="ProductDto">
