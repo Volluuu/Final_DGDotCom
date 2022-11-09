@@ -72,7 +72,7 @@ function Menu(props) {
                 <Category to={"/user/login"} className={"up"}>로그인</Category>
                 <Category to={"/user/signup"} className={"up"}>회원가입</Category>
                 <Category to={"/product/detail/1703"} className={"up"}>상품 상세</Category>
-                <Category to={"/admin"} className={"up"}>관리자페이지</Category>
+                <Category to={"/admin/dashboard"} className={"up"}>관리자페이지</Category>
 
                 {/*<button type={'button'} onClick={()=>{*/}
                 {/*    sessionStorage.removeItem("u_name");*/}
