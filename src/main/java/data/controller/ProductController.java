@@ -17,12 +17,16 @@ public class ProductController {
 
     @Autowired
     ProductMapper productMapper;
-    
+
 //    페이징처리 리스트 출력
 
     @GetMapping("/list")
-    public Map<String,Object> getProductList(@RequestParam (defaultValue = "1") int currentPage)
-    {
+    public Map<String,Object> getProductList(
+            @RequestParam (defaultValue = "1") int currentPage,
+            @RequestParam (required = false) String[] categories,
+            @RequestParam (required = false) String[] brands,
+            @RequestParam (required = false) String[] genders
+    ) {
         System.out.println("ProCP:"+currentPage);
 
         // 카테고리
@@ -158,6 +162,9 @@ public class ProductController {
         Map<String,Object> map=new HashMap<>();
         map.put("startNum",startNum);
         map.put("perPage",perPage);
+        map.put("categories", categories);
+        map.put("brands", brands);
+        map.put("genders", genders);
 
         List<ProductDto> list=productMapper.getProductList(map);
 
