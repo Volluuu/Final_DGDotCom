@@ -1,79 +1,80 @@
-table {
-    border: 1px #a39485 solid;
-    font-size: .9em;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 5px;
-    overflow: hidden;
-}
 
-th {
+/*table {*/
+/*    border: 1px #a39485 solid;*/
+/*    font-size: .9em;*/
+/*    box-shadow: 0 2px 5px rgba(0, 0, 0, .25);*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    border-radius: 5px;*/
+/*    overflow: hidden;*/
+/*}*/
 
-}
+/*th {*/
 
-thead {
-    font-weight: bold;
-    color: #fff;
-    background: mediumpurple;
-}
+/*}*/
 
-td, th {
-    padding: 1em .5em;
-    vertical-align: middle;
+/*thead {*/
+/*    font-weight: bold;*/
+/*    color: #fff;*/
+/*    background: mediumpurple;*/
+/*}*/
 
-}
+/*td, th {*/
+/*    padding: 1em .5em;*/
+/*    vertical-align: middle;*/
 
-td {
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
-    background: #fff;
-}
+/*}*/
 
-a {
-    color: #73685d;
-}
+/*td {*/
+/*    border-bottom: 1px solid rgba(0, 0, 0, .1);*/
+/*    background: #fff;*/
+/*}*/
 
-@media all and (max-width: 768px) {
+/*a {*/
+/*    color: #73685d;*/
+/*}*/
 
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
+/*@media all and (max-width: 768px) {*/
 
-    th {
-        text-align: right;
-    }
+/*    table, thead, tbody, th, td, tr {*/
+/*        display: block;*/
+/*    }*/
 
-    table {
-        position: relative;
-        padding-bottom: 0;
-        border: none;
-        box-shadow: 0 0 10px rgba(0, 0, 0, .2);
-    }
+/*    th {*/
+/*        text-align: right;*/
+/*    }*/
 
-    thead {
-        float: left;
-        white-space: nowrap;
-    }
+/*    table {*/
+/*        position: relative;*/
+/*        padding-bottom: 0;*/
+/*        border: none;*/
+/*        box-shadow: 0 0 10px rgba(0, 0, 0, .2);*/
+/*    }*/
 
-    tbody {
-        overflow-x: auto;
-        overflow-y: hidden;
-        position: relative;
-        white-space: nowrap;
-    }
+/*    thead {*/
+/*        float: left;*/
+/*        white-space: nowrap;*/
+/*    }*/
 
-    tr {
-        display: inline-block;
-        vertical-align: top;
-        text-align: center;
-    }
+/*    tbody {*/
+/*        overflow-x: auto;*/
+/*        overflow-y: hidden;*/
+/*        position: relative;*/
+/*        white-space: nowrap;*/
+/*    }*/
 
-    th {
-        border-bottom: 1px solid #a39485;
-    }
+/*    tr {*/
+/*        display: inline-block;*/
+/*        vertical-align: top;*/
+/*        text-align: center;*/
+/*    }*/
 
-    td {
-        border-bottom: 1px solid #e5e5e5;
+/*    th {*/
+/*        border-bottom: 1px solid #a39485;*/
+/*    }*/
 
-    }
-}
+/*    td {*/
+/*        border-bottom: 1px solid #e5e5e5;*/
+
+/*    }*/
+/*}*/
