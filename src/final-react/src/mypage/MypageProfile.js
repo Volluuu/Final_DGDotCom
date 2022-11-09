@@ -1,14 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Link} from "react-router-dom";
 import axios from "axios";
 
 function MypageProfile(props) {
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
     const [userDto, setUserDto] = useState(''); // 세션의 u_num으로 받아온 유저 데이터
-    const [emailModify, setEmailModify] = useState("none");
-    const [passModify, setPassModify]=useState("none");
-    const [nameModify, setNameModify]=useState("none");
-    const [genderModify, setGenderModify]=useState("none");
+    const [emailModify, setEmailModify] = useState(false);
+    const [emailError, setEmailError]=useState(false); // true면 에러가 있는거, false면 에러가 없는 거
+    const [passModify, setPassModify]=useState(false);
+    const [nameModify, setNameModify]=useState(false);
+    const emailRef=useRef("");
+
+    // 이메일 유효성 검사는 state로 해야할 듯
+    const [emailState, setEmailState]=useState('');
+    // 값 받아올 때 Ref 쓰기
 
     const userByNum = () => {
         let userByNumUrl = process.env.REACT_APP_URL + "/mypage/userbynum?u_num=" + u_num;
@@ -19,8 +24,10 @@ function MypageProfile(props) {
     }
 
     useEffect(() => {
-        userByNum();
+        userByNum(); // window.location.reload() 할까?
     }, [userDto])
+
+
 
     return (
         <div data-v-587be1b3="" data-v-39b2348a="" className="content_area">
@@ -46,11 +53,11 @@ function MypageProfile(props) {
                     </div>
                 </div>
                 <input data-v-587be1b3="" type="file" accept="image/jpeg,image/png" hidden="hidden"/>
-                <canvas data-v-587be1b3="" style={{display: "none"}} width="1000" height="1000"></canvas>
+                {/*<canvas data-v-587be1b3="" style={{display: "none"}} width="1000" height="1000"></canvas>*/}
                 <div data-v-587be1b3="" className="profile_info">
                     <div data-v-587be1b3="" className="profile_group">
                         <h4 data-v-587be1b3="" className="group_title">로그인 정보</h4>
-                        <div data-v-587be1b3="" className="unit">
+                        <div data-v-587be1b3="" className="unit" style={{display:emailModify?"none":""}}>
                             <h5 data-v-587be1b3="" className="title">이메일 주소</h5>
                             <p data-v-587be1b3="" className="desc email">
                                 {
@@ -63,16 +70,18 @@ function MypageProfile(props) {
                                 }
                             </p>
                             <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                    className="btn btn_modify outlinegrey small"> 변경
-                            </button>
+                                    className="btn btn_modify outlinegrey small"
+                            onClick={()=>{
+                                setEmailModify(!emailModify);
+                            }}> 변경 </button>
                         </div>
-                        <div data-v-587be1b3="" className="modify" style={{display: emailModify}}>
-                            <div data-v-6c561060="" data-v-587be1b3="" className="input_box">
+                        <div data-v-587be1b3="" className="modify" style={{display: !emailModify?"none":""}}>
+                            <div data-v-6c561060="" data-v-587be1b3="" className={emailError?"input_box has_error":"input_box"}>
                                 <h6 data-v-587be1b3="" data-v-6c561060="" className="input_title">
                                     이메일 주소 변경
                                 </h6>
                                 <div data-v-6c561060="" className="input_item">
-                                    <input data-v-6c561060="" type="email" autoComplete="off"
+                                    <input data-v-6c561060="" type="email" autoComplete="off" ref={emailRef}
                                            className="input_txt" placeholder=
                                                {
                                                    userDto.email &&
@@ -81,27 +90,43 @@ function MypageProfile(props) {
                                                    userDto.email.charAt(userDto.email.indexOf("@") - 1) + // 마지막 글자 출력
                                                    "@" +
                                                    userDto.email.split("@")[1] // @ 뒤 주소 출력
-                                               }/>
+                                               }
+                                    onChange={(e)=>{
+                                        let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+                                        if(exptext.test(emailRef.current.value)===false){
+                                            setEmailError(true);
+                                        }else{
+                                            setEmailError(false);
+                                        }
+                                    }}/>
                                 </div>
-                                <p data-v-587be1b3="" data-v-6c561060="" className="input_error"></p>
+                                <p data-v-587be1b3="" data-v-6c561060="" className="input_error">이메일 주소를 정확히 입력해주세요.</p>
                             </div>
                             <div data-v-587be1b3="" className="modify_btn_box">
                                 <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                        className="btn outlinegrey medium" slot="button"> 취소
-                                </button>
-                                <button data-v-3d1bcc82="" data-v-587be1b3="" disabled="disabled" type="button"
-                                        className="btn solid medium disabled" slot="button"> 인증 메일 발송
+                                        className="btn outlinegrey medium" slot="button"
+                                        onClick={()=>{
+                                            setEmailModify(!emailModify);
+                                            setEmailError(false);
+                                            emailRef.current.value="";
+                                        }}> 취소 </button>
+                                <button data-v-3d1bcc82="" data-v-587be1b3="" disabled="" type="button"
+                                        // className={emailError?(emailRef!==""?"btn solid medium":"btn solid medium disabled"):(emailRef===""?"btn solid medium disabled":"btn solid medium disabled")} slot="button"> 인증 메일 발송
+                                        className={!emailError&&emailRef.current.value!==""?"btn solid medium":"btn solid medium disabled"} slot="button"> 인증 메일 발송
                                 </button>
                             </div>
                         </div>
-                        <div data-v-587be1b3="" className="unit">
+                        <div data-v-587be1b3="" className="unit"  style={{display:passModify?"none":""}}>
                             <h5 data-v-587be1b3="" className="title">비밀번호</h5>
                             <p data-v-587be1b3="" className="desc password">●●●●●●●●●</p>
                             <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                    className="btn btn_modify outlinegrey small"> 변경
+                                    className="btn btn_modify outlinegrey small"
+                                    onClick={()=>{
+                                        setPassModify(!passModify);
+                                    }}> 변경
                             </button>
                         </div>
-                        <div data-v-587be1b3="" className="modify" style={{display: passModify}}>
+                        <div data-v-587be1b3="" className="modify" style={{display: !passModify?"none":""}}>
                             <h5 data-v-587be1b3="" className="title">비밀번호 변경</h5>
                             <div data-v-6c561060="" data-v-587be1b3="" className="input_box">
                                 <h6 data-v-587be1b3="" data-v-6c561060="" className="input_title">이전 비밀번호</h6>
@@ -125,7 +150,10 @@ function MypageProfile(props) {
                             </div>
                             <div data-v-587be1b3="" className="modify_btn_box">
                                 <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                        className="btn outlinegrey medium" slot="button"> 취소
+                                        className="btn outlinegrey medium" slot="button"
+                                        onClick={()=>{
+                                            setPassModify(!passModify);
+                                        }}> 취소
                                 </button>
                                 <button data-v-3d1bcc82="" data-v-587be1b3="" disabled="disabled" type="button"
                                         className="btn solid medium disabled" slot="button"> 저장
@@ -135,14 +163,17 @@ function MypageProfile(props) {
                     </div>
                     <div data-v-587be1b3="" className="profile_group">
                         <h4 data-v-587be1b3="" className="group_title">개인 정보</h4>
-                        <div data-v-587be1b3="" className="unit">
+                        <div data-v-587be1b3="" className="unit" style={{display:nameModify?"none":""}}>
                             <h5 data-v-587be1b3="" className="title">이름</h5>
                             <p data-v-587be1b3="" className="desc">{userDto.u_name}</p>
                             <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                    className="btn btn_modify outlinegrey small"> 변경
+                                    className="btn btn_modify outlinegrey small"
+                                    onClick={()=>{
+                                        setNameModify(!nameModify);
+                                    }}> 변경
                             </button>
                         </div>
-                        <div data-v-587be1b3="" className="modify name" style={{display: nameModify}}>
+                        <div data-v-587be1b3="" className="modify name" style={{display: !nameModify?"none":""}}>
                             <h5 data-v-587be1b3="" className="title">이름</h5>
                             <div data-v-6c561060="" data-v-587be1b3="" className="input_box">
                                 <h6 data-v-587be1b3="" data-v-6c561060="" className="input_title">
@@ -158,7 +189,10 @@ function MypageProfile(props) {
                             </div>
                             <div data-v-587be1b3="" className="modify_btn_box">
                                 <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                        className="btn outlinegrey medium" slot="button"> 취소
+                                        className="btn outlinegrey medium" slot="button"
+                                        onClick={()=>{
+                                            setNameModify(!nameModify);
+                                        }}> 취소
                                 </button>
                                 <button data-v-3d1bcc82="" data-v-587be1b3="" disabled="disabled" type="button"
                                         className="btn solid medium disabled" slot="button"> 저장
@@ -172,6 +206,7 @@ function MypageProfile(props) {
                             <p data-v-587be1b3="" className="desc">
                                 {userDto.hp && userDto.hp.substring(0,5)+"***-*"+userDto.hp.substring(10)}
                             </p>
+                            {/* 휴대폰 번호 인증 API 구현 */}
                             <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
                                     className="btn btn_modify outlinegrey small"> 변경
                             </button>
@@ -179,75 +214,6 @@ function MypageProfile(props) {
                         <div data-v-587be1b3="" className="unit">
                             <h5 data-v-587be1b3="" className="title">성별</h5>
                             <p data-v-587be1b3="" className="desc">{userDto.gender==="M"?"남성":"여성"}</p>
-                            <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                    className="btn btn_modify outlinegrey small"> 변경
-                            </button>
-                        </div>
-                        <div data-v-1f7c6d3f="" data-v-feb03f9c="" data-v-587be1b3="" className="layer lg"
-                             style={{display: genderModify}}>
-                            <div data-v-1f7c6d3f="" className="layer_container">
-                                <div data-v-1f7c6d3f="" className="layer_header">
-                                    <h2 data-v-feb03f9c="" data-v-1f7c6d3f="" className="title">성별 선택</h2>
-                                </div>
-                                <div data-v-1f7c6d3f="" className="layer_content">
-                                    <div data-v-feb03f9c="" data-v-1f7c6d3f="" className="size_list_area">
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">230</span>
-                                            </Link>
-                                        </div>
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">240</span>
-                                            </Link>
-                                        </div>
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">250</span>
-                                            </Link>
-                                        </div>
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">260</span>
-                                            </Link>
-                                        </div>
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">270</span>
-                                            </Link>
-                                        </div>
-                                        <div data-v-1b874462="" data-v-feb03f9c="" className="size_item"
-                                             data-v-1f7c6d3f="">
-                                            <Link data-v-3d1bcc82="" data-v-1b874462="" to="#!"
-                                                  className="btn outlinegrey medium">
-                                                <span data-v-1b874462="" className="info_txt">280</span>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                    <div data-v-feb03f9c="" data-v-1f7c6d3f="" className="layer_btn">
-                                        <Link data-v-3d1bcc82="" data-v-feb03f9c="" to="#!" className="btn solid medium"
-                                              data-v-1f7c6d3f="">
-                                            확인 </Link>
-                                    </div>
-                                </div>
-                                <Link data-v-feb03f9c="" data-v-1f7c6d3f="" className="btn_layer_close">
-                                    <svg data-v-feb03f9c="" data-v-1f7c6d3f="" xmlns="http://www.w3.org/2000/svg"
-                                         className="ico-close icon sprite-icons">
-                                        <use data-v-feb03f9c="" data-v-1f7c6d3f=""
-                                             href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-ico-close"></use>
-                                    </svg>
-                                </Link>
-                            </div>
                         </div>
                     </div>
                     <div data-v-587be1b3="" className="profile_group">

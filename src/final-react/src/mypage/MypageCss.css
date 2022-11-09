@@ -6005,9 +6005,6 @@ a:hover {
     color: rgba(34, 34, 34, .5)
 }
 
-.input_error[data-v-6c561060] {
-    display: none
-}
 
 .has_error .input_title[data-v-6c561060] {
     color: #f15746
@@ -6020,14 +6017,6 @@ a:hover {
 .has_error .input_txt[data-v-6c561060]:focus {
     border-width: 1px;
     padding-bottom: 8px
-}
-
-.has_error .input_error[data-v-6c561060] {
-    display: block;
-    position: absolute;
-    line-height: 16px;
-    font-size: 11px;
-    color: #f15746
 }
 
 .has_button .input_box[data-v-6c561060] {
@@ -10721,7 +10710,7 @@ a:hover {
     color:rgba(34,34,34,.5)
 }
 .input_error[data-v-6c561060] {
-    display:none
+    display:none;
 }
 .has_error .input_title[data-v-6c561060] {
     color:#f15746
