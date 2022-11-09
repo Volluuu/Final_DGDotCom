@@ -12,8 +12,11 @@ public class CartDto {
     private int c_num;
     private int u_num;
     private int p_num;
-    private String size;
+    private String p_size;
     private int amount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
     private Timestamp addday;
+    private String p_name;
+    private  int price;
+    private  String photo;
 }

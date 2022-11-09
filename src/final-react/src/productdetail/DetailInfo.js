@@ -2,6 +2,7 @@ import {
   AddCircleOutlineRounded,
   RemoveCircleOutline,
 } from "@material-ui/icons";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 function DetailInfo(props) {
@@ -13,10 +14,11 @@ function DetailInfo(props) {
   console.log("u_num:" + Number(u_num));
 
   //size
-  const [size, setSize] = useState("");
+  // const [size, setSize] = useState("");
 
   //amount(수량)
   const [amount, setAmount] = useState(1);
+  const [cnt, setCnt] = useState(0);
 
   //수량 증가
   const addamount = () => {
@@ -34,20 +36,43 @@ function DetailInfo(props) {
   };
 
   //데이터를 담을 배열
-  const [itemlist, setItemlist] = useState({
-    ...row,
-    size: "",
-    amount: amount,
-  });
+  const [itemlist, setItemlist] = useState({});
   console.log("1. itemlist:" + JSON.stringify(itemlist));
 
   //데이터 담는 함수
   const additemlist = (e) => {
     setItemlist({
       ...row,
-      size: e.target.value,
-      amount,
+      p_size: e.target.value,
+      amount: amount,
     });
+  };
+
+  useEffect(() => {
+    setItemlist({
+      ...row,
+      p_size: itemlist.p_size,
+      amount: amount,
+    });
+  }, [amount]);
+
+  console.log("amount:" + amount);
+  //장바구니 이벤트
+  const addcart = (e) => {
+    let insertUrl = localStorage.url + "/cart/insert";
+
+    axios
+      .post(insertUrl, {
+        u_num,
+        p_num: itemlist.p_num,
+        p_size: itemlist.p_size,
+        amount,
+      })
+      .then((res) => {
+        alert("장바구니 추가");
+        setItemlist([]);
+        amount(1);
+      });
   };
 
   // select 양식 함수
@@ -68,7 +93,7 @@ function DetailInfo(props) {
             p_num={row.p_num}
             onClick={additemlist}
           >
-            <option value="F" selected>
+            <option value="Free" selected>
               Free
             </option>
           </select>
@@ -88,8 +113,7 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={additemlist}
-            defaultValue={size}
+            onClick={additemlist}
           >
             <option value="S" selected>
               S
@@ -109,7 +133,6 @@ function DetailInfo(props) {
             className="form-select sizeselect"
             p_num={row.p_num}
             onClick={additemlist}
-            defaultValue={size}
           >
             <option value="230" selected>
               230mm
@@ -123,11 +146,7 @@ function DetailInfo(props) {
         );
       default:
         return (
-          <select
-            className="form-select sizeselect"
-            onClick={additemlist}
-            defaultValue={size}
-          >
+          <select className="form-select sizeselect" onClick={additemlist}>
             <option selected disabled>
               재고 없음
             </option>
@@ -159,16 +178,9 @@ function DetailInfo(props) {
       <div>
         <span>수량</span>
         <br />
-        <span onClick={subamount} onChange={additemlist}>
-          <RemoveCircleOutline />
-        </span>
+        <RemoveCircleOutline value={amount} onClick={subamount} />
         &nbsp;<span>{amount}</span>&nbsp;
-        <span
-          onClick={addamount}
-          // onChange={additemlist}
-        >
-          <AddCircleOutlineRounded />
-        </span>
+        <AddCircleOutlineRounded value={amount} onClick={addamount} />
       </div>
       <div>
         <h1>
@@ -183,7 +195,11 @@ function DetailInfo(props) {
         구매
       </button>
       &nbsp;&nbsp;
-      <button type="button" className="btn btn-outline-success cartbtn">
+      <button
+        type="button"
+        className="btn btn-outline-success cartbtn"
+        onClick={addcart}
+      >
         장바구니
       </button>
       <br />

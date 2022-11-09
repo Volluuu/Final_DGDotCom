@@ -6,12 +6,16 @@
         select count(*) from cart
     </select>
 
+    <select id="getUserCartCount" parameterType="int" resultType="int">
+        select count(*) from cart where u_num=#{u_num}
+    </select>
+
     <insert id="insertCart" parameterType="CartDto">
-        insert into cart values (null,#{u_num},#{p_num},#{size},#{amount},now())
+        insert into cart values (null,#{u_num},#{p_num},#{p_size},#{amount},now())
     </insert>
     <!-- list 출력 및 페이징 처리용-->
     <select id="getCartList" parameterType="Map" resultType="CartDto">
-        select * from cart order by c_num desc limit #{startNum},#{perPage}
+        select * from cart C join product P where C.p_num=P.p_num and u_num=#{u_num} order by c_num desc limit #{startNum},#{perPage}
     </select>
     <!-- p_num으로 데이터 얻어오기-->
     <select id="getData" parameterType="int" resultType="CartDto">
