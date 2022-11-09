@@ -42,16 +42,16 @@ const EventBanner = () => {
         <div>
             <Banner>1조 파이날 프로젝트 많관부 많참부</Banner>
             <List style={{marginBottom:"5px"}}>
-            <p style={{display:"inline-block"}}>I can't say anything, I hold you and only tears flow</p><br/>
+            <p>I can't say anything, I hold you and only tears flow</p>
             </List>
             <List style={{marginBottom:"10px", borderBottom:"2px solid #ccc"}}>
                 <p>나는 아무말도 못하고 그댈 안고서 그냥 눈물만 흘러</p>
             </List>
             <List>
-                <ProductElement/>
-                <ProductElement/>
-                <ProductElement/>
-                <ProductElement/>
+                <ProductElement type={"search"}/>
+                <ProductElement type={"big"}/>
+                <ProductElement type={"big"}/>
+                <ProductElement type={"big"}/>
             </List>
         </div>
     );

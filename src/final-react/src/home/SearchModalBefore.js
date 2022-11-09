@@ -7,7 +7,6 @@ import {NavLink, useNavigate} from "react-router-dom";
 import axios from "axios";
 import SearchCard from "./SearchCard";
 import SearchListVirtual from "./SearchListVirtual";
-import BasicSearchShow from "./BasicSearchShow";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -23,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TransitionsModal() {
-    const classes = useStyles();
+export default function SearchModalBefore() {
+    const classes2 = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
@@ -63,25 +62,25 @@ export default function TransitionsModal() {
 
     useEffect(() => {
         console.log("render!");
-            const debounce = setTimeout(()=>{
-                if(word){updateData();} else{
-                    setSearchList([]);
-                }
-            },200)
-            return () => {
-                clearTimeout(debounce);
+        const debounce = setTimeout(()=>{
+            if(word){updateData();} else{
+                setSearchList([]);
             }
+        },200)
+        return () => {
+            clearTimeout(debounce);
+        }
     }, [word]);
     return (
         <>
             <button type="button" onClick={handleOpen}
-                    style={{width: "50px", height: "30px", border: "3px solid black"}}>
-                검색
+                    style={{height: "30px", border: "3px solid black"}}>
+                느린검색
             </button>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={classes.modal}
+                className={classes2.modal}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -91,31 +90,27 @@ export default function TransitionsModal() {
                 }}
             >
                 <Fade in={open}>
-                    <div className={classes.paper}>
+                    <div className={classes2.paper}>
                         <h2 id="transition-modal-title">찾으시는 상품의 상품명을 입력해주세요</h2>
                         <p id="transition-modal-description">
                             <form onSubmit={onSubmit}>
                                 <div style={{width:'768px', display:"flex", justifyContent:"space-between"}}>
-                                <input type="text" placeholder={"상품명 입력"} style={{
-                                    border     : "1px solid #ccc",
-                                    width      : "90%",
-                                    height     : "34px",
-                                    marginRight: "20px",
-                                }} name={"word"} value={word} onChange={changeWord}/>
-                                <button type={"submit"}
-                                        style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
-                                </button>
+                                    <input type="text" placeholder={"상품명 입력"} style={{
+                                        border     : "1px solid #ccc",
+                                        width      : "90%",
+                                        height     : "34px",
+                                        marginRight: "20px",
+                                    }} name={"word"} value={word} onChange={changeWord}/>
+                                    <button type={"submit"}
+                                            style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
+                                    </button>
                                 </div>
-                                {/*react-virtualized를 사용하지 않고 구현*/}
-                                {/*<div style={{width: "768px", height: "600px", overflowY:"scroll"}}>*/}
-                                {/*    {   searchList.length < 1 ? <div>no result</div> :*/}
-                                {/*        searchList.map((product, idx)=><SearchCard key={idx} product={product}/>)*/}
-                                {/*    }*/}
-                                {/*</div>*/}
-                                {/*react-virtualized를 사용하여 구현*/}
-                                {
-                                    word === '' ? <BasicSearchShow/> : searchList.length < 1 ? <div style={{width: "768px", height: "600px"}}>no result</div> : <SearchListVirtual searchlist={searchList}/>
-                                }
+                              <div style={{width: "768px", height: "600px", overflowY:"scroll"}}>
+                                   {   searchList.length < 1 ? <div>no result</div> :
+                                       searchList.map((product, idx)=><SearchCard key={idx} product={product}/>)
+                                    }
+                             </div>
+
                                 <NavLink to={"/product/list/1"} onClick={handleClose}>리스트로 이동</NavLink><br/>
                             </form>
                         </p>
