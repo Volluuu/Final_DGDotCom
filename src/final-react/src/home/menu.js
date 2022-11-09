@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
 import {Announcement} from "@material-ui/icons";
+import SearchModalBefore from "./SearchModalBefore";
 
 const Menubar = styled.div`
   padding-top: 10px;
@@ -85,6 +86,7 @@ function Menu(props) {
                 <span style={{marginRight: "20px"}}>
                     <Category to={"/product/list/1"} className={"down"}>상품 리스트</Category>
                     <Category to={"/mypage/all"} className={"down"}>마이페이지</Category>
+                    <SearchModalBefore/>
                     <TransitionsModal/>
                 </span>
             </Searchbar>
