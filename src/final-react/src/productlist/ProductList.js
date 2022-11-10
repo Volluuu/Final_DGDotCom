@@ -20,12 +20,22 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-//select
+//정렬 select
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+
+//리스트 테스트
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -34,8 +44,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-
+//리스트 테스트
+const useStyles1 = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+    },
+    nested: {
+        color: 'black',
+        paddingLeft: theme.spacing(4),
+    },
+}));
 
 
 function ProductList(props) {
@@ -168,6 +188,21 @@ function ProductList(props) {
         setOpen(true);
     };
 
+    //리스트 테스트
+    const classes1 = useStyles();
+    const [open1, setOpen1] = React.useState(true);
+    const [open2, setOpen2] = React.useState(true);
+    const [open3, setOpen3] = React.useState(true);
+
+    const handleClick = () => {
+        setOpen1(!open1);
+    };
+    const handleClick2 = () => {
+        setOpen2(!open2);
+    };
+    const handleClick3 = () => {
+        setOpen3(!open3);
+    };
 
     return (
         <div>
@@ -184,6 +219,7 @@ function ProductList(props) {
                            }}
                 />
             </form>
+
             <div style={{marginLeft:'1400px',width:'150px'}}>
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-controlled-open-select-label">정렬기준</InputLabel>
@@ -209,14 +245,13 @@ function ProductList(props) {
 
             <div style={{width:'15%', height:'700px',float:'left',
                 marginLeft:'40px'}}>
-                <b>FILTER</b><br/><br/>
+                <b>CATEGORY</b><br/><br/>
                 <Accordion>
                     <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-                        <Typography>카테고리</Typography>
+                        <Typography>의류</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <b>의류</b><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('jacket')}} checked={checkCategory('jacket')} />} label="자켓"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('hood')}} checked={checkCategory('hood')} />} label="후드"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sweatshirt')}} checked={checkCategory('sweatshirt')} />} label="스웨트셔츠"/>
@@ -228,11 +263,29 @@ function ProductList(props) {
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('coat')}} checked={checkCategory('cort')} />} label="코트"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('pants')}} checked={checkCategory('pants')} />} label="바지"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('shortpants')}} checked={checkCategory('shortpants')} />} label="반바지"/><br/><br/>
-                            <b>신발</b><br/>
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+
+                <Accordion>
+                    <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+                        <Typography>신발</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sneakers')}} checked={checkCategory('sneakers')} />} label="스니커즈"/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('loafer')}} checked={checkCategory('loafer')} />} label="로퍼/플랫"/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sandal')}} checked={checkCategory('sandal')} />} label="샌들/슬리퍼"/><br/><br/>
-                            <b>패션잡화</b><br/>
+                        </Typography>
+                        </AccordionDetails>
+                </Accordion>
+
+                <Accordion>
+                    <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+                        <Typography>패션잡화</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('watch')}} checked={checkCategory('watch')} />} label="시계"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('bag')}} checked={checkCategory('bag')} />} label="가방"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('leather')}} checked={checkCategory('leather')} />} label="스몰레더"/><br/>
@@ -244,7 +297,9 @@ function ProductList(props) {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
+                <br/><br/>
 
+                <b>FILTER</b><br/><br/>
                 <Accordion>
                     <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
                         <Typography>브랜드</Typography>
