@@ -344,7 +344,7 @@ function MypageForm(props) {
               {" "}
               장바구니{" "}
             </h3>
-            <Link data-v-6752ceb2="" to="/mypage/basket" className="btn_more">
+            <Link data-v-6752ceb2="" to="/mypage/cart" className="btn_more">
               <span data-v-6752ceb2="" className="btn_txt">
                 더보기
               </span>

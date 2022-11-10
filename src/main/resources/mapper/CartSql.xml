@@ -26,4 +26,7 @@
         delete from cart where c_num=#{c_num}
     </delete>
 
+    <update id="updateCart" parameterType="CartDto">
+        update cart set amount=#{amount} where c_num=#{c_num} and u_num=#{u_num}
+    </update>
 </mapper>

@@ -21,7 +21,7 @@ public class Cartcontroller {
 
 
     @PostMapping("/insert")
-    public void insertBoard(@RequestBody CartDto dto)
+    public void insertCart(@RequestBody CartDto dto)
     {
         cartMapper.insertCart(dto);
     }
@@ -93,5 +93,9 @@ public class Cartcontroller {
         smap.put("Ucnt",Ucnt);
 
         return smap;
+    }
+    @GetMapping("/delete")
+    public void deleteCart(int c_num){
+        cartMapper.deleteCart(c_num);
     }
 }
