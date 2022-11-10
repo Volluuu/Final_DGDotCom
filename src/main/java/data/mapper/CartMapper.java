@@ -23,5 +23,4 @@ public interface CartMapper {
     public void deleteCart(int c_num);
 //    수정
 //    public updateCart(CartDto dto);
-
 }

@@ -4,10 +4,14 @@ import {
 } from "@material-ui/icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function DetailInfo(props) {
   // DetailDto
   const { row } = props;
+
+  //이동 Hook
+  const navi = useNavigate();
 
   //로그인한 u_num
   const u_num = sessionStorage.u_num;
@@ -61,18 +65,24 @@ function DetailInfo(props) {
   const addcart = (e) => {
     let insertUrl = localStorage.url + "/cart/insert";
 
-    axios
-      .post(insertUrl, {
-        u_num,
-        p_num: itemlist.p_num,
-        p_size: itemlist.p_size,
-        amount,
-      })
-      .then((res) => {
-        alert("장바구니 추가");
-        setItemlist([]);
-        amount(1);
-      });
+    if (itemlist.p_size != null) {
+      axios
+        .post(insertUrl, {
+          u_num,
+          p_num: itemlist.p_num,
+          p_size: itemlist.p_size,
+          amount,
+        })
+        .then((res) => {
+          alert("장바구니 추가");
+          setItemlist([]);
+          setAmount(1);
+          navi("/product/list/1");
+        });
+    } else {
+      alert("사이즈를 선택해주세요");
+      return;
+    }
   };
 
   // select 양식 함수
@@ -93,9 +103,10 @@ function DetailInfo(props) {
             p_num={row.p_num}
             onClick={additemlist}
           >
-            <option value="Free" selected>
-              Free
+            <option disabled selected>
+              선택
             </option>
+            <option value="Free">Free</option>
           </select>
         );
       case "자켓":
@@ -115,9 +126,10 @@ function DetailInfo(props) {
             p_num={row.p_num}
             onClick={additemlist}
           >
-            <option value="S" selected>
-              S
+            <option disabled selected>
+              선택
             </option>
+            <option value="S">S</option>
             <option value="M">M</option>
             <option value="L">L</option>
             <option value="XL">XL</option>
@@ -134,9 +146,10 @@ function DetailInfo(props) {
             p_num={row.p_num}
             onClick={additemlist}
           >
-            <option value="230" selected>
-              230mm
+            <option disabled selected>
+              선택
             </option>
+            <option value="230">230mm</option>
             <option value="240">240mm</option>
             <option value="250">250mm</option>
             <option value="260">260mm</option>
@@ -147,9 +160,10 @@ function DetailInfo(props) {
       default:
         return (
           <select className="form-select sizeselect" onClick={additemlist}>
-            <option selected disabled>
-              재고 없음
+            <option disabled selected>
+              선택
             </option>
+            <option disabled>재고 없음</option>
           </select>
         );
     }
