@@ -13,16 +13,6 @@ const SearchElement = styled.div`
     }
   height: 100px;
 `
-const Virtual = styled.div`
-     & + .SearchCard-virtualized {
-      & + & {
-        border-top: 1px solid  #dee2e6;
-      }
-      &:nth-child(even) {
-        background: #f8f9fa;
-      }
-    }
-`
 const SearchCard = ({key, product, style}) => {
 
     const ProductUrl = `http://localhost:9003/product/${product.photo}`

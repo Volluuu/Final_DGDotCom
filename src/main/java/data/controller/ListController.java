@@ -1,5 +1,6 @@
 package data.controller;
 
+import data.dto.KeywordDto;
 import data.dto.ProductDto;
 import data.mapper.ListMapper;
 import data.mapper.ProductMapper;
@@ -17,9 +18,14 @@ public class ListController {
 	ProductMapper productMapper;
 	@Autowired
 	ListMapper listMapper;
+
 	@GetMapping("/search")
-	public List<ProductDto> getProductList(@RequestParam String word)
-	{
+	public List<ProductDto> getProductList(@RequestParam String word) {
 		return listMapper.getSearchList(word);
+	}
+
+	@PostMapping("/keyword")
+	public void refreshKeyword(@RequestParam KeywordDto dto){
+
 	}
 }
