@@ -1,10 +1,45 @@
 import React from 'react';
-// import { ResponsivePie} from "@nivo/pie";
+import { ResponsivePie} from "@nivo/pie";
 import './admin.css';
+import {PieChart} from "@material-ui/icons";
+import {useParams} from "react-router-dom";
+import Piegraph from "./piegraph";
 
 
 function DashBoard(props) {
 
+const data = [
+    {
+        "id": "sass",
+        "label": "sass",
+        "value": 339,
+        "color": "hsl(229, 70%, 50%)"
+    },
+    {
+        "id": "make",
+        "label": "make",
+        "value": 355,
+        "color": "hsl(203, 70%, 50%)"
+    },
+    {
+        "id": "lisp",
+        "label": "lisp",
+        "value": 351,
+        "color": "hsl(160, 70%, 50%)"
+    },
+    {
+        "id": "ruby",
+        "label": "ruby",
+        "value": 32,
+        "color": "hsl(319, 70%, 50%)"
+    },
+    {
+        "id": "python",
+        "label": "python",
+        "value": 75,
+        "color": "hsl(169, 70%, 50%)"
+    }
+]
 
     return (
 
@@ -102,6 +137,9 @@ function DashBoard(props) {
                 </div>
             </div>
             {/*대쉬보드카드 끝*/}
+            <div>
+        <Piegraph/>
+            </div>
         </div>
     );
 }

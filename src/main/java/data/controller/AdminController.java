@@ -39,8 +39,8 @@ public class AdminController {
 
         //페이징처리
         int totalCount;//총갯수
-        int perPage = 3;//한페이지당 출력할 글 갯수
-        int perBlock = 5; //출력할 페이지 갯수
+        int perPage = 4;//한페이지당 출력할 글 갯수
+        int perBlock = 3; //출력할 페이지 갯수
         int startNum; //db에서 가져올 시작번호
         int startPage;//출력할 시작페이지
         int endPage;//출력할 끝페이지
@@ -67,7 +67,7 @@ public class AdminController {
         map.put("startnum", startNum);
         map.put("perpage", perPage);
 
-        List<UserDto> list = adminMapper.AdminUserPaging(map);
+        List<UserDto> ulist = adminMapper.AdminUserPaging(map);
 
         //출력할 페이지번호들을 Vector에 담아서 보내기
         Vector<Integer> parr = new Vector<>();
@@ -78,7 +78,7 @@ public class AdminController {
         //리액트로 필요한 변수들을 Map에 담아서 보낸다
         Map<String, Object> smap = new HashMap<>();
         smap.put("totalCount",totalCount);
-        smap.put("list",list);
+        smap.put("ulist",ulist);
         smap.put("parr",parr);
         smap.put("startPage",startPage);
         smap.put("endPage",endPage);
