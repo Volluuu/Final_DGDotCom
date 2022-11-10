@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface ListMapper {
+public interface KeywordMapper {
 	//검색어를 기준으로 리스트 목록 가져오기
-	public List<ProductDto> getSearchList(String email);
+	public List<KeywordDto> getTopTen();
 	public void insertKeyword(KeywordDto dto);
 	public void updateKeyword(KeywordDto dto);
 

@@ -18,6 +18,8 @@ const ProductCard = styled(Link)`
 `
 export default function ProductElement(props) {
     const {type} = props;
+    //makeStyles : css파일을 js안에 선언한다고 생각하고 사용. 변수에 할당해서 사용
+    //             JSX문법안에서 className={변수명.root}와 같이 사용
     const useBig = makeStyles((theme) => ({
         root       : {
             display : "flex",
@@ -48,56 +50,42 @@ export default function ProductElement(props) {
 
     }));
     const useSmall = makeStyles((theme) => ({
-        root       : {
+        root       : { //카드의 전체를 정의하는 객체
             display : "flex",
-            width   : 270,
-            height  : 396,
+            width   : 270, //가로
+            height  : 396, //세로
             margin  : "auto",
             flexWrap: "wrap",
         },
-        media      : {
-            height         : 270,
-            width          : 270,
+        media      : { //사진의 속성을 정의하는 객체
+            height         : 270, //사진의 높이
+            width          : 270, //사진의 넓이
             paddingTop     : '56.25%', // 16:9
             backgroundColor: "#DDFFF6",
         },
-        infoBox    : {
-            fontSize   : "14.4px",
-            paddingLeft: "14.4px",
+        infoBox    : { //카드 내 정보를 출력하는 부분의 픽셀들
+            fontSize   : "14.4px", // 글자크기
+            paddingLeft: "14.4px", // 패딩
 
         },
-        brand      : {
+        brand      : { // 브랜드 글자 표시하는 객체
             textDecoration: "underline",
-            marginBottom  : "2.7px",
+            marginBottom  : "2.7px", // 글자 크기
         },
-        productname: {
-            fontSize  : "18px",
-            lineHeight: "19.8px",
+        productname: { // 상품 이름 표시하는 객체
+            fontSize  : "18px", //글자크기
+            lineHeight: "19.8px", // 자간
         },
 
     }));
 
-    const useSearch = makeStyles((theme) => ({
-        root       : {
-            display : "flex",
-            width   : 50,
-            height  : 50,
-            margin  : "auto",
-            flexWrap: "wrap",
-        },
-        media      : {
-            height         : 50,
-            width          : 50,
-            paddingTop     : '56.25%', // 16:9
-            backgroundColor: "#DDFFF6",
-        },
-    }));
-    const big = useBig(); const small = useSmall(); const search = useSearch();
-    const classes = type
+    //새로운 클래스를 만들었을 때 변수에 선언을 먼저 해준 뒤 classes라는 변수에 다시 할당하여 사용
+    //리액트의 Hook은 반복문, 조건문(이항연산자) 내에서 사용불가
+    const big = useBig(); const small = useSmall();
+    const classes = type==='big'? big : small;
     console.log(type);
    // const classes = useBig();
     return (
-
         <ProductCard to={"/login"}>
             <Card className={classes.root}>
                 <CardMedia
@@ -105,9 +93,6 @@ export default function ProductElement(props) {
                     image="http://localhost:9003/product/20221104024539930.PNG"
                     title="Paella dish"
                 />
-                {
-                    type === 'search' ? '' :
-                        <>
                             <div className={classes.infoBox}>
                                 <div>
                                     <p className={classes.brand}>Stussy</p>
@@ -115,8 +100,6 @@ export default function ProductElement(props) {
                                 </div>
                             </div>
                             <p style={{position: "relative", bottom: 0, left: "5%"}}>261,000원</p>
-                        </>
-                }
             </Card>
         </ProductCard>
     );

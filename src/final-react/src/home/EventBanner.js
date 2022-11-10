@@ -48,7 +48,7 @@ const EventBanner = () => {
                 <p>나는 아무말도 못하고 그댈 안고서 그냥 눈물만 흘러</p>
             </List>
             <List>
-                <ProductElement type={"search"}/>
+                <ProductElement type={"big"}/>
                 <ProductElement type={"big"}/>
                 <ProductElement type={"big"}/>
                 <ProductElement type={"big"}/>
