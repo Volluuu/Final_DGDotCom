@@ -52,6 +52,22 @@ public class UserController {
     }
 
     // 이메일, 비번, 이름, 번호, 성별
+    @PostMapping("/signin")
+    public int signIn(@RequestBody UserDto dto) {
+        UserDto user = userMapper.getUserInfo(dto.getEmail());
+        int u_num = 0;
+        if (user == null) {
+            u_num = 0;
+        } else if (passwordEncoder.encode(dto.getPass()) == passwordEncoder.encode(user.getPass())) {
+            u_num = user.getU_num();
+        }
 
 
+//        return User.builder()
+//                .username(email)//아이디
+//                .password(pw)
+//                .roles(roles)
+//                .build();
+        return u_num;
+    }
 }

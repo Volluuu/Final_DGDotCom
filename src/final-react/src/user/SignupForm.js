@@ -287,8 +287,7 @@ function SignupForm(props) {
                     </div>
                     <br/>
                     <button type={"submit"}
-                            className="btn btn_join full solid
-                                " data-v-3d1bcc82=""
+                            className="btn btn_join full solid" data-v-3d1bcc82=""
                             data-v-6ca47fe2=""> 가입하기
                     </button>
                     {/*disabled*/}

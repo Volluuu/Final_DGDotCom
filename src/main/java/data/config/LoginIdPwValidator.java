@@ -17,14 +17,14 @@ public class LoginIdPwValidator implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDto user=userMapper.getUserInfo(email);
+        UserDto user = userMapper.getUserInfo(email);
 
-        if(user==null){
+        if (user == null) {
             return null;
         }
 
-        String pw=user.getPass();
-        String roles=user.getIsadmin(); // ADMIN
+        String pw = user.getPass();
+        String roles = user.getIsadmin(); // ADMIN
 
         return User.builder()
                 .username(email)//아이디
