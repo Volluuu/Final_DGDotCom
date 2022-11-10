@@ -11,5 +11,11 @@ public interface UserMapper {
     //스프링 시큐리티용 회원가입
     public void insertUser(UserDto dto);
 
+    // 이메일 중복 체크
+    public int emailCheck(String email);
+
+    // 핸드폰 중복 체크
+    public int hpCheck(String hp);
+
 
 }
