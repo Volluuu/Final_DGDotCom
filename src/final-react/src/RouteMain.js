@@ -7,7 +7,9 @@ import SignupForm from "./user/SignupForm";
 import ProductList from "./productlist/ProductList";
 import ProductDetail from "./productdetail/ProductDetail";
 import MypageRoute from "./mypage/MypageRoute";
-import AdminForm from "./admin/AdminForm";
+import AdminRoute from "./admin/AdminRoute";
+import UserInfo from "./admin/UserInfo";
+import AdminMenu from "./admin/AdminMenu";
 
 function RouteMain(props) {
   return (
@@ -58,7 +60,17 @@ function RouteMain(props) {
 
         {/* 관리자 페이지 */}
         <Route path={"/admin"}>
-          <Route path={":path"} element={<AdminForm/>}/>
+          <Route path={":path"} element={
+              <React.Fragment>
+                  <AdminRoute/>
+              </React.Fragment>
+          }>
+            <Route path={":currentPage"} element={
+                <React.Fragment>
+                    <AdminRoute/>
+                </React.Fragment>
+            }/>
+          </Route>
         </Route>
 
 

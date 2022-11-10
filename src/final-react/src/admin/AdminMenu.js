@@ -1,52 +1,15 @@
-import './userTable.css';
-import { useParams} from "react-router-dom";
+import React from 'react';
 import DashBoard from "./DashBoard";
 import UserInfo from "./UserInfo";
 import AdProduct from "./AdProduct";
 import Shipping from "./Shipping";
 import Cs from "./Cs";
 import Banner from "./Banner";
+import {useParams} from "react-router-dom";
 
-function AdminForm(props) {
+
+function AdminMenu(props) {
     const {path}=useParams();
-    // //유저리스트 호출
-    // const [userlist,setUserlist] = useState([]);
-    // // console.log(userlist);
-    //
-    // const ulist = () => {
-    //     let ulistUrl = localStorage.url + "/admin/userList";
-    //     axios.get(ulistUrl)
-    //         .then(res => {
-    //             setUserlist(res.data);
-    //             console.dir(res.data)
-    //         });
-    // }
-    //
-    // useEffect(() => {
-    //     ulist();
-    // },[]);
-
-    //페이징
-
-    // const navi = useNavigate();
-    // const {currentPage} = useParams();
-    // console.log("currentPage="+currentPage);
-    // const [data,setData] = useState('');
-    //
-    // const userpageList = () => {
-    //     let url = localStorage.url+"/admin/userpagelist?currentPage="+currentPage;
-    //     axios.get(url)
-    //         .then(res => {
-    //             setData(res.data);
-    //             console.log(res.data);
-    //         })
-    // }
-    //
-    // //currentPage 값이 변경될때마다 함수 다시 호출
-    // useEffect(()=>{
-    //     userpageList();
-    // },[currentPage])
-
     return (
         <div>
             <div id='wrapper' style={{width:'100%'}}>
@@ -67,7 +30,7 @@ function AdminForm(props) {
                     </div>
 
                     <li className='nav-item active'>
-                        <a className='nav-link' href='./dashboard' data-target="#collapseTwo"
+                        <a className='nav-link' href='/admin/dashboard' data-target="#collapseTwo"
                            aria-expanded="true" aria-controls="collapseTwo">
                             {/*회원관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>대쉬보드</span>
@@ -75,7 +38,7 @@ function AdminForm(props) {
                     </li>
 
                     <li className='nav-item active'>
-                        <a className='nav-link' href='./userinfo' data-target="#collapseTwo"
+                        <a className='nav-link' href='/admin/userinfo' data-target="#collapseTwo"
                            aria-expanded="true" aria-controls="collapseTwo">
                             {/*회원관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>회원관리</span>
@@ -83,7 +46,7 @@ function AdminForm(props) {
                     </li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="./adproduct" data-target="#collapseUtilities"
+                        <a className="nav-link collapsed" href="/admin/adproduct" data-target="#collapseUtilities"
                            aria-expanded="true" aria-controls="collapseUtilities">
                             {/*상품관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>상품관리</span>
@@ -91,7 +54,7 @@ function AdminForm(props) {
                     </li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="./shipping" data-target="#collapseUtilities"
+                        <a className="nav-link collapsed" href="/admin/shipping" data-target="#collapseUtilities"
                            aria-expanded="true" aria-controls="collapseUtilities">
                             {/*배송관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>배송관리</span>
@@ -99,7 +62,7 @@ function AdminForm(props) {
                     </li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="./banner" data-target="#collapseUtilities"
+                        <a className="nav-link collapsed" href="/admin/banner" data-target="#collapseUtilities"
                            aria-expanded="true" aria-controls="collapseUtilities">
                             {/*배너관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>배너관리</span>
@@ -107,7 +70,7 @@ function AdminForm(props) {
                     </li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="./cs" data-target="#collapseUtilities"
+                        <a className="nav-link collapsed" href="/admin/cs" data-target="#collapseUtilities"
                            aria-expanded="true" aria-controls="collapseUtilities">
                             {/*고객센터 아이콘 넣기~!~!!~!!~~!*/}
                             <span>고객센터</span>
@@ -167,11 +130,9 @@ function AdminForm(props) {
 
                     </div>
                 </div>
-
-
             </div>
         </div>
     );
 }
 
-export default AdminForm;
+export default AdminMenu;
