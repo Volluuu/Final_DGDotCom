@@ -1,9 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {NavLink, Link, useNavigate, useParams} from "react-router-dom";
+import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
-import {
-    Close, StarBorderRounded, StarRounded
-} from "@mui/icons-material";
+import {Close, StarBorderRounded, StarRounded} from "@mui/icons-material";
 
 function MypageOrder(props) {
     // const [currentPage, setCurrentPage]=useState(1);
@@ -161,7 +159,7 @@ function MypageOrder(props) {
                             <dl data-v-0c307fea="" className="tab_box">
                                 <dt data-v-0c307fea="" className="title">배송 전</dt>
                                 <dd data-v-0c307fea="" className="count"
-                                style={{color:"#FF0000"}}>
+                                    style={{color: "#FF0000"}}>
                                     {tradeData.stateCount && tradeData.stateCount[0]}
                                 </dd>
 
@@ -187,17 +185,17 @@ function MypageOrder(props) {
                                       }}>최근 2개월</Link></li>
                             <li className="month_item">
                                 <Link to="#" className="month_link"
-                                                             onClick={() => {
-                                                                 setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 4)).toISOString().slice(0, 10));
-                                                                 setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>4개월</Link>
+                                      onClick={() => {
+                                          setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 4)).toISOString().slice(0, 10));
+                                          setEndDate(today.toISOString().slice(0, 10));
+                                      }}>4개월</Link>
                             </li>
                             <li className="month_item">
                                 <Link to="#" className="month_link"
-                                                             onClick={() => {
-                                                                 setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().slice(0, 10));
-                                                                 setEndDate(today.toISOString().slice(0, 10));
-                                                             }}>6개월</Link>
+                                      onClick={() => {
+                                          setStartDate(new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().slice(0, 10));
+                                          setEndDate(today.toISOString().slice(0, 10));
+                                      }}>6개월</Link>
                             </li>
                             <li className="month_item custom"></li>
                         </ul>
@@ -316,7 +314,6 @@ function MypageOrder(props) {
                         </div>
                     </div>
                 </div>
-
                 <ul data-v-a54c4c26="" className="search_info">
                     <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">첫 주문 일자 이후부터 조회 가능합니다.</p>
                     </li>
