@@ -6,6 +6,11 @@
         from user
         where email = #{email}
     </select>
+    <select id="getUserByNum" parameterType="int" resultType="UserDto">
+        select *
+        from user
+        where u_num = #{u_num}
+    </select>
     <insert id="insertUser" parameterType="UserDto">
         insert into user
         values (null, #{email}, #{u_name}, #{pass}, #{hp}, #{addr}, #{gender}, 'USER', now(), 0, null)
