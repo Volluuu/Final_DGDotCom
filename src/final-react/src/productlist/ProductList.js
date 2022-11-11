@@ -5,16 +5,16 @@ import {InputBase} from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
+
+//칩
 import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 
 import Checkbox from '@material-ui/core/Checkbox';
@@ -27,33 +27,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-//리스트 테스트
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles3 = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
     },
 }));
 
-//리스트 테스트
-const useStyles1 = makeStyles((theme) => ({
+//칩
+const useStyles5 = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
     },
-    nested: {
-        color: 'black',
-        paddingLeft: theme.spacing(4),
+    chip: {
+        margin: theme.spacing(0.5),
     },
 }));
 
@@ -68,9 +61,10 @@ function ProductList(props) {
     const searchParams = new URLSearchParams(location.search);
     console.log(searchParams.get('categories'));
     const [productlist, setProductlist] = useState();
-    const categories = searchParams.getAll('categories') || [];
-    const brands = searchParams.getAll('brands') || [];
-    const genders = searchParams.getAll('genders') || [];
+    const categories = searchParams.getAll('categories');
+    const brands = searchParams.getAll('brands');
+    const genders = searchParams.getAll('genders');
+    const sizes = searchParams.getAll('sizes');
 
     const { currentPage } = useParams();
     console.log("proCP:" + currentPage);
@@ -78,14 +72,19 @@ function ProductList(props) {
     const productUrl = localStorage.url + "/product/";
     console.log("proUrl:" + productUrl);
 
+    const makeSearchParms = (parms) => {
+        return createSearchParams({
+            currentPage: parms?.currentPage || 1,
+            categories,
+            brands,
+            genders,
+            sizes,
+            priceOrderBy: parms?.priceOrderBy || priceOrderBy
+        })
+    }
     const getPageList = () => {
         axios.get(localStorage.url + "/product/list", {
-            params: createSearchParams({
-                currentPage: 1,
-                categories,
-                brands,
-                genders
-            })
+            params: makeSearchParms()
         }).then((res) => {
             console.log("axios 성공");
             setProductlist(res.data);
@@ -93,24 +92,19 @@ function ProductList(props) {
     };
 
     const selectCategory = (category) => {
-        if (categories.includes(category)) {
-            categories.splice(categories.findIndex((c) => c === category), 1);
+        if (categories.includes(category) || categories.includes(encodeURIComponent(category))) {
+            categories.splice(categories.findIndex((c) => c === category || c === encodeURIComponent(category)), 1);
         } else {
             categories.push(category);
         }
         navigate({
             pathname: '',
-            search: '?' + createSearchParams({
-                currentPage: 1,
-                categories,
-                brands,
-                genders
-            })
+            search: '?' + makeSearchParms()
         });
     };
 
     const checkCategory = (category) => {
-        return categories.includes(category);
+        return categories.includes(category) || categories.includes(encodeURIComponent(category));
     };
 
     const selectBrand = (brand) => {
@@ -121,12 +115,7 @@ function ProductList(props) {
         }
         navigate({
             pathname: '',
-            search: '?' + createSearchParams({
-                currentPage: 1,
-                categories,
-                brands,
-                genders
-            })
+            search: '?' + makeSearchParms()
         });
     };
 
@@ -142,17 +131,28 @@ function ProductList(props) {
         }
         navigate({
             pathname: '',
-            search: '?' + createSearchParams({
-                currentPage: 1,
-                categories,
-                brands,
-                genders
-            })
+            search: '?' + makeSearchParms()
         });
     };
 
     const checkGender = (gender) => {
         return genders.includes(gender);
+    };
+
+    const selectSize = (size) => {
+        if (sizes.includes(size)) {
+            sizes.splice(sizes.findIndex((c) => c === size), 1);
+        } else {
+            sizes.push(size);
+        }
+        navigate({
+            pathname: '',
+            search: '?' + makeSearchParms()
+        });
+    };
+
+    const checkSize = (size) => {
+        return sizes.includes(size);
     };
 
     useEffect(() => {
@@ -172,12 +172,18 @@ function ProductList(props) {
     // }, [open]);
 
     //select
-    const classes = useStyles();
-    const [age, setAge] = React.useState('');
+    const classes = useStyles3();
+    const [priceOrderBy, setPriceOrderBy] = React.useState(searchParams.get('priceOrderBy'));
     const [open, setOpen] = React.useState(false);
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setPriceOrderBy(event.target.value);
+        navigate({
+            pathname: '',
+            search: '?' + makeSearchParms({
+                priceOrderBy: event.target.value
+            })
+        });
     };
 
     const handleClose = () => {
@@ -188,20 +194,16 @@ function ProductList(props) {
         setOpen(true);
     };
 
-    //리스트 테스트
-    const classes1 = useStyles();
-    const [open1, setOpen1] = React.useState(true);
-    const [open2, setOpen2] = React.useState(true);
-    const [open3, setOpen3] = React.useState(true);
 
-    const handleClick = () => {
-        setOpen1(!open1);
-    };
-    const handleClick2 = () => {
-        setOpen2(!open2);
-    };
-    const handleClick3 = () => {
-        setOpen3(!open3);
+    //칩
+    const chipclasses = useStyles5();
+    const [chipData, setChipData] = React.useState([
+        { key: 0, label: 'Angular' },
+        { key: 1, label: 'jQuery' },
+    ]);
+
+    const handleDelete5 = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     };
 
     return (
@@ -229,16 +231,37 @@ function ProductList(props) {
                         open={open}
                         onClose={handleClose}
                         onOpen={handleOpen}
-                        value={age}
+                        value={priceOrderBy}
                         onChange={handleChange}
                     >
                         <MenuItem value="">
                         </MenuItem>
-                        <MenuItem value={20}>가격높은순</MenuItem>
-                        <MenuItem value={30}>가격낮은순</MenuItem>
+                        <MenuItem value="desc">가격높은순</MenuItem>
+                        <MenuItem value="asc">가격낮은순</MenuItem>
                     </Select>
                 </FormControl>
+            </div>
 
+
+            <div style={{marginLeft:'335px',width:'200px'}}>
+                <Paper component="ul" className={chipclasses.root}>
+                    {chipData.map((data) => {
+                        let icon;
+
+                        if (data.label === 'React') {
+                            icon = <TagFacesIcon />;
+                        }
+                        return (
+                            <li key={data.key}>
+                                <Chip
+                                    label={data.label}
+                                    onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    className={chipclasses.chip}
+                                />
+                            </li>
+                        );
+                    })}
+                </Paper>
             </div>
 
 
@@ -252,17 +275,17 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('jacket')}} checked={checkCategory('jacket')} />} label="자켓"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('hood')}} checked={checkCategory('hood')} />} label="후드"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sweatshirt')}} checked={checkCategory('sweatshirt')} />} label="스웨트셔츠"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('neat')}} checked={checkCategory('neat')} />} label="니트웨어"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('longtshirt')}} checked={checkCategory('longtshirt')} />} label="긴팔 티셔츠"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('tshirt')}} checked={checkCategory('tshirt')} />} label="반팔 티셔츠"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('shirt')}} checked={checkCategory('shirt')} />} label="셔츠"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('padding')}} checked={checkCategory('padding')} />} label="패딩"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('coat')}} checked={checkCategory('cort')} />} label="코트"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('pants')}} checked={checkCategory('pants')} />} label="바지"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('shortpants')}} checked={checkCategory('shortpants')} />} label="반바지"/><br/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('자켓')}} checked={checkCategory('자켓')} />} label="자켓"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('후드')}} checked={checkCategory('후드')} />} label="후드"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스웨트 셔츠')}} checked={checkCategory('스웨트 셔츠')} />} label="스웨트 셔츠"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('니트 웨어')}} checked={checkCategory('니트 웨어')} />} label="니트 웨어"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('긴팔 티셔츠')}} checked={checkCategory('긴팔 티셔츠')} />} label="긴팔 티셔츠"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('반팔 티셔츠')}} checked={checkCategory('반팔 티셔츠')} />} label="반팔 티셔츠"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('셔츠')}} checked={checkCategory('셔츠')} />} label="셔츠"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('패딩')}} checked={checkCategory('패딩')} />} label="패딩"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('코트')}} checked={checkCategory('코트')} />} label="코트"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('바지')}} checked={checkCategory('바지')} />} label="바지"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('반바지')}} checked={checkCategory('반바지')} />} label="반바지"/><br/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -273,11 +296,11 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sneakers')}} checked={checkCategory('sneakers')} />} label="스니커즈"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('loafer')}} checked={checkCategory('loafer')} />} label="로퍼/플랫"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('sandal')}} checked={checkCategory('sandal')} />} label="샌들/슬리퍼"/><br/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스니커즈')}} checked={checkCategory('스니커즈')} />} label="스니커즈"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('로퍼/플랫')}} checked={checkCategory('로퍼/플랫')} />} label="로퍼/플랫"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('샌들/슬리퍼')}} checked={checkCategory('샌들/슬리퍼')} />} label="샌들/슬리퍼"/><br/><br/>
                         </Typography>
-                        </AccordionDetails>
+                    </AccordionDetails>
                 </Accordion>
 
                 <Accordion>
@@ -286,14 +309,14 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('watch')}} checked={checkCategory('watch')} />} label="시계"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('bag')}} checked={checkCategory('bag')} />} label="가방"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('leather')}} checked={checkCategory('leather')} />} label="스몰레더"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('jewelry')}} checked={checkCategory('jewelry')} />} label="주얼리"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('cap')}} checked={checkCategory('cap')} />} label="모자"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('scarf')}} checked={checkCategory('scarf')} />} label="스카프"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('belt')}} checked={checkCategory('belt')} />} label="벨트"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('etc')}} checked={checkCategory('etc')} />} label="기타"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('시계')}} checked={checkCategory('시계')} />} label="시계"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('가방')}} checked={checkCategory('가방')} />} label="가방"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스몰 레더')}} checked={checkCategory('스몰 레더')} />} label="스몰 레더"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('쥬얼리')}} checked={checkCategory('쥬얼리')} />} label="쥬얼리"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('모자')}} checked={checkCategory('모자')} />} label="모자"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스카프')}} checked={checkCategory('스카프')} />} label="스카프"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('벨트')}} checked={checkCategory('벨트')} />} label="벨트"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('기타')}} checked={checkCategory('기타')} />} label="기타"/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -308,7 +331,6 @@ function ProductList(props) {
                         <Typography>
                             <FormControlLabel control={<Checkbox onClick={() => {selectBrand('A.P.C.')}} checked={checkBrand('A.P.C.')} />} label="A.P.C."/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectBrand('Burberry')}} checked={checkBrand('Burberry')} />} label="Burberry"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectBrand('Creed')}} checked={checkBrand('Creed')} />} label="Creed"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectBrand('Gucci')}} checked={checkBrand('Gucci')} />} label="Gucci"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectBrand('Montblanc')}} checked={checkBrand('Montblanc')} />} label="Montblanc"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectBrand('Nike')}} checked={checkBrand('Nike')} />} label="Nike"/><br/>
@@ -328,6 +350,7 @@ function ProductList(props) {
                         <Typography>
                             <FormControlLabel control={<Checkbox onClick={() => {selectGender('M')}} checked={checkGender('M')}/>} label="남자"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectGender('F')}} checked={checkGender('F')}/>} label="여자"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectGender('U')}} checked={checkGender('U')}/>} label="공용"/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -338,10 +361,11 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox/>} label="S"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="M"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="L"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="XL"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('S')}} checked={checkSize('S')} />} label="S"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('M')}} checked={checkSize('M')} />} label="M"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('L')}} checked={checkSize('L')} />} label="L"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('XL')}} checked={checkSize('XL')} />} label="XL"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('F')}} checked={checkSize('F')} />} label="F"/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -352,12 +376,12 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox/>} label="230"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="240"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="250"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="260"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="270"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="280"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('230')}} checked={checkSize('230')} />} label="230"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('240')}} checked={checkSize('240')} />} label="240"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('250')}} checked={checkSize('250')} />} label="250"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('260')}} checked={checkSize('260')} />} label="260"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('270')}} checked={checkSize('270')} />} label="270"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('280')}} checked={checkSize('280')} />} label="280"/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -368,7 +392,7 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox/>} label="10만원 이하"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('S')}} checked={checkSize('230')} />} label="10만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="10만원 - 30만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="30만원 - 50만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="50만원 이상"/><br/>
