@@ -17,9 +17,6 @@ function DetailInfo(props) {
   const u_num = sessionStorage.u_num;
   console.log("u_num:" + Number(u_num));
 
-  //size
-  // const [size, setSize] = useState("");
-
   //amount(수량)
   const [amount, setAmount] = useState(1);
   const [cnt, setCnt] = useState(0);

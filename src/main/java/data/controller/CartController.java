@@ -1,7 +1,6 @@
 package data.controller;
 
 import data.dto.CartDto;
-import data.dto.ProductDto;
 import data.mapper.CartMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import java.util.Vector;
 @RestController
 @CrossOrigin
 @RequestMapping("/cart")
-public class Cartcontroller {
+public class CartController {
 
     @Autowired
     CartMapper cartMapper;
