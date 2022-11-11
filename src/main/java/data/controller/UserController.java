@@ -1,12 +1,16 @@
 package data.controller;
 
+import data.config.LoginIdPwValidator;
 import data.config.RegisterMail;
 import data.dto.UserDto;
 import data.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.OutputStream;
 import java.util.Map;
 
 @RestController
@@ -21,6 +25,9 @@ public class UserController {
     RegisterMail registerMail;
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    LoginIdPwValidator loginIdPwValidator;
 
     // 가입
     @PostMapping("/signup")
@@ -51,23 +58,33 @@ public class UserController {
         return userMapper.hpCheck(hp);
     }
 
-    // 이메일, 비번, 이름, 번호, 성별
+
     @PostMapping("/signin")
     public int signIn(@RequestBody UserDto dto) {
-        UserDto user = userMapper.getUserInfo(dto.getEmail());
-        int u_num = 0;
+        User user = (User) loginIdPwValidator.loadUserByUsername(dto.getEmail());
+
         if (user == null) {
-            u_num = 0;
-        } else if (passwordEncoder.encode(dto.getPass()) == passwordEncoder.encode(user.getPass())) {
-            u_num = user.getU_num();
+            return 0; // 이메일에 해당하는 유저가 없을 경우 0 반환
+        } else if (!passwordEncoder.matches(dto.getPass(), user.getPassword())) {
+            return -1; // 이메일에 해당하는 비밀번호가 틀릴 경우 -1 반환
+        } else {
+            // 이메일에 해당하는 비밀번호가 맞을 경우 u_num 반환
+            return userMapper.getUserInfo(user.getUsername()).getU_num();
+        }
+    }
+
+    @PostMapping("/logout")
+    public String logout(@RequestBody Map<String, Integer> map) {
+        int u_num = (int) map.get("u_num");
+        String email = userMapper.getUserByNum(u_num).getEmail();
+        User user = (User) loginIdPwValidator.loadUserByUsername(email);
+        if (user == null) {
+            return "에러";
+        } else {
+            return "로그아웃 성공";
         }
 
-
-//        return User.builder()
-//                .username(email)//아이디
-//                .password(pw)
-//                .roles(roles)
-//                .build();
-        return u_num;
     }
+
+    // 이메일, 비번, 이름, 번호, 성별 수정
 }

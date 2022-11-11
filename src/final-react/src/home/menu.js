@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {NavLink, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
-import { Announcement } from "@material-ui/icons";
+import {Announcement} from "@material-ui/icons";
 import SearchModalBefore from "./SearchModalBefore";
+import axios from "axios";
 
 const Menubar = styled.div`
   padding-top: 10px;
@@ -60,39 +61,59 @@ const AnnouncementBar = styled.div`
 `;
 
 function Menu(props) {
-  const [u_name, setU_name] = useState("");
+    const [loginok, setLoginok] = useState("");
+    const navi = useNavigate();
 
-  useEffect(() => {
-    setU_name(sessionStorage.u_name);
-  }, []);
+    useEffect(() => {
+        setLoginok(sessionStorage.loginok);
+    }, []);
 
-  return (
-    <>
-      <Menubar>
-        <Category to={"/user/login"} className={"up"}>
-          로그인
-        </Category>
-        <Category to={"/user/signup"} className={"up"}>
-          회원가입
-        </Category>
-        <Category to={"/product/detail/1703"} className={"up"}>
-          상품 상세
-        </Category>
-        <Category to={"/admin/dashboard"} className={"up"}>
-          관리자페이지
-        </Category>
+    const logout = () => {
+        let logoutUrl = process.env.REACT_APP_URL + "/user/logout";
+        axios.post(logoutUrl, {u_num: sessionStorage.u_num})
+            .then(res => {
+                alert(res.data);
+                sessionStorage.removeItem("loginok");
+                sessionStorage.removeItem("u_num");
+                window.location.reload();
+            })
 
-        {/*<button type={'button'} onClick={()=>{*/}
-        {/*    sessionStorage.removeItem("u_name");*/}
-        {/*    sessionStorage.u_name="세션이름 바꾸기";*/}
-        {/*}}>세션 u_name 바꾸기</button>*/}
-        {/* 세션 바꿔도 바로 안 바뀜 */}
-      </Menubar>
-      <Searchbar>
-        <NavLink to={"/"}>
-          <b style={{ fontSize: "30px" }}>동건닷컴</b>
-        </NavLink>
-        <span style={{ marginRight: "20px" }}>
+    }
+
+    return (
+        <>
+            <Menubar>
+                {
+                    loginok === "yes" ?
+                        <Category to={"/"} className={"up"} onClick={logout}>
+                            로그아웃
+                        </Category> :
+                        <Category to={"/user/login"} className={"up"}>
+                            로그인
+                        </Category>
+                }
+
+                <Category to={"/user/signup"} className={"up"}>
+                    회원가입
+                </Category>
+                <Category to={"/product/detail/1703"} className={"up"}>
+                    상품 상세
+                </Category>
+                <Category to={"/admin/dashboard"} className={"up"}>
+                    관리자페이지
+                </Category>
+
+                {/*<button type={'button'} onClick={()=>{*/}
+                {/*    sessionStorage.removeItem("u_name");*/}
+                {/*    sessionStorage.u_name="세션이름 바꾸기";*/}
+                {/*}}>세션 u_name 바꾸기</button>*/}
+                {/* 세션 바꿔도 바로 안 바뀜 */}
+            </Menubar>
+            <Searchbar>
+                <NavLink to={"/"}>
+                    <b style={{fontSize: "30px"}}>동건닷컴</b>
+                </NavLink>
+                <span style={{marginRight: "20px"}}>
           <Category to={"/mypage/cart"} className={"down"}>
             장바구니
           </Category>
@@ -102,13 +123,12 @@ function Menu(props) {
           <Category to={"/mypage/all"} className={"down"}>
             마이페이지
           </Category>
-          <SearchModalBefore />
-          <TransitionsModal />
+          <TransitionsModal/>
         </span>
-      </Searchbar>
-      <AnnouncementBar>공지사항 공지사항 칠지사항 빵지사항</AnnouncementBar>
-    </>
-  );
+            </Searchbar>
+            <AnnouncementBar>공지사항 공지사항 칠지사항 빵지사항</AnnouncementBar>
+        </>
+    );
 }
 
 export default Menu;
