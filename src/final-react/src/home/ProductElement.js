@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import {Link} from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 const randomColor = ["#FEBEBE", "#FFEFD5", "#F0FFF0", "#CDECFA", "#CCE1FF", "#CEBEE1", "#DCFFDC", "#FAFAD2", "#dcdcdc"];
 
@@ -16,8 +17,8 @@ const ProductCard = styled(Link)`
     transform: scale(1.05);
   }
 `
-export default function ProductElement(props) {
-    const {type} = props;
+function ProductElement(props) {
+    const {type , num} = props;
     //makeStyles : css파일을 js안에 선언한다고 생각하고 사용. 변수에 할당해서 사용
     //             JSX문법안에서 className={변수명.root}와 같이 사용
     const useBig = makeStyles((theme) => ({
@@ -37,7 +38,7 @@ export default function ProductElement(props) {
         infoBox    : {
             fontSize   : "16px",
             paddingLeft: "16px",
-
+            width:"300px",
         },
         brand      : {
             textDecoration: "underline",
@@ -66,6 +67,7 @@ export default function ProductElement(props) {
         infoBox    : { //카드 내 정보를 출력하는 부분의 픽셀들
             fontSize   : "14.4px", // 글자크기
             paddingLeft: "14.4px", // 패딩
+            width:"270px",
 
         },
         brand      : { // 브랜드 글자 표시하는 객체
@@ -78,29 +80,39 @@ export default function ProductElement(props) {
         },
 
     }));
-
     //새로운 클래스를 만들었을 때 변수에 선언을 먼저 해준 뒤 classes라는 변수에 다시 할당하여 사용
     //리액트의 Hook은 반복문, 조건문(이항연산자) 내에서 사용불가
     const big = useBig(); const small = useSmall();
     const classes = type==='big'? big : small;
-    console.log(type);
-   // const classes = useBig();
+
+    //**********************************************************************************
+    const [elt, setElt] = useState('');
+    const updateData = () => {
+        const res = axios.get(`http://localhost:9003/list/card?num=${num}`).then(res => {
+                setElt(res.data);
+        });
+    }
+    useEffect(() => {
+        updateData();
+    }, []);
+
     return (
-        <ProductCard to={"/login"}>
+        <ProductCard to={`/product/detail/${elt.p_num}`}>
             <Card className={classes.root}>
                 <CardMedia
                     className={classes.media}
-                    image="http://localhost:9003/product/20221104024539930.PNG"
+                    image={`http://localhost:9003/product/${elt.photo}`}
                     title="Paella dish"
                 />
                             <div className={classes.infoBox}>
                                 <div>
-                                    <p className={classes.brand}>Stussy</p>
-                                    <p className={classes.productname}>Stussy Stock Sweater Black</p>
+                                    <p className={classes.brand}>{elt.brand}</p>
+                                    <p className={classes.productname}>{elt.p_name}</p>
                                 </div>
                             </div>
-                            <p style={{position: "relative", bottom: 0, left: "5%"}}>261,000원</p>
+                            <p style={{position: "relative", bottom: 0, left: "5%"}}>{elt.price}</p>
             </Card>
         </ProductCard>
     );
 }
+export default React.memo(ProductElement);

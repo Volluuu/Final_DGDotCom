@@ -51,7 +51,7 @@ export default function TransitionsModal() {
             e.preventDefault();
             setOpen(false);
             setWord('');
-            navigate("/product/list/1");
+            navigate("/product/list/");
         },
         [],
     );

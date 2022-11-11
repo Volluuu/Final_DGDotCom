@@ -48,10 +48,10 @@ const EventBanner = () => {
                 <p>나는 아무말도 못하고 그댈 안고서 그냥 눈물만 흘러</p>
             </List>
             <List>
-                <ProductElement type={"big"}/>
-                <ProductElement type={"big"}/>
-                <ProductElement type={"big"}/>
-                <ProductElement type={"big"}/>
+                <ProductElement type={"big"} num={12}/>
+                <ProductElement type={"big"} num={456}/>
+                <ProductElement type={"big"} num={789}/>
+                <ProductElement type={"big"} num={33}/>
             </List>
         </div>
     );
