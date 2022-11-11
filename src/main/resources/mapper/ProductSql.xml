@@ -27,7 +27,21 @@
                 #{gender}
             </foreach>
         </if>
-        order by p_num desc limit #{startNum},#{perPage}
+        <if test="sizes != null and sizes.length > 0">
+            and p_num in (
+                select p_num from inven where p_size in
+                <foreach collection="sizes" item="size" index="index" separator=", " open="(" close=")">
+                    #{size}
+                </foreach>
+            )
+        </if>
+        <if test="priceOrderBy != null and priceOrderBy == 'desc'">
+            order by price desc
+        </if>
+        <if test="priceOrderBy != null and priceOrderBy == 'asc'">
+            order by price asc
+        </if>
+        limit #{startNum},#{perPage}
     </select>
     <!-- p_num으로 데이터 얻어오기-->
     <select id="getProduct" parameterType="int" resultType="ProductDto">
