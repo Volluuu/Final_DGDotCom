@@ -70,9 +70,9 @@ function Menu(props) {
 
     const logout = () => {
         let logoutUrl = process.env.REACT_APP_URL + "/user/logout";
-        axios.post(logoutUrl, {u_num: sessionStorage.u_num})
+        axios.get(logoutUrl)
             .then(res => {
-                alert(res.data);
+                console.log(res.data);
                 sessionStorage.removeItem("loginok");
                 sessionStorage.removeItem("u_num");
                 window.location.reload();

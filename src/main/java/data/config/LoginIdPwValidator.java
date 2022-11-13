@@ -20,12 +20,9 @@ public class LoginIdPwValidator implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDto user = userMapper.getUserInfo(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDto user = userMapper.getUserInfo(username);
 
         if (user == null) {
             return null;

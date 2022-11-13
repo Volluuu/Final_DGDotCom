@@ -5,11 +5,16 @@ import data.config.RegisterMail;
 import data.dto.UserDto;
 import data.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -59,31 +64,24 @@ public class UserController {
     }
 
 
-    @PostMapping("/signin")
-    public int signIn(@RequestBody UserDto dto) {
-        User user = (User) loginIdPwValidator.loadUserByUsername(dto.getEmail());
-
-        if (user == null) {
-            return 0; // 이메일에 해당하는 유저가 없을 경우 0 반환
-        } else if (!passwordEncoder.matches(dto.getPass(), user.getPassword())) {
-            return -1; // 이메일에 해당하는 비밀번호가 틀릴 경우 -1 반환
-        } else {
-            // 이메일에 해당하는 비밀번호가 맞을 경우 u_num 반환
-            return userMapper.getUserInfo(user.getUsername()).getU_num();
-        }
-    }
+//    @PostMapping("/signin")
+//    public int signIn(@RequestBody UserDto dto) {
+//        User user = (User) loginIdPwValidator.loadUserByUsername(dto.getEmail());
+//
+//        if (user == null) {
+//            return 0; // 이메일에 해당하는 유저가 없을 경우 0 반환
+//        } else if (!passwordEncoder.matches(dto.getPass(), user.getPassword())) {
+//            return -1; // 이메일에 해당하는 비밀번호가 틀릴 경우 -1 반환
+//        } else {
+//            // 이메일에 해당하는 비밀번호가 맞을 경우 u_num 반환
+//            return userMapper.getUserInfo(user.getUsername()).getU_num();
+//        }
+//    }
 
     @PostMapping("/logout")
-    public String logout(@RequestBody Map<String, Integer> map) {
-        int u_num = (int) map.get("u_num");
-        String email = userMapper.getUserByNum(u_num).getEmail();
-        User user = (User) loginIdPwValidator.loadUserByUsername(email);
-        if (user == null) {
-            return "에러";
-        } else {
-            return "로그아웃 성공";
-        }
-
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+        return "로그아웃";
     }
 
     // 이메일, 비번, 이름, 번호, 성별 수정

@@ -18,26 +18,37 @@ function LoginForm(props) {
         e.preventDefault();
         let signinUrl = process.env.REACT_APP_URL + "/user/signin";
 
-        axios.post(signinUrl, {email, pass})
+        axios.post(signinUrl,
+            {"username": email, "password": pass},
+            {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .then(res => {
-                if (res.data === 0) {
-                    alert("아이디를 다시 확인해주세요.");
-                    setEmail('');
-                    setPass('');
-                    document.getElementById("email").focus();
-                    sessionStorage.removeItem("loginok");
-                } else if (res.data === -1) {
-                    alert("비밀번호가 틀렸습니다.");
-                    setPass('');
-                    document.getElementById("pass").focus();
-                    sessionStorage.removeItem("loginok");
-                } else {
-                    alert("로그인 성공");
-                    navi(-1);
-                    sessionStorage.u_num = res.data;
-                    sessionStorage.loginok = "yes";
-                }
-            })
+                console.log("이메일 전송 완료");
+                console.dir(res);
+                sessionStorage.u_num = 1;
+                sessionStorage.loginok = "yes";
+                navi(-1);
+                // navi("/");
+                // if (res.data === 0) {
+                //     alert("아이디를 다시 확인해주세요.");
+                //     setEmail('');
+                //     setPass('');
+                //     document.getElementById("email").focus();
+                //     sessionStorage.removeItem("loginok");
+                // } else if (res.data === -1) {
+                //     alert("비밀번호가 틀렸습니다.");
+                //     setPass('');
+                //     document.getElementById("pass").focus();
+                //     sessionStorage.removeItem("loginok");
+                // } else {
+                //     alert("로그인 성공");
+                //     navi(-1);
+                //     sessionStorage.u_num = res.data;
+                //     sessionStorage.loginok = "yes";
+                // }
+            }).catch(res => {
+            alert("로그인 실패");
+            console.dir(res);
+        })
     }
 
     const onLoginBtnState = () => {
@@ -109,7 +120,7 @@ function LoginForm(props) {
                          className="input_box">
                         <h3 className="input_title" data-v-6c561060="" data-v-b02d33c2="">비밀번호</h3>
                         <div className="input_item" data-v-6c561060="">
-                            <input type="password" placeholder="" autoComplete="off" className="input_txt"
+                            <input type="password" placeholder="" autoComplete="off" className="input_txt" name="pass"
                                    data-v-6c561060="" value={pass} id="pass"
                                    onChange={(e) => {
                                        setPass(e.target.value);
