@@ -23,7 +23,6 @@ public class MyLoginFailureHandler implements AuthenticationFailureHandler {
         System.out.println("실패");
         exception.printStackTrace();
         writePrintErrorResponse(response, exception);
-        response.sendRedirect("/admin");
 
     }
 

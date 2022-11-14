@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -62,15 +63,16 @@ public class SecurityConfig {
 //                .defaultSuccessUrl("/")
                 .successHandler(successHandler())
                 .failureHandler(new MyLoginFailureHandler())
-                .permitAll()
-                .and()
-                .logout()
-//                .failureUrl("/login?error=true") // 로그인 실패 시 방문 페이지
-//                .failureHandler(AuthenticationFailureHandler)
-//                .logout(); // 폼 방식 로그아웃을 사용할 것임
-                .logoutUrl("/user/logout")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true); // 세션 날리기
+                .permitAll();
+//                .and()
+//                .logout()// 폼 방식 로그아웃을 사용할 것임
+////                .logoutSuccessUrl("/user/logout")
+////                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+////                .failureUrl("/login?error=true") // 로그인 실패 시 방문 페이지
+////                .failureHandler(AuthenticationFailureHandler)
+//                .logoutUrl("/user/logout")
+//                .invalidateHttpSession(true) // 세션 날리기
+//                .deleteCookies("JSESSIONID");
 
 //                .logoutSuccessHandler(LogoutSuccessHandler);
         return http.build();

@@ -60,8 +60,6 @@ public class MyLoginSuccessHandler extends SavedRequestAwareAuthenticationSucces
 //        System.out.println(ip);
         System.out.println("성공");
         HttpSession session = request.getSession();
-        session.setAttribute("u_num", 1);
-        session.getAttribute("u_num");
         if (session != null) {
             String redirectUrl = (String) session.getAttribute("prevPage");
             if (redirectUrl != null) {

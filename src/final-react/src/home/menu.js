@@ -68,14 +68,19 @@ function Menu(props) {
         setLoginok(sessionStorage.loginok);
     }, []);
 
-    const logout = () => {
+    const logout = (e) => {
+        e.preventDefault();
         let logoutUrl = process.env.REACT_APP_URL + "/user/logout";
-        axios.get(logoutUrl)
+        axios.post(logoutUrl)
             .then(res => {
                 console.log(res.data);
                 sessionStorage.removeItem("loginok");
                 sessionStorage.removeItem("u_num");
                 window.location.reload();
+                console.log("로그아웃 성공");
+            })
+            .catch(res => {
+                console.log("에러");
             })
 
     }
@@ -85,9 +90,11 @@ function Menu(props) {
             <Menubar>
                 {
                     loginok === "yes" ?
-                        <Category to={"/"} className={"up"} onClick={logout}>
-                            로그아웃
-                        </Category> :
+                        <form onSubmit={logout}>
+                            <input type="hidden" name="_csrf"/>
+                            <button type="submit">로그아웃</button>
+                        </form>
+                        :
                         <Category to={"/user/login"} className={"up"}>
                             로그인
                         </Category>
