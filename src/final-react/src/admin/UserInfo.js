@@ -30,7 +30,7 @@ function UserInfo({path}) {
                 <h5>총 {data.totalCount}명</h5>
                 <table className='table-hj'>
                     <thead className='thead-hj'>
-                    <tr className='tr-hj'>
+                    <tr className='tr-hj' align='center'>
                         <th className='th-hj'>번호</th>
                         <th className='th-hj'>이메일</th>
                         <th className='th-hj'>이름</th>
@@ -46,7 +46,7 @@ function UserInfo({path}) {
                     {
                         data.ulist &&
                         data.ulist.map((r,idx) =>
-                            <tr key={idx} className='tr-hj'>
+                            <tr key={idx} className='tr-hj' align='center'>
                                 <td className='td-hj'>{data.no-idx}</td>
                                 <td className='td-hj'>{r.email}</td>
                                 <td className='td-hj'>{r.u_name}</td>

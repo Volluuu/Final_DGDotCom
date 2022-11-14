@@ -13,6 +13,9 @@ public class AdminDto {
     public int i_num;
     public int cs_num;
     public int b_num;
+    public int amount;
+    public int sellamount;
+    public String p_size;
     public String b_photo; //배너이미지 (banner table)
     public String post;  //결제완료인지 결제대기중인지 확인하기위한 컬럼 (orderlist table)
     public String brand; //파이그래프에 넣기 위한 데이터 얻기(product table)

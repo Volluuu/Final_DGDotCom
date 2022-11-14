@@ -4,51 +4,83 @@
 
     <!--=================================유저시작=============================================-->
 
-<!--    총 유저수-->
+    <!--    총 유저수-->
     <select id="TotalUser" resultType="int">
-        select count(*) from user
+        select count(*)
+        from user
     </select>
-<!--회원정보-->
+    <!--회원정보-->
 
     <select id="AdminGetAllUser" resultType="UserDto">
-        select * from user
+        select *
+        from user
     </select>
 
-<!--회원삭제-->
+    <!--회원삭제-->
     <delete id="DeleteUser" parameterType="int">
-        delete from user where user_num = #{u_num}
+        delete
+        from user
+        where u_num = #{u_num}
     </delete>
 
-<!--회원 페이징처리-->
+    <!--회원 페이징처리-->
     <select id="AdminUserPaging" parameterType="Map" resultType="UserDto">
-        select * from user order by u_num desc limit #{startnum}, #{perpage}
+        select *
+        from user
+        order by u_num desc limit #{startnum}, #{perpage}
     </select>
     <!--=================================상품시작=============================================-->
-<!--총 상품수-->
-    <select id="TotalProduct" parameterType="int" resultType="ProductDto">
-        select count(*) from product
+    <!--총 상품수-->
+    <select id="TotalProduct" resultType="int">
+        select count(*)
+        from product
     </select>
 
-<!--상품 정보-->
+    <!-- 상품-->
+    <select id="GetAllProduct" resultType="int">
+        select *
+        from product
+    </select>
+
+    <select id="ProductPaging" parameterType="Map" resultType="JoinDto">
+        SELECT product.p_num,
+               product.category,
+               product.photo,
+               product.brand,
+               product.p_name,
+               product.price,
+               inven.sellamount,
+               inven.p_size,
+               inven.amount
+        from product
+                 left join inven on product.p_num = inven.p_num
+        order by product.p_num asc limit #{startnum},#{perpage}
+    </select>
+
+    <!--상품 정보-->
     <select id="ProductNum" parameterType="int" resultType="ProductDto">
-        select * from product where p_num = #{p_num}
+        select *
+        from product
+        where p_num = #{p_num}
     </select>
 
-<!--상품 추가-->
+    <!--상품 추가-->
     <insert id="InsertProduct" parameterType="ProductDto">
         insert into product (category, photo, brand, gender, p_name, price, discount)
         values (#{category}, #{photo}, #{brand}, #{gender}, #{p_name}, #{price}, #{discount})
     </insert>
 
-<!--상품 삭제-->
+    <!--상품 삭제-->
     <delete id="DeleteProduct" parameterType="int">
-        delete from product where p_num = #{p_num}
+        delete
+        from product
+        where p_num = #{p_num}
     </delete>
 
-<!--상품 업데이트-->
+    <!--상품 업데이트-->
     <update id="UpdateProduct" parameterType="int">
         update product set category=#{category}, brand=#{brand}, gender=#{gender}, p_name=#{p_name},
-                           price=#{price}, discount=#{discount}
+        price=#{price}, discount=#{discount}
         <if test="photo != null">
             ,photo=#{photo}
         </if>
@@ -56,26 +88,31 @@
     </update>
 
     <!--=================================배너시작=============================================-->
-<!--배너리스트-->
+    <!--배너리스트-->
     <select id="getBannerList" resultType="AdminDto">
         select *
         from banner
         order by b_num asc
     </select>
 
-<!--배너업로드-->
+    <!--배너업로드-->
     <insert id="InsertBanner" parameterType="AdminDto">
-        insert into banner (b_photo) values (#{b_photo})
+        insert into banner (b_photo)
+        values (#{b_photo})
     </insert>
 
-<!--배너삭제-->
+    <!--배너삭제-->
     <delete id="DeleteBanner" parameterType="int">
-        delete from banner where b_num = #{b_num}
+        delete
+        from banner
+        where b_num = #{b_num}
     </delete>
 
-<!--배너 업데이트-->
+    <!--배너 업데이트-->
     <update id="UpdateBanner" parameterType="int">
-        update banner set b_photo = #{b_photo} where b_num = #{b_num}
+        update banner
+        set b_photo = #{b_photo}
+        where b_num = #{b_num}
     </update>
 
 </mapper>

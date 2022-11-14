@@ -23,6 +23,9 @@ public class JoinDto {
     private String brand;
     private String gender;
     private String p_name;
+    private String p_size;
+    private int amount;
+    private int sellamount;
     private int price;
     private int discount;
     private int readcount;
