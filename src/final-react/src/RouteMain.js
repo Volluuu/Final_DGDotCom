@@ -43,7 +43,8 @@ function RouteMain(props) {
 
         {/* 상품 관련 (리스트, 상세페이지)*/}
         <Route path={"/product"}>
-          <Route path={"list/:currentPage"} element={
+          {/* <Route path={"list/:currentPage"} element={ */}
+          <Route path={"list"} element={
             <React.Fragment>
                   <Menu/>
               <ProductList/>

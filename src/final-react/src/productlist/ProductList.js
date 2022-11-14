@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import {random} from 'lodash'
 import { Link, useNavigate, useParams, useLocation, createSearchParams } from "react-router-dom";
 import {InputBase} from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 
 //칩
 import Chip from '@material-ui/core/Chip';
@@ -26,7 +29,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import styled from "styled-components";
 
 const useStyles3 = makeStyles((theme) => ({
     formControl: {
@@ -41,17 +44,55 @@ const useStyles5 = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        listStyle: 'none',
-        padding: theme.spacing(0.5),
-        margin: 0,
-    },
-    chip: {
-        margin: theme.spacing(0.5),
+        '& > *': {
+            margin: theme.spacing(0.5),
+        },
     },
 }));
 
+const ProductCard = styled(Link)`
+  margin: 0 auto;
+  margin-bottom: 20px;
+  transition: all 0.05s linear;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`
 
 function ProductList(props) {
+    const useBig = makeStyles((theme) => ({
+        root       : {
+            display : "inline-block",
+            width   : 300,
+            height  : 440,
+            margin  : "16px",
+        },
+        media      : {
+            height         : 300,
+            width          : 300,
+            paddingTop     : '56.25%', // 16:9
+            // backgroundColor: "#DDFFF6",
+        },
+        infoBox    : {
+            fontSize   : "16px",
+            paddingLeft: "16px",
+            width:"300px",
+        },
+        brand      : {
+            textDecoration: "underline",
+            marginBottom  : "3px",
+        },
+        productname: {
+            fontSize  : "20px",
+            lineHeight: "22px",
+        },
+    
+    }));
+    const big = useBig();
+    const randomColor = () => {
+        return ["#FEBEBE", "#FFEFD5", "#F0FFF0", "#CDECFA", "#CCE1FF", "#CEBEE1", "#DCFFDC", "#FAFAD2", "#dcdcdc"][random(0, 8)];
+    };
     console.log('다시 렌더링')
 
     localStorage.url = process.env.REACT_APP_URL;
@@ -59,7 +100,6 @@ function ProductList(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
-    console.log(searchParams.get('categories'));
     const [productlist, setProductlist] = useState();
     const categories = searchParams.getAll('categories');
     const brands = searchParams.getAll('brands');
@@ -79,7 +119,8 @@ function ProductList(props) {
             brands,
             genders,
             sizes,
-            priceOrderBy: parms?.priceOrderBy || priceOrderBy
+            priceOrderBy: parms?.priceOrderBy || priceOrderBy,
+            keyword
         })
     }
     const getPageList = () => {
@@ -157,6 +198,7 @@ function ProductList(props) {
 
     useEffect(() => {
         console.log("list 호출");
+        setKeyword(searchParams.get('keyword') || undefined);
         getPageList();
     }, [location.search]);
 
@@ -173,7 +215,7 @@ function ProductList(props) {
 
     //select
     const classes = useStyles3();
-    const [priceOrderBy, setPriceOrderBy] = React.useState(searchParams.get('priceOrderBy'));
+    const [priceOrderBy, setPriceOrderBy] = React.useState(searchParams.get('priceOrderBy') || undefined);
     const [open, setOpen] = React.useState(false);
 
     const handleChange = (event) => {
@@ -185,6 +227,8 @@ function ProductList(props) {
             })
         });
     };
+
+    const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || undefined);
 
     const handleClose = () => {
         setOpen(false);
@@ -212,17 +256,20 @@ function ProductList(props) {
             <form style={{textAlign:'center', width:'950px', height:'150px',
                 marginLeft:'400px',marginTop:'50px'}}>
                 <TextField id="standard-basic" placeholder="검색어 입력"
-                           InputProps={{
-                               startAdornment: (
-                                   <InputAdornment position="start">
-                                       <SearchIcon />
-                                   </InputAdornment>
-                               ),
-                           }}
+                    value={keyword}
+                    style={{width:'300px'}}
+                    onChange={(event) => {setKeyword(event.target.value)}}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
                 />
             </form>
 
-            <div style={{marginLeft:'1400px',width:'150px'}}>
+            <div style={{marginLeft:'1490px',width:'150px'}}>
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-controlled-open-select-label">정렬기준</InputLabel>
                     <Select
@@ -242,9 +289,8 @@ function ProductList(props) {
                 </FormControl>
             </div>
 
-
             <div style={{marginLeft:'335px',width:'200px'}}>
-                <Paper component="ul" className={chipclasses.root}>
+                <Paper component="ul" className={chipclasses.root}  elevation={0}>
                     {chipData.map((data) => {
                         let icon;
 
@@ -263,8 +309,6 @@ function ProductList(props) {
                     })}
                 </Paper>
             </div>
-
-
 
             <div style={{width:'15%', height:'700px',float:'left',
                 marginLeft:'40px'}}>
@@ -392,7 +436,7 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectSize('S')}} checked={checkSize('230')} />} label="10만원 이하"/><br/>
+                            <FormControlLabel control={<Checkbox/>} label="10만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="10만원 - 30만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="30만원 - 50만원 이하"/><br/>
                             <FormControlLabel control={<Checkbox/>} label="50만원 이상"/><br/>
@@ -402,46 +446,67 @@ function ProductList(props) {
             </div>
 
 
-            <div style={{marginLeft:'320px',marginTop:'60px', width: '1350px'}}>
+            <div style={{marginLeft:'320px',marginTop:'36px', width: '1350px'}}>
 
-                {productlist &&
-                    productlist.list.map((pl, i) => (
-                        <Link to={`/product/detail/${pl.p_num}`} key={i}>
-                            <div
-                                style={{
-                                    width: "270px",
-                                    height: "390px",
-                                    display: "inline-block",
-                                    marginLeft: "20px",
-                                    marginRight: "20px",
-                                    textAlign: "center",
-                                }}
-                                key={i}
-                                p_num={pl.p_num}
-                            >
-                                <img
-                                    alt=""
-                                    src={productUrl + pl.photo}
-                                    width="300px"
-                                    height="300px"
-                                    style={{ margin: "0 auto" }}
-                                />
-                                <br />
-                                <span>{pl.brand}</span>
-                                <br />
-                                <span>{pl.p_name}</span>
-                                <br />
-                                <span>
-                {Number(pl.price)
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                    원
-              </span>
-                                <br />
-                                {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
-                            </div>
-                        </Link>
-                    ))}
+            {productlist &&
+                productlist.list.map((pl, i) => (
+            //             <Link to={`/product/detail/${pl.p_num}`} key={i}>
+            //                 <div
+            //                     style={{
+            //                         width: "270px",
+            //                         height: "390px",
+            //                         display: "inline-block",
+            //                         marginLeft: "20px",
+            //                         marginRight: "20px",
+            //                         textAlign: "center",
+            //                     }}
+            //                     key={i}
+            //                     p_num={pl.p_num}
+            //                 >
+            //                     <img
+            //                         alt=""
+            //                         src={productUrl + pl.photo}
+            //                         width="300px"
+            //                         height="300px"
+            //                         style={{ margin: "0 auto" }}
+            //                     />
+            //                     <br />
+            //                     <span>{pl.brand}</span>
+            //                     <br />
+            //                     <span>{pl.p_name}</span>
+            //                     <br />
+            //                     <span>
+            //     {Number(pl.price)
+            //         .toString()
+            //         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            //                         원
+            //   </span>
+            //                     <br />
+            //                     {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
+            //                 </div>
+            //             </Link>
+            <ProductCard to={`/product/detail/${pl.p_num}`}>
+                <Card className={big.root}>
+                    <CardMedia
+                        className={big.media}
+                        image={productUrl + pl.photo}
+                        // title="Paella dish"
+                        style={{backgroundColor: randomColor()}}
+                    />
+                                <div className={big.infoBox}>
+                                    <div>
+                                        <p className={big.brand}>{pl.brand}</p>
+                                        <p className={big.productname}>{pl.p_name}</p>
+                                    </div>
+                                </div>
+                                <p style={{position: "relative", bottom: 0, left: "5%"}}>{
+                                    Number(pl.price)
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                }</p>
+                </Card>
+            </ProductCard>
+            ))}
             </div>
         </div>
     );
