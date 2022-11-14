@@ -6,7 +6,7 @@ import Shipping from "./Shipping";
 import Cs from "./Cs";
 import Banner from "./Banner";
 import {useParams} from "react-router-dom";
-
+import logo from "../admin/logo192.png";
 
 function AdminMenu(props) {
     const {path}=useParams();
@@ -17,8 +17,8 @@ function AdminMenu(props) {
                 <ul className='navbar-nav sidebar sidebar-dark accordion' id='accordionSidebar'
                     style={{backgroundColor: 'mediumpurple'}}>
                     {/* 로고*/}
-                    <a className='sidebar-brand d-flex align-items-center justify-content-center' href='./admin'>
-                        <img alt='#' src='../logo192.png' style={{width: '80px', height: '80px'}}/>
+                    <a className='sidebar-brand d-flex align-items-center justify-content-center' href='../'>
+                        <img alt='#' src={logo} style={{width: '80px', height: '80px'}}/>
                     </a>
 
                     {/*로고 아래*/}

@@ -1,7 +1,9 @@
 package data.controller;
 
 import data.dto.CartDto;
+import data.dto.UserDto;
 import data.mapper.CartMapper;
+import data.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +21,20 @@ public class CartController {
     CartMapper cartMapper;
 
 
+//    유저정보
+@GetMapping("/userdata")
+public UserDto userCart(@RequestParam int u_num) {
+    return cartMapper.userCart(u_num);
+}
+
+// 장바구니 추가
     @PostMapping("/insert")
     public void insertCart(@RequestBody CartDto dto)
     {
         cartMapper.insertCart(dto);
     }
 
+    //리스트 호출
     @GetMapping("/list")
     public Map<String,Object> getCartList(@RequestParam (defaultValue = "1") int currentPage,int u_num)
     {
@@ -93,6 +103,8 @@ public class CartController {
 
         return smap;
     }
+    
+//    삭제
     @GetMapping("/delete")
     public void deleteCart(int c_num){
         cartMapper.deleteCart(c_num);

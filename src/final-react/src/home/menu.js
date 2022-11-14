@@ -66,14 +66,20 @@ function Menu(props) {
         setLoginok(sessionStorage.loginok);
     }, []);
 
-    const logout = () => {
+    const logout = (e) => {
+        e.preventDefault();
         let logoutUrl = process.env.REACT_APP_URL + "/user/logout";
-        axios.post(logoutUrl, {u_num: sessionStorage.u_num})
+        axios.post(logoutUrl)
             .then(res => {
-                alert(res.data);
-                sessionStorage.removeItem("loginok");
+                console.log(res.data);
+                localStorage.removeItem("accessToken");
                 sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
                 window.location.reload();
+                console.log("로그아웃 성공");
+            })
+            .catch(res => {
+                console.log("에러");
             })
 
     }
@@ -101,6 +107,7 @@ function Menu(props) {
                     <b style={{fontSize: "30px"}}>동건닷컴</b>
                 </NavLink>
                 <span style={{marginRight: "20px"}}>
+
 {
     loginok !== 'yes' ?
         <>

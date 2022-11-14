@@ -74,7 +74,7 @@ function DetailInfo(props) {
           alert("장바구니 추가");
           setItemlist([]);
           setAmount(1);
-          navi("/product/list/1");
+          navi("/product/list");
         });
     } else {
       alert("사이즈를 선택해주세요");

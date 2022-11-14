@@ -1,6 +1,7 @@
 package data.mapper;
 
 import data.dto.AdminDto;
+import data.dto.JoinDto;
 import data.dto.ProductDto;
 import data.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,11 +26,11 @@ public interface AdminMapper {
 
     /* -------------------상품시작------------------- */
 
-    /* 총 상품수를 불러오기위한 메서드 */
     public int TotalProduct();
+   public List<ProductDto> GetAllProduct();
 
     /* 상품정보를 불러오기위한 메서드 */
-    public ProductDto ProductNum(int p_num);
+    public List<JoinDto> ProductPaging(Map<String,Integer> map);
 
     /* 상품을 추가하기위한 메서드 */
     public void InsertProduct(ProductDto dto);
