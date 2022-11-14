@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "./userTable.css"
 import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
+import {Input} from "@mui/material";
 
 function UserInfo({path}) {
     const navi = useNavigate();
@@ -25,9 +26,10 @@ function UserInfo({path}) {
     },[currentPage])
 
     return (
+
         <div className='container-fluid'>
             <div className='row'>
-                <h5>총 {data.totalCount}명</h5>
+                <h5>총 {data.utotalCount}명</h5>
                 <table className='table-hj'>
                     <thead className='thead-hj'>
                     <tr className='tr-hj' align='center'>
@@ -84,6 +86,9 @@ function UserInfo({path}) {
                                 <b style={{color:'black'}}>다음</b>
                             </Link> : ''
                     }
+                    <div style={{float:'right'}}>
+                        <button href="#" className="btn-gradient red">삭제</button>
+                    </div>
                 </div>
             </div>
         </div>

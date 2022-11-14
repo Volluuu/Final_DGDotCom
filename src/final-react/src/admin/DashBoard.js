@@ -19,6 +19,7 @@ function DashBoard(props) {
     }
     useEffect(() => {
         userList();
+        product();
     }, []); //처음시작시 딱 한번 호출
 
     const product = () => {
@@ -28,9 +29,6 @@ function DashBoard(props) {
                 setPdata(res.data);
             });
     }
-    useEffect(() => {
-        product();
-    }, []); //처음시작
 
     return (
 
