@@ -2,8 +2,6 @@ import React, {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
-import {Announcement} from "@material-ui/icons";
-import SearchModalBefore from "./SearchModalBefore";
 import axios from "axios";
 
 const Menubar = styled.div`
@@ -89,20 +87,8 @@ function Menu(props) {
     return (
         <>
             <Menubar>
-                {
-                    loginok === "yes" ?
-                        <form onSubmit={logout}>
-                            <input type="hidden" name="_csrf"/>
-                            <button type="submit">로그아웃</button>
-                        </form>
-                        :
-                        <Category to={"/user/login"} className={"up"}>
-                            로그인
-                        </Category>
-                }
-
-                <Category to={"/user/signup"} className={"up"}>
-                    회원가입
+                <Category to={"/product/list/1"} className={"down"}>
+                    상품 리스트
                 </Category>
                 <Category to={"/product/detail/1703"} className={"up"}>
                     상품 상세
@@ -110,7 +96,6 @@ function Menu(props) {
                 <Category to={"/admin/dashboard"} className={"up"}>
                     관리자페이지
                 </Category>
-
                 {/*<button type={'button'} onClick={()=>{*/}
                 {/*    sessionStorage.removeItem("u_name");*/}
                 {/*    sessionStorage.u_name="세션이름 바꾸기";*/}
@@ -122,16 +107,29 @@ function Menu(props) {
                     <b style={{fontSize: "30px"}}>동건닷컴</b>
                 </NavLink>
                 <span style={{marginRight: "20px"}}>
-          <Category to={"/mypage/cart"} className={"down"}>
-            장바구니
-          </Category>
-          <Category to={"/product/list"} className={"down"}>
-            상품 리스트
-          </Category>
-          <Category to={"/mypage/all"} className={"down"}>
-            마이페이지
-          </Category>
-          <TransitionsModal/>
+
+{
+    loginok !== 'yes' ?
+        <>
+            <Category to={"/user/login"} className={"up"}>
+                로그인
+            </Category>
+            <Category to={"/user/signup"} className={"up"}>
+                회원가입
+            </Category>
+        </> : <>
+            <Category to={"/"} className={"up"} onClick={logout}>
+                로그아웃
+            </Category>
+            <Category to={"/mypage/cart"} className={"down"}>
+                장바구니
+            </Category>
+            <Category to={"/mypage/all"} className={"down"}>
+                마이페이지
+            </Category>
+        </>
+}
+                    <TransitionsModal/>
         </span>
             </Searchbar>
             <AnnouncementBar>공지사항 공지사항 칠지사항 빵지사항</AnnouncementBar>

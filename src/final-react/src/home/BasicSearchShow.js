@@ -15,29 +15,50 @@ const RecLink = styled(Link)`
   background-color: #F4F4F4;
 `
 const HotLink = styled(Link)`
-  
-`
 
+`
 const Title_p = styled.p`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
 `
+
+const CategoryElt = styled(Link)`
+  margin: 0 auto;
+  width: 120px;
+  height: 140px;
+  & > img.CategoryEltPhoto {
+    width: 120px;
+    height:120px;
+    border-radius: 50%;
+  }
+  & > p.CategoryEltInfo {
+    text-align: center;
+    font-size: 12px;
+    padding-top: 5px;
+  }
+`
+
 const BasicSearchShow = () => {
     const [hot, setHot] = useState([]);
+    const [hot_brand, setHot_brand] = useState([]);
 
-    const updateData = () => {
-        const res = axios.get("http://localhost:9003/list/hot").then(res => {
-            setHot(res.data);
-        });
+    const updateHot = async () => {
+        const res = await axios.get("http://localhost:9003/list/hot");
+        setHot(res.data);
+    }
+    const updateHotBrand = async () => {
+        const res = await axios.get("http://localhost:9003/list/brand");
+        setHot_brand(res.data);
     }
 
     useEffect(() => {
-        updateData();
-    }, [hot]);
+        updateHot().then(r => {});
+        updateHotBrand().then(r => {});
+    }, []);
 
     return (
-        <div style={{width: "768px", height: "600px"}}>
+        <div style={{width: "768px", height: "800px"}}>
             <Title_p>최근 검색어</Title_p>
             {
                 // user table에서 search 컬럼을 가져와서 list.map 구현
@@ -51,33 +72,53 @@ const BasicSearchShow = () => {
                     recommend.map((elt, idx) => <RecLink key={idx} to={`/product/list/1`}>{elt}</RecLink>)
                 }
             </div>
-                <Title_p>인기 검색어</Title_p>
-            <div style={{marginBottom: "20px", width:"768px", display:"flex", justifyContent:"space-around"}}>
+            <Title_p>인기 검색어</Title_p>
+            <div style={{marginBottom: "20px", width: "768px", display: "flex", justifyContent: "space-around"}}>
                 {/*//인기 검색어 테이블을 만들어야 할듯 없으면 테이블에 추가, 있으면 해당 검색어의 count를 1추가*/}
-                <ol style={{width:"384px", justifyContent:"left"}}>
+                <ul style={{width: "384px", justifyContent: "left"}}>
                     {
                         hot.filter((elt, idx) => idx < 5).map((elt, idx) =>
-                            <li key={idx}><HotLink key={idx} to={`/product/list/1?currentPage=1&keyword=${elt.word}`}><b>{idx+1}</b> {elt.word}</HotLink>
+                            <li style={{marginBottom: "20px"}} key={idx}><HotLink key={idx}
+                                                                                  to={`/product/list/1?currentPage=1&keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 1}</b> {elt.word}
+                            </HotLink>
                             </li>)
                     }
-                </ol>
-                <ol style={{width:"384px", justifyContent:"left"}}>
+                </ul>
+                <ul style={{width: "384px", justifyContent: "left"}}>
                     {
                         hot.filter((elt, idx) => idx >= 5).map((elt, idx) =>
-                            <li key={idx}><HotLink key={idx} to={`/product/list/1?currentPage=1&keyword=${elt.word}`}><b>{idx+1}</b> {elt.word}</HotLink>
-                        </li>)
+                            <li style={{marginBottom: "20px"}} key={idx}><HotLink key={idx}
+                                                                                  to={`/product/list/1?currentPage=1&keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 6}</b> {elt.word}
+                            </HotLink>
+                            </li>)
                     }
-                </ol>
-                {/*{*/}
-                {/*    hot.filter((elt,idx)=><HotLink key={idx} to={`/product/list/1?currentPage=1&categories=${elt.word}`}>{elt.word}</HotLink>)*/}
-                {/*}*/}
+                </ul>
             </div>
             <Title_p>카테고리</Title_p>
-            <p>카테고리에 넣을 내용 : 신발 의류 패션잡하 뮤직이즈마이라이프 테크</p>
+
+            <div style={{display:"flex" , marginBottom:"20px"}}>
+                <CategoryElt to={"/product/list/1"}>
+                    <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020517860.PNG" alt=""/>
+                    <p className={"CategoryEltInfo"}>상의</p>
+                </CategoryElt>
+                <CategoryElt to={"/product/list/1"}>
+                    <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020634615.PNG" alt=""/>
+                    <p className={"CategoryEltInfo"}>하의</p>
+                </CategoryElt><CategoryElt to={"/product/list/1"}>
+                <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104001835856.PNG" alt=""/>
+                <p className={"CategoryEltInfo"}>아우터</p>
+            </CategoryElt><CategoryElt to={"/product/list/1"}>
+                <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104022610637.PNG" alt=""/>
+                <p className={"CategoryEltInfo"}>패션잡화</p>
+            </CategoryElt>
+            </div>
+
             <Title_p>인기 브랜드</Title_p>
-            {
-                //readcount와 brand를 기준으로 select를 해온 뒤 브랜드 이미지 넣기는 귀찮으니까 ㅋㅋ 버튼으로 이동하게 만들어야지
-            }
+            <div style={{width:"768px", backgroundColor:"skyblue", height:"200px", display:"flex", margin:"0 auto", flexWrap:"wrap"}}>
+                {
+                    hot_brand.map((elt, idx) => <Link key={idx} to={"/product/list/1"}>{elt.brand}</Link>)
+                }
+            </div>
 
         </div>
     );

@@ -7,11 +7,12 @@ const SearchElement = styled.div`
     display: flex;
     padding : 10px;
     & > img {
-      border : 1px solid black;
+      border : 1px solid black; 
       width:80px;
       height:80px;
     }
   height: 100px;
+  
 `
 const SearchCard = ({key, product, style}) => {
 

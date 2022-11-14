@@ -44,4 +44,8 @@ public class ListController {
 	public List<KeywordDto> getTopTen() {
 		return keywordMapper.getTopTen();
 	}
+	@GetMapping("/brand")
+	public List<ProductDto> getHotBrand() {
+		return keywordMapper.getHotBrand();
+	}
 }
