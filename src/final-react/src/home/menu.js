@@ -74,8 +74,9 @@ function Menu(props) {
         axios.post(logoutUrl)
             .then(res => {
                 console.log(res.data);
-                sessionStorage.removeItem("loginok");
+                localStorage.removeItem("accessToken");
                 sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
                 window.location.reload();
                 console.log("로그아웃 성공");
             })

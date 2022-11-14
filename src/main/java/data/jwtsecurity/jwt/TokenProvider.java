@@ -1,6 +1,6 @@
-package data.jwt;
+package data.jwtsecurity.jwt;
 
-import data.dto.TokenDto;
+import data.jwtsecurity.controller.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -58,8 +58,9 @@ public class TokenProvider {
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-
+        long u_num = 1;
         return TokenDto.builder()
+                .u_num(u_num)
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())

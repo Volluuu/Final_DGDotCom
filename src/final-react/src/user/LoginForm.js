@@ -17,38 +17,39 @@ function LoginForm(props) {
     const onSubmitLogin = (e) => {
         e.preventDefault();
         let signinUrl = process.env.REACT_APP_URL + "/user/signin";
+        let jwtLogin = process.env.REACT_APP_URL + "/auth/login";
 
-        axios.post(signinUrl,
-            {"username": email, "password": pass},
-            {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+        axios.post(jwtLogin, {
+            "email": email,
+            "password": pass
+        }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
-                console.log("이메일 전송 완료");
-                console.dir(res);
-                sessionStorage.u_num = 1;
+                console.dir(res.data);
+                localStorage.accessToken = res.data.accessToken;
+                sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
-                navi(-1);
-                // navi("/");
-                // if (res.data === 0) {
-                //     alert("아이디를 다시 확인해주세요.");
-                //     setEmail('');
-                //     setPass('');
-                //     document.getElementById("email").focus();
-                //     sessionStorage.removeItem("loginok");
-                // } else if (res.data === -1) {
-                //     alert("비밀번호가 틀렸습니다.");
-                //     setPass('');
-                //     document.getElementById("pass").focus();
-                //     sessionStorage.removeItem("loginok");
-                // } else {
-                //     alert("로그인 성공");
-                //     navi(-1);
-                //     sessionStorage.u_num = res.data;
-                //     sessionStorage.loginok = "yes";
-                // }
+                navi("/");
             }).catch(res => {
-            alert("로그인 실패");
-            console.dir(res);
         })
+
+        // axios.post(signinUrl,
+        //     {"username": email, "password": pass},
+        //     {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+        //     .then(res => {
+        //         axios.post(jwtLogin, {
+        //             email, pass
+        //         })
+        //             .then(res => {
+        //                 console.log("로그인 완료");
+        //                 sessionStorage.u_num = 1;
+        //                 sessionStorage.loginok = "yes";
+        //                 navi(-1);
+        //             }).catch(res => {
+        //             alert("로그인 실패");
+        //             console.dir(res);
+        //         })
+        //     })
+
     }
 
     const onLoginBtnState = () => {

@@ -1,7 +1,7 @@
-package data.config;
+package data.jwtsecurity.config;
 
-import data.jwt.JwtFilter;
-import data.jwt.TokenProvider;
+import data.jwtsecurity.jwt.JwtFilter;
+import data.jwtsecurity.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

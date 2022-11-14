@@ -1,6 +1,7 @@
 package data.controller;
 
-import data.config.LoginIdPwValidator;
+//import data.config.LoginIdPwValidator;
+
 import data.config.RegisterMail;
 import data.dto.UserDto;
 import data.mapper.UserMapper;
@@ -32,15 +33,15 @@ public class UserController {
     @Autowired
     UserMapper userMapper;
 
-    @Autowired
-    LoginIdPwValidator loginIdPwValidator;
+//    @Autowired
+//    LoginIdPwValidator loginIdPwValidator;
 
-    // 가입
-    @PostMapping("/signup")
-    public void signUp(@RequestBody UserDto dto) {
-        dto.setPass(passwordEncoder.encode(dto.getPass()));
-        userMapper.insertUser(dto);
-    }
+//    // 가입
+//    @PostMapping("/signup")
+//    public void signUp(@RequestBody UserDto dto) {
+//        dto.setPass(passwordEncoder.encode(dto.getPass()));
+//        userMapper.insertUser(dto);
+//    }
 
     //이메일 중복 체크
     @GetMapping("/emailcheck")
