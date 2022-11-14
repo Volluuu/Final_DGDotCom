@@ -117,7 +117,7 @@ function Menu(props) {
           <Category to={"/mypage/cart"} className={"down"}>
             장바구니
           </Category>
-          <Category to={"/product/list/1"} className={"down"}>
+          <Category to={"/product/list"} className={"down"}>
             상품 리스트
           </Category>
           <Category to={"/mypage/all"} className={"down"}>
