@@ -1,45 +1,34 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { ResponsivePie} from "@nivo/pie";
 import './admin.css';
 import {PieChart} from "@material-ui/icons";
-import {useParams} from "react-router-dom";
-import Piegraph from "./piegraph";
+import axios from "axios";
+
 
 
 function DashBoard(props) {
+    const [udata, setUdata] = useState([]);
+    const [pdata, setPdata] = useState('');
 
-const data = [
-    {
-        "id": "sass",
-        "label": "sass",
-        "value": 339,
-        "color": "hsl(229, 70%, 50%)"
-    },
-    {
-        "id": "make",
-        "label": "make",
-        "value": 355,
-        "color": "hsl(203, 70%, 50%)"
-    },
-    {
-        "id": "lisp",
-        "label": "lisp",
-        "value": 351,
-        "color": "hsl(160, 70%, 50%)"
-    },
-    {
-        "id": "ruby",
-        "label": "ruby",
-        "value": 32,
-        "color": "hsl(319, 70%, 50%)"
-    },
-    {
-        "id": "python",
-        "label": "python",
-        "value": 75,
-        "color": "hsl(169, 70%, 50%)"
+    const userList = () => {
+        let userUrl = localStorage.url + "/admin/user";
+        axios.get(userUrl)
+            .then(res => {
+                setUdata(res.data);
+            });
     }
-]
+    useEffect(() => {
+        userList();
+        product();
+    }, []); //처음시작시 딱 한번 호출
+
+    const product = () => {
+        let producturl = localStorage.url +"/admin/product";
+        axios.get(producturl)
+            .then(res => {
+                setPdata(res.data);
+            });
+    }
 
     return (
 
@@ -57,7 +46,7 @@ const data = [
                                             className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             총 회원 수
                                         </div>
-                                        <div className="h5 mb-0 font-weight-bold text-gray-800">2459명</div>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{udata.length}명</div>
                                     </div>
                                     <div className="col-auto">
                                         <i className="fa-solid fa-user fa-2x text-gray-300"></i>
@@ -77,7 +66,7 @@ const data = [
                                             className="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             상품 수
                                         </div>
-                                        <div className="h5 mb-0 font-weight-bold text-gray-800">1271개</div>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{pdata.length}개</div>
                                     </div>
                                     <div className="col-auto">
                                         <i className="fa-solid fa-plane fa-2x text-gray-300"></i>
@@ -138,7 +127,7 @@ const data = [
             </div>
             {/*대쉬보드카드 끝*/}
             <div>
-        <Piegraph/>
+        <graph/>
             </div>
         </div>
     );
