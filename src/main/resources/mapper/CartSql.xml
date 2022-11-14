@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.CartMapper">
+<!--    유저정보 얻어오기-->
+    <select id="userCart" parameterType="int" resultType="UserDto">
+        select * from user where u_num = #{u_num}
+    </select>
+
     <!--    총 수량 얻기 ( 페이징처리)-->
     <select id="getCartCount" resultType="int">
         select count(*) from cart

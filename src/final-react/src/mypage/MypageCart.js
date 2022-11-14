@@ -9,15 +9,56 @@ function MypageBasket(props) {
   const [cartlist, setCartlist] = useState(""); //cart table 데이터
   const productUrl = process.env.REACT_APP_URL + "/product/"; // 이미지 주소
   const [sumPayment, setSumPayment] = useState(""); //총 결제 금액
+  const [u_data, setU_data] = useState(""); //유저정보
+  const [perchasedata, setPerchasedata] = useState(""); //결제정보
+  const [chkpname, setChkpname] = useState("");
   const navi = useNavigate();
+
   // CommonJS
   const Swal = require("sweetalert2"); //swal창
 
-  Swal.bindClickHandler();
+  //유저정보 불러오기
+  const userdata = () => {
+    let userUrl = localStorage.url + "/cart/userdata?u_num=" + u_num;
 
-  Swal.mixin({
-    toast: true,
-  }).bindClickHandler("data-swal-toast-template");
+    axios.get(userUrl).then((res) => {
+      console.log("user 호출 성공");
+      setU_data(res.data);
+    });
+  };
+
+  function requestBtn() {
+    Swal.fire({
+      title: "결제 정보 입력",
+      html: `<input type="text" id="name" class="swal2-input" placeholder="구매자 이름 입력" >
+  <input type="text" id="hp" class="swal2-input" placeholder="전화번호 입력(-없이)" >
+  <input type="address" id="addr" class="swal2-input" placeholder="주소입력" >
+  <input type="email" id="email" class="swal2-input" placeholder="이메일 입력">
+  `,
+      confirmButtonText: "결제하기",
+      focusConfirm: false,
+      preConfirm: () => {
+        const name = Swal.getPopup().querySelector("#name").value;
+        const hp = Swal.getPopup().querySelector("#hp").value;
+        const addr = Swal.getPopup().querySelector("#addr").value;
+        const email = Swal.getPopup().querySelector("#email").value;
+        if (!name || !addr || !hp || !email) {
+          Swal.showValidationMessage(`잘못된 정보입니다. 다시 확인해주세요`);
+        }
+        return { name, hp, addr, email };
+      },
+    }).then((result) => {
+      //     Swal.fire(
+      //       `
+      //   name: ${result.value.name}
+      //  hp: ${result.value.hp}
+      //  addr: ${result.value.addr}
+      //  email: ${result.value.email}
+      // `.trim()
+      //     );
+      requestPay(result);
+    });
+  }
 
   //u_num에 해당하는 cart data 불러오기
   const cartdata = () => {
@@ -110,34 +151,35 @@ function MypageBasket(props) {
   };
 
   // 결제
-  const requestPay = () => {
+  const requestPay = (result) => {
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp81470772"); // 가맹점 식별 코드
     // IMP.request_pay(param, callback) 결제창 호출
     IMP.request_pay(
       {
         // param
-        pg: "kakaopay.TC0ONETIME", // PG사 선택란 : 카카오페이
+        pg: "html5_inicis", // PG 모듈
         pay_method: "card", // 지불 수단
-        merchant_uid: "merchant_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+        merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
         name: "test", // 상품명
-        amount: sumPayment, // 가격
-        buyer_email: "test@gmail.com",
-        buyer_name: "tester", // 구매자 이름
-        buyer_tel: "010-4242-4242", // 구매자 연락처
-        buyer_addr: "서울특별시 강남구 신사동", // 구매자 주소지
-        buyer_postcode: "01181", // 구매자 우편번호
+        // amount: sumPayment, // 가격
+        amount: "100",
+        buyer_email: result.email,
+        buyer_name: result.name, // 구매자 이름
+        buyer_tel: result.hp, // 구매자 연락처
+        buyer_addr: result.addr, // 구매자 주소지
+        // buyer_postcode: "01181", // 구매자 우편번호
       },
       (rsp) => {
         // callback
         if (rsp.success) {
-          // 결제 성공 시 로직,
-          let msg = "결제가 완료되었습니다.";
-          msg += "고유ID : " + rsp.imp_uid;
-          msg += "상점 거래ID : " + rsp.merchant_uid;
-          msg += "결제 금액 : " + rsp.paid_amount;
-          msg += "카드 승인번호 : " + rsp.apply_num;
-          alert("결제 성공~" + msg);
+          // 결제 성공 시, 출력 창
+          let msg = "결제가 완료되었습니다.\n";
+          msg += "고유ID : " + rsp.imp_uid + "\n";
+          msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+          msg += "결제 금액 : " + rsp.paid_amount + "\n";
+          msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+          alert("결제 성공:" + msg);
         } else {
           // 결제 실패 시 로직,
           alert("실패 :" + rsp.error_msg);
@@ -150,6 +192,7 @@ function MypageBasket(props) {
   useEffect(() => {
     cartdata();
     totalPay();
+    userdata();
   }, []);
 
   //체크된 값들이 추가될때 마다 결제 금액 계산하기 위해 렌더링
@@ -235,7 +278,6 @@ function MypageBasket(props) {
             <th style={{ width: "5%" }}>수량</th>
             <th style={{ width: "10%" }}>주문금액</th>
             <th style={{ width: "12%" }}>주문관리</th>
-            <th style={{ width: "9%" }}>배송비</th>
           </tr>
         </thead>
         <tbody>
@@ -314,11 +356,6 @@ function MypageBasket(props) {
                     삭제
                   </button>
                 </td>
-                <td>
-                  배송비
-                  <br />
-                  <p style={{ fontSize: "5px" }}>(10만원이상 무료배송)</p>
-                </td>
               </tr>
             ))}
           {cartlist && cartlist.list.length !== 0 ? (
@@ -332,7 +369,7 @@ function MypageBasket(props) {
                   선택 삭제
                 </button>
               </td>
-              <td colSpan={6} style={{ textAlign: "center" }}>
+              <td colSpan={5} style={{ textAlign: "center" }}>
                 <p>
                   총 결제 금액 : \
                   {sumPayment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -346,7 +383,10 @@ function MypageBasket(props) {
                 >
                   결제 하기
                 </button>
-                <button data-swal-template="#my-template">Trigger modal</button>
+                <button data-swal-template="#my-template" onClick={requestBtn}>
+                  Trigger modal
+                </button>
+                <button type="button">확인용</button>
               </td>
             </tr>
           ) : (
@@ -371,20 +411,6 @@ function MypageBasket(props) {
           )}
         </tbody>
       </table>
-
-      <template id="my-template">
-        <swal-title>Save changes to "Untitled 1" before closing?</swal-title>
-        <swal-icon type="warning" color="red"></swal-icon>
-        <swal-button type="confirm">Save As</swal-button>
-        <swal-button type="cancel">Cancel</swal-button>
-        <swal-button type="deny">Close without Saving</swal-button>
-        <swal-param name="allowEscapeKey" value="false" />
-        <swal-param name="customClass" value='{ "popup": "my-popup" }' />
-        <swal-function-param
-          name="didOpen"
-          value="popup => console.log(popup)"
-        />
-      </template>
     </div>
   );
 }
