@@ -14,4 +14,5 @@ public interface KeywordMapper {
 	public void insertKeyword(String word);
 	public void updateKeyword(String word);
 	public int isThere(String word);
+	public List<ProductDto> getHotBrand();
 }

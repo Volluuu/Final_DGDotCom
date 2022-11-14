@@ -55,8 +55,8 @@ export default function TransitionsModal() {
         },
         [],
     );
-    const updateData = async() => {
-        const res = await axios.get(`http://localhost:9003/list/search?word=${word}`).then(res=>{
+    const updateWord = () => {
+        const res = axios.get(`http://localhost:9003/list/search?word=${word}`).then(res=>{
             setSearchList(res.data);
         })
     }
@@ -64,7 +64,7 @@ export default function TransitionsModal() {
     useEffect(() => {
         console.log("render!");
             const debounce = setTimeout(()=>{
-                if(word){updateData();} else{
+                if(word){updateWord();} else{
                     setSearchList([]);
                 }
             },200)
@@ -106,13 +106,7 @@ export default function TransitionsModal() {
                                         style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
                                 </button>
                                 </div>
-                                {/*react-virtualized를 사용하지 않고 구현*/}
-                                {/*<div style={{width: "768px", height: "600px", overflowY:"scroll"}}>*/}
-                                {/*    {   searchList.length < 1 ? <div>no result</div> :*/}
-                                {/*        searchList.map((product, idx)=><SearchCard key={idx} product={product}/>)*/}
-                                {/*    }*/}
-                                {/*</div>*/}
-                                {/*react-virtualized를 사용하여 구현*/}
+
                                 {
                                     word === '' ? <BasicSearchShow/> : searchList.length < 1 ? <div style={{width: "768px", height: "600px"}}>no result</div> : <SearchListVirtual searchlist={searchList}/>
                                 }

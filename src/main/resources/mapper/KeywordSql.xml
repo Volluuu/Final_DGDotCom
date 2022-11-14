@@ -7,6 +7,9 @@
     <select id="isThere" parameterType="String" resultType="int">
         select count(*) from keyword where word = #{word}
     </select>
+    <select id="getHotBrand" resultType="ProductDto">
+        select distinct readcount, brand from product group by brand order by readcount desc limit 10
+    </select>
     <insert id="insertKeyword" parameterType="String">
         insert into keyword(word_num, word, word_count) values (null, #{word}, 1)
     </insert>
