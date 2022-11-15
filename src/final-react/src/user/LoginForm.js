@@ -24,31 +24,13 @@ function LoginForm(props) {
             .then(res => {
                 console.dir(res.data);
                 localStorage.accessToken = res.data.accessToken;
+                sessionStorage.accessToken = res.data.accessToken;
                 sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
                 navi("/");
             }).catch(error => {
             alert(error);
         })
-
-        // axios.post(signinUrl,
-        //     {"username": email, "password": pass},
-        //     {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-        //     .then(res => {
-        //         axios.post(jwtLogin, {
-        //             email, pass
-        //         })
-        //             .then(res => {
-        //                 console.log("로그인 완료");
-        //                 sessionStorage.u_num = 1;
-        //                 sessionStorage.loginok = "yes";
-        //                 navi(-1);
-        //             }).catch(res => {
-        //             alert("로그인 실패");
-        //             console.dir(res);
-        //         })
-        //     })
-
     }
 
     const onLoginBtnState = () => {
@@ -139,10 +121,10 @@ function LoginForm(props) {
                 </form>
                 <ul className="look_box" data-v-b02d33c2="">
                     <li className="look_list" data-v-b02d33c2="">
-                        <Link to="/join" className="look_link" data-v-b02d33c2=""> 이메일 가입 </Link>
+                        <Link to="/user/signup" className="look_link" data-v-b02d33c2=""> 회원가입 </Link>
                     </li>
                     <li className="look_list" data-v-b02d33c2="">
-                        <Link to="/login/find_email" className="look_link" data-v-b02d33c2=""> 이메일 찾기 </Link>
+                        <Link to="/login/find_email" className="look_link" data-v-b02d33c2=""> 아이디 찾기 </Link>
                     </li>
                     <li className="look_list" data-v-b02d33c2="">
                         <Link to="/login/find_password" className="look_link" data-v-b02d33c2=""> 비밀번호 찾기 </Link>

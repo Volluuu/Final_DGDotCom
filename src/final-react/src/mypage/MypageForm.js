@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {useParams, Link} from "react-router-dom";
+import {useParams, Link, useNavigate} from "react-router-dom";
 import {Close} from "@mui/icons-material";
 
 function MypageForm(props) {
@@ -11,6 +11,7 @@ function MypageForm(props) {
     const [pointStyle, setPointStyle] = useState("none"); // 모달 창 State
     const productUrl = process.env.REACT_APP_URL + "/product/"; // 이미지 주소
     const [cartlist, setCartlist] = useState(""); //장바구니 데이터
+    const navi = useNavigate();
 
     // 세션의 u_num으로 받아오는 유저 정보
     const userByNum = () => {
@@ -18,10 +19,21 @@ function MypageForm(props) {
         let userByNumUrl =
             process.env.REACT_APP_URL + "/mypage/userbynum?u_num=" + u_num;
         axios.get(userByNumUrl, {
-            withCredentials: true
+            withCredentials: true,
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         }).then((res) => {
             setUserDto(res.data);
-        });
+        })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    alert("인증되지 않은 유저입니다.");
+                    navi("/user/login");
+                } else if (error.response.status === 403) {
+                    alert("권한이 없습니다.");
+                    navi("/");
+                }
+            })
+        ;
 
         // u_num, currentPage로 주문 내역 받아오기
         let orderListUrl =
@@ -31,10 +43,21 @@ function MypageForm(props) {
             "&currentPage=" +
             (currentPage === undefined ? 1 : currentPage);
         axios.get(orderListUrl, {
-            withCredentials: true
+            withCredentials: true,
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         }).then((res) => {
             setTradeData(res.data);
-        });
+        })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    alert("인증되지 않은 유저입니다.");
+                    navi("/user/login");
+                } else if (error.response.status === 403) {
+                    alert("권한이 없습니다.");
+                    navi("/");
+                }
+            })
+        ;
     };
 
     //u_num에 해당하는 cart data 불러오기
@@ -42,12 +65,23 @@ function MypageForm(props) {
         const cartListUrl = localStorage.url + "/cart/list?u_num=" + u_num;
 
         axios.get(cartListUrl, {
-            withCredentials: true
+            withCredentials: true,
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         }).then((res) => {
             console.log("cart data 호출 성공");
             setCartlist(res.data);
             console.dir("data:" + JSON.stringify(cartlist));
-        });
+        })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    alert("인증되지 않은 유저입니다.");
+                    navi("/user/login");
+                } else if (error.response.status === 403) {
+                    alert("권한이 없습니다.");
+                    navi("/");
+                }
+            })
+        ;
     };
 
     useEffect(() => {

@@ -37,13 +37,12 @@ public class TokenProvider {
     }
 
     public TokenDto generateTokenDto(Authentication authentication) {
+        System.out.println("generateTokenDto");
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
         long now = (new Date()).getTime();
-
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
@@ -67,6 +66,7 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String accessToken) {
+        System.out.println("getAuthentication");
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
@@ -87,6 +87,7 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
+        System.out.println("validateToken");
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -103,6 +104,7 @@ public class TokenProvider {
     }
 
     private Claims parseClaims(String accessToken) {
+        System.out.println("parseClaims");
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
