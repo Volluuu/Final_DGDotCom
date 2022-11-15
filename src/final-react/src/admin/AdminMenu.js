@@ -17,7 +17,7 @@ function AdminMenu(props) {
                 <ul className='navbar-nav sidebar sidebar-dark accordion' id='accordionSidebar'
                     style={{backgroundColor: 'mediumpurple'}}>
                     {/* 로고*/}
-                    <a className='sidebar-brand d-flex align-items-center justify-content-center' href='../'>
+                    <a className='sidebar-brand d-flex align-items-center justify-content-center' href='/'>
                         <img alt='#' src={logo} style={{width: '80px', height: '80px'}}/>
                     </a>
 

@@ -7,7 +7,7 @@
     font-weight: 300;
     display: inline;
 }
-h2 {
+.h2 {
     color: #89867e;
     text-align: center;
     font-weight: 300;
@@ -77,9 +77,9 @@ pre .val {color: #e6db74;} /* value */
 .btn-gradient {
     margin: 5px;
 }
-a[class*="btn"] {text-decoration: none;}
-input[class*="btn"],
-button[class*="btn"] {border: 0;}
+/*a[class*="btn"] {text-decoration: none;}*/
+/*input[class*="btn"],*/
+/*button[class*="btn"] {border: 0;}*/
 
 /* Here you can change the button sizes */
 .btn.large,

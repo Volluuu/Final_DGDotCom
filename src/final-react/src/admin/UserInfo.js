@@ -3,12 +3,14 @@ import "./userTable.css"
 import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Input} from "@mui/material";
+import Checkbox from "@material-ui/core/Checkbox";
 
 function UserInfo({path}) {
     const navi = useNavigate();
     const {currentPage} = useParams();
     console.log("currentPage="+currentPage);
     const [data,setData] = useState('');
+    const [checkItems, setCheckItems] = useState([]);
 
     const userPageList = () => {
         let url = localStorage.url+"/admin/userpagelist?currentPage="+
@@ -18,6 +20,51 @@ function UserInfo({path}) {
                 console.dir(res.data);
                 setData(res.data);
             })
+    }
+
+    // 체크박스 전체 단일 개체 선택
+    const handleSingleCheck = (checked, id) => {
+        if (checked) {
+            setCheckItems([...checkItems, id]);
+        } else {
+            // 체크 해제
+            setCheckItems(checkItems.filter((r) => r !== id));
+        }
+    };
+
+    // 체크박스 전체 선택
+    const handleAllCheck = (checked) => {
+        if (checked) {
+            // console.log("제발....ㅠㅠ.ㅠ.");
+            console.dir(checked);
+            const idArray = [];
+            // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
+            // 전체 체크 박스 체크
+            data.ulist.forEach((el) => idArray.push(el.u_num));
+            console.log();
+            setCheckItems(idArray);
+        }
+
+        // 반대의 경우 전체 체크 박스 체크 삭제
+        else {
+            setCheckItems([]);
+        }
+    };
+
+    //유저 삭제
+    const deleteUser = (num) => {
+        const deleteUrl = localStorage.url + "/admin/deleteuser?num="+num;
+
+        if(window.confirm("삭제하시겠습니까?"))
+        {
+            alert("삭제완료");
+            axios.delete(deleteUrl)
+                .then(res => {
+                    window.location.reload();
+                })
+        }else {
+            alert("취소합니다");
+        }
     }
 
     //currentPage 값이 변경될때마다 함수 다시 호출
@@ -33,6 +80,18 @@ function UserInfo({path}) {
                 <table className='table-hj'>
                     <thead className='thead-hj'>
                     <tr className='tr-hj' align='center'>
+                        <th className='th-hj'>
+                            <Checkbox
+                                name="checkAll"
+                                type={"checkbox"}
+                                onChange={(e) => handleAllCheck(e.target.checked)}
+                                // checkItems의 갯 수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
+                                // 하나라도 빼면 체크 박스 해제
+                                checked={
+                                    checkItems.length === 4
+                                        ? true
+                                        : false
+                                }></Checkbox></th>
                         <th className='th-hj'>번호</th>
                         <th className='th-hj'>이메일</th>
                         <th className='th-hj'>이름</th>
@@ -49,6 +108,12 @@ function UserInfo({path}) {
                         data.ulist &&
                         data.ulist.map((r,idx) =>
                             <tr key={idx} className='tr-hj' align='center'>
+                                <td className='td-hj'><Checkbox
+                                    type={"checkbox"}
+                                    onChange={(e) => handleSingleCheck(e.target.checked,r.u_num)}
+                                    // checkItems에 data.id가 있으면 체크 아니면 체크 해제
+                                    checked={checkItems.includes(r.u_num) ? true : false}
+                                /></td>
                                 <td className='td-hj'>{data.no-idx}</td>
                                 <td className='td-hj'>{r.email}</td>
                                 <td className='td-hj'>{r.u_name}</td>
@@ -57,6 +122,9 @@ function UserInfo({path}) {
                                 <td className='td-hj'>{r.gender}</td>
                                 <td className='td-hj'>{r.gaip}</td>
                                 <td className='td-hj'>{r.point}</td>
+                                <td><button className="btn-gradient red" onClick={()=>{deleteUser(r.u_num);
+                                }}>삭제</button></td>
+
                             </tr>
                         )
                     }
@@ -87,7 +155,7 @@ function UserInfo({path}) {
                             </Link> : ''
                     }
                     <div style={{float:'right'}}>
-                        <button href="#" className="btn-gradient red">삭제</button>
+
                     </div>
                 </div>
             </div>
