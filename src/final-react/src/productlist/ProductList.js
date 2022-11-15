@@ -12,14 +12,15 @@ import CardMedia from '@material-ui/core/CardMedia';
 //칩
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
 
+//아코디언
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 
 import Typography from '@material-ui/core/Typography';
 
+//체크박스
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -44,11 +45,16 @@ const useStyles5 = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        '& > *': {
-            margin: theme.spacing(0.5),
-        },
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+        border: 'none',
+    },
+    chip: {
+        margin: theme.spacing(0.5),
     },
 }));
+
 
 const ProductCard = styled(Link)`
   margin: 0 auto;
@@ -87,11 +93,11 @@ function ProductList(props) {
             fontSize  : "20px",
             lineHeight: "22px",
         },
-    
+
     }));
     const big = useBig();
     const randomColor = () => {
-        return ["#FEBEBE", "#FFEFD5", "#F0FFF0", "#CDECFA", "#CCE1FF", "#CEBEE1", "#DCFFDC", "#FAFAD2", "#dcdcdc"][random(0, 8)];
+        return ["#ffe6e6", "#fff5e6", "#F0FFF0", "#e8f6fd", "#e6f0ff", "#f2eef7", "#e6ffe6", "#fcfce8", "#dcdcdc"][random(0, 8)];
     };
     console.log('다시 렌더링')
 
@@ -105,30 +111,45 @@ function ProductList(props) {
     const brands = searchParams.getAll('brands');
     const genders = searchParams.getAll('genders');
     const sizes = searchParams.getAll('sizes');
+    let currentPage = searchParams.get('currentPage') || 1;
+    const [isConnection, setIsConnection] = useState(false);
 
-    const { currentPage } = useParams();
-    console.log("proCP:" + currentPage);
+    // const { currentPage } = useParams();
+    // console.log("proCP:" + currentPage);
 
     const productUrl = localStorage.url + "/product/";
     console.log("proUrl:" + productUrl);
 
     const makeSearchParms = (parms) => {
-        return createSearchParams({
+        const _params = {
             currentPage: parms?.currentPage || 1,
             categories,
             brands,
             genders,
             sizes,
-            priceOrderBy: parms?.priceOrderBy || priceOrderBy,
             keyword
-        })
+        }
+        if (!parms?.currentPage) delete _params.currentPage;
+        return createSearchParams(_params);
     }
-    const getPageList = () => {
+
+    const getPageList = (params) => {
+        console.log(0, productlist)
+
         axios.get(localStorage.url + "/product/list", {
-            params: makeSearchParms()
+            params: makeSearchParms(params)
         }).then((res) => {
             console.log("axios 성공");
-            setProductlist(res.data);
+            if (Number(currentPage) === 1) {
+                console.log(1, currentPage)
+                setProductlist(res.data.list);
+            } else {
+                console.log(2, productlist)
+                console.log(3, res.data.list)
+                setProductlist([].concat(productlist || [], res.data.list));
+            }
+        }).finally(() => {
+            setIsConnection(false);
         });
     };
 
@@ -246,9 +267,23 @@ function ProductList(props) {
         { key: 1, label: 'jQuery' },
     ]);
 
-    const handleDelete5 = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-    };
+    useEffect(() => {
+        const infiniteScroll = (event) => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                if (isConnection) return;
+                setIsConnection(true);
+                currentPage = Number(currentPage) + 1
+                console.log('스크롤 마지막');
+                getPageList({
+                    currentPage
+                });
+            }
+        };
+        window.addEventListener('scroll', infiniteScroll);
+        return () => {
+            window.removeEventListener('scroll', infiniteScroll);
+        };
+    }, [])
 
     return (
         <div>
@@ -256,16 +291,16 @@ function ProductList(props) {
             <form style={{textAlign:'center', width:'950px', height:'150px',
                 marginLeft:'400px',marginTop:'50px'}}>
                 <TextField id="standard-basic" placeholder="검색어 입력"
-                    value={keyword}
-                    style={{width:'300px'}}
-                    onChange={(event) => {setKeyword(event.target.value)}}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
+                           value={keyword}
+                           style={{width:'300px'}}
+                           onChange={(event) => {setKeyword(event.target.value)}}
+                           InputProps={{
+                               startAdornment: (
+                                   <InputAdornment position="start">
+                                       <SearchIcon />
+                                   </InputAdornment>
+                               ),
+                           }}
                 />
             </form>
 
@@ -295,13 +330,13 @@ function ProductList(props) {
                         let icon;
 
                         if (data.label === 'React') {
-                            icon = <TagFacesIcon />;
+
                         }
                         return (
                             <li key={data.key}>
                                 <Chip
                                     label={data.label}
-                                    onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+
                                     className={chipclasses.chip}
                                 />
                             </li>
@@ -448,51 +483,51 @@ function ProductList(props) {
 
             <div style={{marginLeft:'320px',marginTop:'36px', width: '1350px'}}>
 
-            {productlist &&
-                productlist.list.map((pl, i) => (
-            //             <Link to={`/product/detail/${pl.p_num}`} key={i}>
-            //                 <div
-            //                     style={{
-            //                         width: "270px",
-            //                         height: "390px",
-            //                         display: "inline-block",
-            //                         marginLeft: "20px",
-            //                         marginRight: "20px",
-            //                         textAlign: "center",
-            //                     }}
-            //                     key={i}
-            //                     p_num={pl.p_num}
-            //                 >
-            //                     <img
-            //                         alt=""
-            //                         src={productUrl + pl.photo}
-            //                         width="300px"
-            //                         height="300px"
-            //                         style={{ margin: "0 auto" }}
-            //                     />
-            //                     <br />
-            //                     <span>{pl.brand}</span>
-            //                     <br />
-            //                     <span>{pl.p_name}</span>
-            //                     <br />
-            //                     <span>
-            //     {Number(pl.price)
-            //         .toString()
-            //         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            //                         원
-            //   </span>
-            //                     <br />
-            //                     {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
-            //                 </div>
-            //             </Link>
-            <ProductCard to={`/product/detail/${pl.p_num}`}>
-                <Card className={big.root}>
-                    <CardMedia
-                        className={big.media}
-                        image={productUrl + pl.photo}
-                        // title="Paella dish"
-                        style={{backgroundColor: randomColor()}}
-                    />
+                {productlist &&
+                    productlist.map((pl, i) => (
+                        //             <Link to={`/product/detail/${pl.p_num}`} key={i}>
+                        //                 <div
+                        //                     style={{
+                        //                         width: "270px",
+                        //                         height: "390px",
+                        //                         display: "inline-block",
+                        //                         marginLeft: "20px",
+                        //                         marginRight: "20px",
+                        //                         textAlign: "center",
+                        //                     }}
+                        //                     key={i}
+                        //                     p_num={pl.p_num}
+                        //                 >
+                        //                     <img
+                        //                         alt=""
+                        //                         src={productUrl + pl.photo}
+                        //                         width="300px"
+                        //                         height="300px"
+                        //                         style={{ margin: "0 auto" }}
+                        //                     />
+                        //                     <br />
+                        //                     <span>{pl.brand}</span>
+                        //                     <br />
+                        //                     <span>{pl.p_name}</span>
+                        //                     <br />
+                        //                     <span>
+                        //     {Number(pl.price)
+                        //         .toString()
+                        //         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        //                         원
+                        //   </span>
+                        //                     <br />
+                        //                     {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
+                        //                 </div>
+                        //             </Link>
+                        <ProductCard to={`/product/detail/${pl.p_num}`}>
+                            <Card className={big.root}>
+                                <CardMedia
+                                    className={big.media}
+                                    image={productUrl + pl.photo}
+                                    // title="Paella dish"
+                                    style={{backgroundColor: randomColor()}}
+                                />
                                 <div className={big.infoBox}>
                                     <div>
                                         <p className={big.brand}>{pl.brand}</p>
@@ -501,12 +536,12 @@ function ProductList(props) {
                                 </div>
                                 <p style={{position: "relative", bottom: 0, left: "5%"}}>{
                                     Number(pl.price)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                        .toString()
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                                 }</p>
-                </Card>
-            </ProductCard>
-            ))}
+                            </Card>
+                        </ProductCard>
+                    ))}
             </div>
         </div>
     );
