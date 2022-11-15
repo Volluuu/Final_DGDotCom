@@ -71,7 +71,7 @@ function Menu(props) {
     return (
         <>
             <Menubar>
-                <Category to={"/product/list/1"} className={"down"}>
+                <Category to={"/product/list"} className={"down"}>
                     상품 리스트
                 </Category>
                 <Category to={"/product/detail/1703"} className={"up"}>
