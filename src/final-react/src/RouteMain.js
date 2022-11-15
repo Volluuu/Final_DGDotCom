@@ -10,6 +10,7 @@ import MypageRoute from "./mypage/MypageRoute";
 import AdminRoute from "./admin/AdminRoute";
 import UserInfo from "./admin/UserInfo";
 import AdminMenu from "./admin/AdminMenu";
+import Footer from "./home/Footer";
 
 function RouteMain(props) {
   return (
@@ -23,6 +24,7 @@ function RouteMain(props) {
             <>
                 <Menu/>
                 <Home/>
+                <Footer/>
             </>
             } />
         {/* 로그인 및 회원가입 */}

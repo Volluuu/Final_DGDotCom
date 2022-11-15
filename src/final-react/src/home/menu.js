@@ -3,6 +3,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
 import axios from "axios";
+import AnnouncementBar from "./AnnouncementBar";
 
 const Menubar = styled.div`
   padding-top: 10px;
@@ -49,13 +50,6 @@ const Category = styled(NavLink)`
     margin-left: 1rem;
     margin-right: 1rem;
   }
-`;
-const AnnouncementBar = styled.div`
-  height: 30px;
-  width: 100%;
-  background-color: black;
-  color: white;
-  text-align: center;
 `;
 
 function Menu(props) {
@@ -122,7 +116,7 @@ function Menu(props) {
                     <TransitionsModal/>
         </span>
             </Searchbar>
-            <AnnouncementBar>공지사항 공지사항 칠지사항 빵지사항</AnnouncementBar>
+            <AnnouncementBar/>
         </>
     );
 }

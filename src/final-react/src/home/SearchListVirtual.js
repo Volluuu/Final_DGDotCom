@@ -19,13 +19,13 @@ const SearchListVirtual = ({searchlist}) => {
     );
     return (
         <List
-            width={745.33}
-            height={600}
+            width={432.33}
+            height={800}
             rowCount={searchlist.length}
             rowHeight={100}
             rowRenderer={rowRenderer}
             list={searchlist}
-            style={{outline:"none"}}
+            style={{outline:"none", margin:"0 auto"}}
         />
     );
 };
