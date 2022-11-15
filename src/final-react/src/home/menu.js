@@ -66,22 +66,12 @@ function Menu(props) {
         setLoginok(sessionStorage.loginok);
     }, []);
 
-    const logout = (e) => {
-        e.preventDefault();
-        let logoutUrl = process.env.REACT_APP_URL + "/user/logout";
-        axios.post(logoutUrl)
-            .then(res => {
-                console.log(res.data);
-                localStorage.removeItem("accessToken");
-                sessionStorage.removeItem("u_num");
-                sessionStorage.removeItem("loginok");
-                window.location.reload();
-                console.log("로그아웃 성공");
-            })
-            .catch(res => {
-                console.log("에러");
-            })
-
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("u_num");
+        sessionStorage.removeItem("loginok");
+        window.location.reload();
+        console.log("로그아웃 성공");
     }
 
     return (
@@ -118,7 +108,7 @@ function Menu(props) {
                 회원가입
             </Category>
         </> : <>
-            <Category to={"/"} className={"up"} onClick={logout}>
+            <Category className={"up"} onClick={logout}>
                 로그아웃
             </Category>
             <Category to={"/mypage/cart"} className={"down"}>

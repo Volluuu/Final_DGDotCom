@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
         http
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
+//                .cors().configurationSource(corsConfigurationSource())
+//                .and()
                 .csrf().disable()
                 // exception handling 할 때 우리가 만든 클래스를 추가
                 .exceptionHandling()
@@ -100,19 +100,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return new MyLoginSuccessHandler("/");
 //    }
 //
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("http//localhost:3000");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+////        corsConfiguration.addAllowedOrigin("http//localhost:3000");
+//        corsConfiguration.addAllowedHeader("*");
+//        corsConfiguration.addAllowedOriginPattern("*");
+//        corsConfiguration.addAllowedMethod("*");
+//        corsConfiguration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 //
 //
 //    @Bean

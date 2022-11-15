@@ -150,29 +150,20 @@ function SignupForm(props) {
             return;
         }
         let signupUrl = process.env.REACT_APP_URL + "/user/signup";
-        let jwtUrl = process.env.REACT_APP_URL + "/auth/signup";
-        // axios.post(signupUrl, {
-        //     email: emailRef.current.value,
-        //     u_name: nameRef.current.value,
-        //     pass: passRef.current.value,
-        //     hp: hpRef.current.value,
-        //     addr: addrRef.current.value,
-        //     gender
-        // })
-        //     .then(res => {
-        //         console.log("회원가입");
-        //     })
-        axios.post(jwtUrl, {
+        axios.post(signupUrl, {
             email: emailRef.current.value,
-            password: passRef.current.value,
+            u_name: nameRef.current.value,
+            pass: passRef.current.value,
+            hp: hpRef.current.value,
+            addr: addrRef.current.value,
+            gender
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
                 navi("/user/login");
                 console.log("회원가입 성공");
-                console.log(res.data);
             })
-            .catch(res => {
-                console.log("회원가입 실패");
+            .catch(error => {
+                alert(error.response.status + "에러");
             })
     }
 
