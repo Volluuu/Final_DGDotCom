@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
-import ModalBasic from "./ModalBasic";
+// import ModalBasic from "./ModalBasic";
+import "../admin/button.css";
 
 function MypageBasket(props) {
   const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -392,7 +393,7 @@ function MypageBasket(props) {
                 <td>
                   <button
                     type="button"
-                    className="btn btn-outline-dark btn-sm"
+                    className="btn-3d.cyan"
                     value={citem.c_num}
                   >
                     수정
@@ -400,7 +401,7 @@ function MypageBasket(props) {
                   <br />
                   <button
                     type="button"
-                    className="btn btn-outline-dark btn-sm"
+                    className="btn-3d.cyan"
                     value={citem.c_num}
                     onClick={deleteCart}
                   >
@@ -442,7 +443,7 @@ function MypageBasket(props) {
                     결제하기
                   </button>
                 ) : (
-                  <button className="btn btn-success" onClick={requestBtn}>
+                  <button className="btn-3d.green" onClick={requestBtn}>
                     결제하기
                   </button>
                 )}
@@ -462,7 +463,7 @@ function MypageBasket(props) {
                 <Link
                   data-v-3d1bcc82=""
                   data-v-541a17ff=""
-                  to="/product/list/1"
+                  to="/product/list"
                   className="btn outlinegrey small"
                 >
                   {" "}
@@ -473,8 +474,8 @@ function MypageBasket(props) {
           )}
         </tbody>
       </table>
-      <button onClick={showModal}>모달 띄우기</button>
-      {modalOpen && <ModalBasic setModalOpen={setModalOpen} />}
+      {/* <button onClick={showModal}>모달 띄우기</button>
+      {modalOpen && <ModalBasic setModalOpen={setModalOpen} />} */}
     </div>
   );
 }

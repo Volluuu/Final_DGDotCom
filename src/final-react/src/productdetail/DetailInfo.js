@@ -96,9 +96,10 @@ function DetailInfo(props) {
       case "시계":
         return (
           <select
-            className="form-select sizeselect"
+            className="form-select"
             p_num={row.p_num}
             onClick={additemlist}
+            style={{ width: "300px" }}
           >
             <option disabled selected>
               선택
@@ -122,6 +123,7 @@ function DetailInfo(props) {
             className="form-select sizeselect"
             p_num={row.p_num}
             onClick={additemlist}
+            style={{ width: "300px" }}
           >
             <option disabled selected>
               선택
@@ -142,6 +144,7 @@ function DetailInfo(props) {
             className="form-select sizeselect"
             p_num={row.p_num}
             onClick={additemlist}
+            style={{ width: "300px" }}
           >
             <option disabled selected>
               선택
@@ -156,7 +159,11 @@ function DetailInfo(props) {
         );
       default:
         return (
-          <select className="form-select sizeselect" onClick={additemlist}>
+          <select
+            className="form-select sizeselect"
+            onClick={additemlist}
+            style={{ width: "300px" }}
+          >
             <option disabled selected>
               선택
             </option>
