@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
+import ModalBasic from "./ModalBasic";
 
 function MypageBasket(props) {
   const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -11,8 +12,15 @@ function MypageBasket(props) {
   const [sumPayment, setSumPayment] = useState(""); //총 결제 금액
   const [u_data, setU_data] = useState(""); //유저정보
   const [perchasedata, setPerchasedata] = useState(""); //결제정보
-  const [chkpname, setChkpname] = useState("");
   const navi = useNavigate();
+
+  // 모달창 노출 여부 state
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // 모달창 노출
+  const showModal = () => {
+    setModalOpen(true);
+  };
 
   // CommonJS
   const Swal = require("sweetalert2"); //swal창
@@ -27,38 +35,74 @@ function MypageBasket(props) {
     });
   };
 
-  function requestBtn() {
-    Swal.fire({
+  //결제 버튼 클릭 시, Swal 이벤트
+  async function requestBtn() {
+    await Swal.fire({
       title: "결제 정보 입력",
-      html: `<input type="text" id="name" class="swal2-input" placeholder="구매자 이름 입력" >
-  <input type="text" id="hp" class="swal2-input" placeholder="전화번호 입력(-없이)" >
-  <input type="address" id="addr" class="swal2-input" placeholder="주소입력" >
-  <input type="email" id="email" class="swal2-input" placeholder="이메일 입력">
+      html: `<p style={{textAlign:'left'}}>배송받을 이름</p><br/><input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" >
+  <p style={{textAlign:'left'}}>배송받을 연락처 </p><br/><input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-없이)" maxLength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+  <p style={{textAlign:'left'}}>배송받을 주소</p><br/><div className="input-group"><input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" >
+  <p style={{textAlign:'left'}}>구매 이메일</p><br/><input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력">
   `,
       confirmButtonText: "결제하기",
       focusConfirm: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: true,
       preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const hp = Swal.getPopup().querySelector("#hp").value;
-        const addr = Swal.getPopup().querySelector("#addr").value;
-        const email = Swal.getPopup().querySelector("#email").value;
-        if (!name || !addr || !hp || !email) {
-          Swal.showValidationMessage(`잘못된 정보입니다. 다시 확인해주세요`);
+        const o_name = Swal.getPopup().querySelector("#o_name").value;
+        const o_hp = Swal.getPopup().querySelector("#o_hp").value;
+        const o_addr = Swal.getPopup().querySelector("#o_addr").value;
+        const o_email = Swal.getPopup().querySelector("#o_email").value;
+        if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
+          Swal.showValidationMessage(
+            `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+          );
+          return false;
         }
-        return { name, hp, addr, email };
+        return { o_name, o_hp, o_addr, o_email };
       },
     }).then((result) => {
-      //     Swal.fire(
-      //       `
-      //   name: ${result.value.name}
-      //  hp: ${result.value.hp}
-      //  addr: ${result.value.addr}
-      //  email: ${result.value.email}
-      // `.trim()
-      //     );
-      requestPay(result);
+      if (result.isConfirmed) {
+        requestPay(result);
+      } else if (result.isDenied) {
+        alert("취소됨");
+      }
     });
   }
+
+  // async function requestBtn() {
+  //   const { value: formValues } = await Swal.fire({
+  //     title: "결제 정보 입력",
+  //     html:
+  //       '<input id="swal-input1" class="swal2-input">' +
+  //       '<input id="swal-input2" class="swal2-input">' +
+  //       '<input id="swal-input3" class="swal2-input">' +
+  //       '<input id="swal-input4" class="swal2-input">',
+  //     confirmButtonText: "결제하기",
+  //     focusConfirm: false,
+  //     allowOutsideClick: false,
+  //     allowEscapeKey: false,
+  //     showCancelButton: true,
+  //     preConfirm: () => {
+  //       const o_name = document.getElementById("#swal-input1").value;
+  //       const o_hp = document.getElementById("#swal-input2").value;
+  //       const o_addr = document.getElementById("#swal-input3").value;
+  //       const o_email = document.getElementById("#swal-input4").value;
+  //       if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
+  //         Swal.showValidationMessage(
+  //           `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+  //         );
+  //         return false;
+  //       }
+  //       return { o_name, o_hp, o_addr, o_email };
+  //     },
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       Swal.fire(JSON.stringify(formValues));
+  //     }
+  //   });
+  // }
 
   //u_num에 해당하는 cart data 불러오기
   const cartdata = () => {
@@ -158,16 +202,16 @@ function MypageBasket(props) {
     IMP.request_pay(
       {
         // param
-        pg: "html5_inicis", // PG 모듈
+        pg: "html5_inicis.INIpayTest", // PG 모듈
         pay_method: "card", // 지불 수단
         merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-        name: "test", // 상품명
+        name: result.p_name, // 상품명
         // amount: sumPayment, // 가격
         amount: "100",
-        buyer_email: result.email,
-        buyer_name: result.name, // 구매자 이름
-        buyer_tel: result.hp, // 구매자 연락처
-        buyer_addr: result.addr, // 구매자 주소지
+        buyer_email: result.o_email,
+        buyer_name: result.o_name, // 구매자 이름
+        buyer_tel: result.o_hp, // 구매자 연락처
+        buyer_addr: result.o_addr, // 구매자 주소지
         // buyer_postcode: "01181", // 구매자 우편번호
       },
       (rsp) => {
@@ -177,8 +221,16 @@ function MypageBasket(props) {
           let msg = "결제가 완료되었습니다.\n";
           msg += "고유ID : " + rsp.imp_uid + "\n";
           msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+          msg += "결제 선택 : " + rsp.pg + "\n";
+          msg += "결제 방식 : " + rsp.pay_method + "\n";
           msg += "결제 금액 : " + rsp.paid_amount + "\n";
           msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+          msg += "상품명 : " + rsp.name + "\n";
+          msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+          msg += "구매자 번호 : " + rsp.buyer_hp + "\n";
+          msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+          msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+
           alert("결제 성공:" + msg);
         } else {
           // 결제 실패 시 로직,
@@ -198,7 +250,6 @@ function MypageBasket(props) {
   //체크된 값들이 추가될때 마다 결제 금액 계산하기 위해 렌더링
   useEffect(() => {
     totalPay();
-    console.log(sumPayment);
   }, [checkList]);
 
   return (
@@ -376,17 +427,28 @@ function MypageBasket(props) {
                 </p>
               </td>
               <td colSpan={2} style={{ textAlign: "right" }}>
-                <button
+                {/* <button
                   type="button"
                   className="btn btn-outline-success"
                   onClick={requestPay}
                 >
                   결제 하기
+                </button> */}
+                {checkList && checkList.length === 0 ? (
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => alert("선택된 항목이 없습니다")}
+                  >
+                    결제하기
+                  </button>
+                ) : (
+                  <button className="btn btn-success" onClick={requestBtn}>
+                    결제하기
+                  </button>
+                )}
+                <button type="button" className="btn btn-danger">
+                  확인용
                 </button>
-                <button data-swal-template="#my-template" onClick={requestBtn}>
-                  Trigger modal
-                </button>
-                <button type="button">확인용</button>
               </td>
             </tr>
           ) : (
@@ -411,6 +473,8 @@ function MypageBasket(props) {
           )}
         </tbody>
       </table>
+      <button onClick={showModal}>모달 띄우기</button>
+      {modalOpen && <ModalBasic setModalOpen={setModalOpen} />}
     </div>
   );
 }
