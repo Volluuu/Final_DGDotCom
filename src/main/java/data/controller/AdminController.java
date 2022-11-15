@@ -91,6 +91,13 @@ public class AdminController {
 
     }
 
+    //삭제
+    @DeleteMapping("/deleteuser")
+    public void deleteUser(@RequestParam int u_num)
+    {
+        adminMapper.DeleteUser(u_num);
+    }
+
     /*------------------------- 상품 시작 ---------------------------*/
 
     //상품 가져오기
@@ -106,7 +113,7 @@ public class AdminController {
         //페이징 처리
         int ptotalCount;//총갯수
         int perPage = 6;//한페이지당 출력할 글 갯수
-        int perBlock = 10; //출력할 페이지 갯수76
+        int perBlock = 10; //출력할 페이지 갯수
         int startNum; //db에서 가져올 시작번호
         int startPage;//출력할 시작페이지
         int endPage;//출력할 끝페이지
@@ -119,6 +126,7 @@ public class AdminController {
         totalPage = ptotalCount / perPage + (ptotalCount % perPage == 0 ? 0 : 1);
         //시작페이지
         startPage = (currentPage - 1) / perBlock * perBlock + 1;
+
         //끝페이지
         endPage = startPage + perBlock - 1;
         if (endPage > totalPage)

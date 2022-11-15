@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components';
@@ -10,60 +10,75 @@ function AdProduct(props) {
     const {currentPage} = useParams();
     console.log("current page: " + currentPage);
     const [data, setData] = useState('');
-
-    // 체크된 아이템을 담을 배열
     const [checkItems, setCheckItems] = useState([]);
 
-    // 체크박스 단일 선택
+    const photoUrl = localStorage.url + "/product/";
+
+    const ProductPaging = () => {
+        let url = localStorage.url + "/admin/ProductPaging?currentPage=" + (currentPage === undefined ? '1' : currentPage);
+        axios.get(url)
+            .then(res => {
+                setData(res.data);
+            })
+    }
+
+
+    // 체크박스 전체 단일 개체 선택
     const handleSingleCheck = (checked, id) => {
         if (checked) {
-            // 단일 선택 시 체크된 아이템을 배열에 추가
-            setCheckItems(prev => [...prev, id]);
+            setCheckItems([...checkItems, id]);
         } else {
-            // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
-            setCheckItems(checkItems.filter((el) => el !== id));
+            // 체크 해제
+            setCheckItems(checkItems.filter((r) => r !== id));
         }
     };
 
     // 체크박스 전체 선택
     const handleAllCheck = (checked) => {
         if (checked) {
-            // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
+            // console.log("제발....ㅠㅠ.ㅠ.");
+            console.dir(checked);
             const idArray = [];
-            data.forEach((el) => idArray.push(el.id));
+            // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
+            // 전체 체크 박스 체크
+            data.list.forEach((el) => idArray.push(el.p_num));
+            console.log();
             setCheckItems(idArray);
-        } else {
-            // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
+        }
+
+        // 반대의 경우 전체 체크 박스 체크 삭제
+        else {
             setCheckItems([]);
         }
-    }
+    };
 
 
-    const photoUrl = localStorage.url + "/product/";
-    const ProductPaging = () => {
-        let url = localStorage.url + "/admin/ProductPaging?currentPage=" + (currentPage === undefined ? '1' : currentPage);
-        axios.get(url)
-            .then(res => {
-                console.dir(res.data);
-                setData(res.data);
-            })
-    }
+    console.log(checkItems.length);
 
-    //currentPage 값이 변경될때마다 함수 다시 호출
+
+//currentPage 값이 변경될때마다 함수 다시 호출
     useEffect(() => {
         ProductPaging();
     }, [currentPage])
+
     return (<div className='container-fluid'>
             <div className='row'>
                 <h5>총 {data.ptotalCount}개</h5>
                 <table className='table-hj'>
                     <thead className='thead-hj'>
                     <tr className='tr-hj' align='center'>
-                        <th className='th-hj'><Checkbox type='checkbox' name='selectAll'
-                                                     onChange={(e) => handleAllCheck(e.target.checked)}
-                            // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
-                                                     checked={checkItems.length === data.length ? true : false}/>
-                        </th>
+                        <th className='th-hj'>
+                            <Checkbox
+                                name="checkAll"
+                                type={"checkbox"}
+                                onChange={(e) => handleAllCheck(e.target.checked)}
+                                // checkItems의 갯 수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
+                                // 하나라도 빼면 체크 박스 해제
+                                checked={
+                                    checkItems.length === 6
+                                        ? true
+                                        : false
+                                }></Checkbox></th>
                         <th className='th-hj'>번호</th>
                         <th className='th-hj'>사진</th>
                         <th className='th-hj'>종류</th>
@@ -78,10 +93,12 @@ function AdProduct(props) {
 
                     <tbody className='tbody-hj'>
                     {data.list && data.list.map((r, idx) => <tr key={idx} className='tr-hj' align='center'>
-                        <td className='td-hj'><Checkbox type='checkbox' name={`select-${data.p_name}`}
-                            onChange={(e) => handleSingleCheck(e.target.checked, data.p_name)}
-                            // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                        checked={checkItems.includes(data.p_name) ? true : false} /></td>
+                        <td className='td-hj'><Checkbox
+                            type={"checkbox"}
+                            onChange={(e) => handleSingleCheck(e.target.checked,r.p_num)}
+                            // checkItems에 data.id가 있으면 체크 아니면 체크 해제
+                            checked={checkItems.includes(r.p_num) ? true : false}
+                        /></td>
                         <td className='td-hj'>{data.no - idx}</td>
                         <td className='td-hj'><img style={{width: '70px', borderRadius: '15px'}}
                                                    alt='' src={photoUrl + r.photo}/></td>
@@ -121,13 +138,3 @@ function AdProduct(props) {
 }
 
 export default AdProduct;
-
-let html = styled.html`
-height: 100%;
-`
-
-let body = styled.body`
-height: 100%;
-display: grid;
-place-content: center;
-`
