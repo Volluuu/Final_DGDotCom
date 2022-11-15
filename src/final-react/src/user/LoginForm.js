@@ -16,12 +16,10 @@ function LoginForm(props) {
 
     const onSubmitLogin = (e) => {
         e.preventDefault();
-        let signinUrl = process.env.REACT_APP_URL + "/user/signin";
-        let jwtLogin = process.env.REACT_APP_URL + "/auth/login";
+        let signinUrl = process.env.REACT_APP_URL + "/user/login";
 
-        axios.post(jwtLogin, {
-            "email": email,
-            "password": pass
+        axios.post(signinUrl, {
+            email, pass
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
                 console.dir(res.data);
@@ -29,7 +27,8 @@ function LoginForm(props) {
                 sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
                 navi("/");
-            }).catch(res => {
+            }).catch(error => {
+            alert(error);
         })
 
         // axios.post(signinUrl,

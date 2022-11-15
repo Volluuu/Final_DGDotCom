@@ -13,7 +13,7 @@
     </select>
     <insert id="insertUser" parameterType="UserDto">
         insert into user
-        values (null, #{email}, #{u_name}, #{pass}, #{hp}, #{addr}, #{gender}, 'USER', now(), 0, null)
+        values (null, #{email}, #{u_name}, #{pass}, #{hp}, #{addr}, #{gender}, 'ROLE_USER', now(), 0, null)
     </insert>
     <!--    아이디 중복 체크-->
     <select id="emailCheck" parameterType="String" resultType="int">
@@ -27,4 +27,5 @@
         from user
         where hp = #{hp}
     </select>
+
 </mapper>
