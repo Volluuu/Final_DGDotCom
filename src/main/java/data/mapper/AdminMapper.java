@@ -5,6 +5,7 @@ import data.dto.JoinDto;
 import data.dto.ProductDto;
 import data.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.hibernate.mapping.Join;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public interface AdminMapper {
     public List<UserDto> AdminUserPaging(Map<String,Integer> map);
 
     /* 회원정보를 삭제하기위한 메서드 */
-    public void DeleteUser(int u_num);
+    public String DeleteUser(int u_num);
 
     /* -------------------상품시작------------------- */
 
@@ -33,13 +34,19 @@ public interface AdminMapper {
     public List<JoinDto> ProductPaging(Map<String,Integer> map);
 
     /* 상품을 추가하기위한 메서드 */
-    public void InsertProduct(ProductDto dto);
+    public void InsertProduct(JoinDto dto);
+
+    public void InsertInven(JoinDto dto);
 
     /* 상품정보를 삭제하기위한 메서드 */
     public void DeleteProduct(int p_num);
 
     /* 상품정보를 업데이트하기위한 메서드 */
     public void UpdateProduct(int p_num);
+
+    /*상품의 가장 마지막 p_num을 알기위한 메서드*/
+    public int getMaxPnum();
+
 
     /* -------------------배너시작------------------- */
 
@@ -57,4 +64,5 @@ public interface AdminMapper {
 
     /* 배너데이터 */
     public AdminDto getBannerData(int b_num);
+
 }

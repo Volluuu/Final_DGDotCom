@@ -6,6 +6,7 @@ import data.dto.ProductDto;
 import data.dto.UserDto;
 import data.mapper.AdminMapper;
 import data.util.FileUtil;
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -162,25 +160,21 @@ public class AdminController {
         return smap;
     }
 
-    /*------------------------- 배너 시작 ---------------------------*/
-
     //사진 업로드시 저장할 파일명
     String uploadFileName;
 
-    //배너 사진 업로드
-    @PostMapping("/bannerUpload")
-    public String bannerUpload(@RequestParam MultipartFile uploadFile, HttpServletRequest request) {
-        System.out.println("Banner upload");
-
-        //업로드할 폴더 지정
-        String path = request.getSession().getServletContext().getRealPath("/bannerImage");
-
+    //사진 업로드
+    @PostMapping("/pimgupload")
+    public String fileUpload(@RequestParam MultipartFile uploadFile, HttpServletRequest request) {
+        System.out.println("상품사진 업로드");
+        //업로드할 폴더 구하기
+        String path = request.getSession().getServletContext().getRealPath("/product");
         //기존 업로드 파일이 있을 경우 삭제 후 다시 업로드
         if (uploadFileName != null) {
             FileUtil.deletePhoto(path, uploadFileName);
         }
 
-        //이전 업로드한 사진을 지운 후 현재 사진 업로드 하기
+        //이전 업로드한 사진을 지운 후 현재 사진 업로드하기
         uploadFileName = FileUtil.getChangeFileName(uploadFile.getOriginalFilename());
         try {
             uploadFile.transferTo(new File(path + "/" + uploadFileName));
@@ -190,6 +184,54 @@ public class AdminController {
         }
         return uploadFileName;
     }
+
+    @PostMapping("/productInsert")
+            public void InsertProduct(@RequestBody JoinDto dto)
+    {
+        dto.setPhoto(uploadFileName);
+        adminMapper.InsertProduct(dto);
+        //inven테이블에 마지막p_num에 +1을해서 들어가게하기
+        dto.setP_num(adminMapper.getMaxPnum());
+        adminMapper.InsertInven(dto);
+        uploadFileName = null;
+    }
+
+
+    @DeleteMapping("/deleteProduct")
+    public String DeleteProduct(@RequestParam(value = "")ArrayList<Integer>  p_num,
+                                @RequestParam(defaultValue = "1") int currentPage)
+    {
+        for(int i=0; i<p_num.size(); i++) {
+            adminMapper.DeleteProduct(p_num.get(i));
+        }
+        return "redirect:/admin/adproduct?currentPage="+currentPage;
+    }
+    /*------------------------- 배너 시작 ---------------------------*/
+
+//
+//    //배너 사진 업로드
+//    @PostMapping("/bannerUpload")
+//    public String bannerUpload(@RequestParam MultipartFile uploadFile, HttpServletRequest request) {
+//        System.out.println("Banner upload");
+//
+//        //업로드할 폴더 지정
+//        String path = request.getSession().getServletContext().getRealPath("/bannerImage");
+//
+//        //기존 업로드 파일이 있을 경우 삭제 후 다시 업로드
+//        if (uploadFileName != null) {
+//            FileUtil.deletePhoto(path, uploadFileName);
+//        }
+//
+//        //이전 업로드한 사진을 지운 후 현재 사진 업로드 하기
+//        uploadFileName = FileUtil.getChangeFileName(uploadFile.getOriginalFilename());
+//        try {
+//            uploadFile.transferTo(new File(path + "/" + uploadFileName));
+//            System.out.println("업로드 성공");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return uploadFileName;
+//    }
 
     @GetMapping("/bannerList")
     public List<AdminDto> getBannerList()

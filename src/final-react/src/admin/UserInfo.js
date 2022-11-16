@@ -6,7 +6,6 @@ import {Input} from "@mui/material";
 import Checkbox from "@material-ui/core/Checkbox";
 
 function UserInfo({path}) {
-    const navi = useNavigate();
     const {currentPage} = useParams();
     console.log("currentPage="+currentPage);
     const [data,setData] = useState('');
@@ -52,8 +51,8 @@ function UserInfo({path}) {
     };
 
     //유저 삭제
-    const deleteUser = (num) => {
-        const deleteUrl = localStorage.url + "/admin/deleteuser?num="+num;
+    const deleteUser = (u_num) => {
+        const deleteUrl = localStorage.url + "/admin/deleteuser?u_num="+u_num;
 
         if(window.confirm("삭제하시겠습니까?"))
         {
@@ -114,7 +113,7 @@ function UserInfo({path}) {
                                     // checkItems에 data.id가 있으면 체크 아니면 체크 해제
                                     checked={checkItems.includes(r.u_num) ? true : false}
                                 /></td>
-                                <td className='td-hj'>{data.no-idx}</td>
+                                <td className='td-hj'>{r.u_num}</td>
                                 <td className='td-hj'>{r.email}</td>
                                 <td className='td-hj'>{r.u_name}</td>
                                 <td className='td-hj'>{r.hp}</td>
@@ -122,9 +121,6 @@ function UserInfo({path}) {
                                 <td className='td-hj'>{r.gender}</td>
                                 <td className='td-hj'>{r.gaip}</td>
                                 <td className='td-hj'>{r.point}</td>
-                                <td><button className="btn-gradient red" onClick={()=>{deleteUser(r.u_num);
-                                }}>삭제</button></td>
-
                             </tr>
                         )
                     }
@@ -155,7 +151,8 @@ function UserInfo({path}) {
                             </Link> : ''
                     }
                     <div style={{float:'right'}}>
-
+                        <button className="btn-gradient red" onClick={()=>{deleteUser(checkItems);
+                        }}>삭제</button>
                     </div>
                 </div>
             </div>
