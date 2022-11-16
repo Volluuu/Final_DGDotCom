@@ -5,7 +5,6 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import {NavLink, useNavigate} from "react-router-dom";
 import axios from "axios";
-import SearchCard from "./SearchCard";
 import SearchListVirtual from "./SearchListVirtual";
 import BasicSearchShow from "./BasicSearchShow";
 import styled from "styled-components";
@@ -21,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
         border         : '2px solid #000',
         boxShadow      : theme.shadows[5],
         padding        : theme.spacing(2, 4, 3),
-        display:'flex',
+        display        : 'flex',
     },
 }));
+
 
 export default function TransitionsModal() {
     const classes = useStyles();
@@ -41,6 +41,7 @@ export default function TransitionsModal() {
     const [word, setWord] = useState('');
     const navigate = useNavigate();
     const [searchList, setSearchList] = useState([]);
+    const [latest, setLatest] = useState([]);
     const changeWord = useCallback(
         (e) => {
             setWord(e.target.value);
@@ -53,17 +54,33 @@ export default function TransitionsModal() {
             e.preventDefault();
             if (word === '') {
                 navigate("/product/list");
+                setOpen(false);
 
             } else {
                 navigate(`/product/list?keyword=${word}`)
+                axios.post(`http://localhost:9003/list/keyword?word=${word}`).then(res => {
+                });
+                setOpen(false);
+                setWord('');
             }
             const setOpenAndWord = () => {
-                setOpen(false);
                 setWord('');
             }
         },
         [word],
     );
+    const updateLatest = async () => {
+        const num = sessionStorage.u_num;
+        const res = await axios.get(`http://localhost:9003/list/latest/get?u_num=${num}`)
+        setLatest(res.data);
+    }
+    const concatLatest = async () => {
+
+    }
+
+    const deleteLatest = async () => {
+
+    }
     const updateWord = () => {
         const res = axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
             setSearchList(res.data);
@@ -71,6 +88,7 @@ export default function TransitionsModal() {
     }
 
     useEffect(() => {
+        updateLatest().then();
         const debounce = setTimeout(() => {
             if (word) {
                 updateWord();
@@ -101,7 +119,7 @@ export default function TransitionsModal() {
                 }}
             >
                 <Fade in={open}>
-                    <div className={classes.paper} style={{height: "100%", display:"flex"}}>
+                    <div className={classes.paper} style={{height: "100%", display: "flex", overflowY: "auto"}}>
                         <p id="transition-modal-description">
                             <form onSubmit={onSubmit}>
                                 <InputBar>
@@ -118,19 +136,18 @@ export default function TransitionsModal() {
                                                 color          : "white",
                                                 padding        : "5px",
                                                 marginTop      : "20px",
-                                                height        : "34px",
-                                                width: "50px",
+                                                height         : "34px",
+                                                width          : "50px",
                                             }}>검색
                                     </button>
                                 </InputBar>
-                                <div style={{margin:"0 auto"}}>
-                                {
-                                    word === '' ? <BasicSearchShow/> : searchList.length < 1 ?
-                                        <NoResult>no result</NoResult> :
-                                        <SearchListVirtual searchlist={searchList}/>
-                                }
+                                <div style={{margin: "0 auto"}}>
+                                    {
+                                        word === '' ? <BasicSearchShow latest={latest} setLatest={setLatest} open={open} handOpen={handleOpen} handleClose={handleClose}/> : searchList.length < 1 ?
+                                            <NoResult>no result</NoResult> :
+                                            <SearchListVirtual searchlist={searchList} open={open} handOpen={handleOpen} handleClose={handleClose}/>
+                                    }
                                 </div>
-                                <NavLink to={"/product/list"} onClick={handleClose}>상품 리스트로 이동</NavLink><br/>
                             </form>
                         </p>
                     </div>
@@ -141,20 +158,20 @@ export default function TransitionsModal() {
 }
 
 const InputBar = styled.div`
-  width         : 700px;
-  display       : flex;
+  width: 700px;
+  display: flex;
   justify-content: space-between;
-  @media(max-width: 768px) {
-    width:432px;
+  @media (max-width: 768px) {
+    width: 415px;
     & > input {
       width: auto;
     }
   }
 `
 const NoResult = styled.div`
-    width:700px;
-  height:800px;
-  @media(max-width: 768px) {
-    width: 432px;
+  width: 700px;
+  height: 800px;
+  @media (max-width: 768px) {
+    width: 415px;
   }
 `

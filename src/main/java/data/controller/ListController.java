@@ -2,6 +2,7 @@ package data.controller;
 
 import data.dto.KeywordDto;
 import data.dto.ProductDto;
+import data.dto.UserDto;
 import data.mapper.KeywordMapper;
 import data.mapper.ListMapper;
 import data.mapper.ProductMapper;
@@ -21,31 +22,63 @@ public class ListController {
 	ListMapper listMapper;
 	@Autowired
 	KeywordMapper keywordMapper;
+
 	@GetMapping("/search")
 	public List<ProductDto> getProductList(@RequestParam String word) {
 		return listMapper.getSearchList(word);
 	}
+
 	@GetMapping("/card")
 	public ProductDto getElt(@RequestParam int num) {
 		return listMapper.getElt(num);
 	}
 
-//**********************************************위에는 리스트 아래는 키워드 나누기 귀찬아서 ㅎㅎ; ***************
+	//**********************************************위에는 리스트 아래는 키워드 나누기 귀찬아서 ㅎㅎ; ***************
 	@PostMapping("/keyword")
-	public void refreshKeyword(@RequestParam String word){
+	public void refreshKeyword(@RequestParam String word) {
 		int count = keywordMapper.isThere(word);
-		if(count == 0) {
+		if (count == 0) {
 			keywordMapper.insertKeyword(word);
 		} else {
 			keywordMapper.updateKeyword(word);
 		}
 	}
+
 	@GetMapping("/hot")
 	public List<KeywordDto> getTopTen() {
 		return keywordMapper.getTopTen();
 	}
+
 	@GetMapping("/brand")
 	public List<ProductDto> getHotBrand() {
 		return keywordMapper.getHotBrand();
+	}
+
+	@GetMapping("/latest/get")
+	public List<String> getLatestword(@RequestParam int num) {
+		String search = keywordMapper.getLatestWord(num);
+		return Arrays.asList(search.split(","));
+	}
+
+	@PostMapping("/latest/update")
+	public void updateLatestWord(@RequestParam String word, @RequestParam int num) {
+		String search = keywordMapper.getLatestWord(num);
+		Map<String, Object> map = new HashMap<>();
+		if (word != null && Arrays.asList(search.split(",")).size() <= 5) {
+			String newSearch = search.concat(word);
+			map.put("search", newSearch);
+			map.put("num", num);
+			keywordMapper.updateLatestWord(map);
+		} else if (word != null && Arrays.asList(search.split(",")).size() > 5) {
+			String newSearch = search.substring(search.indexOf(",") + 1).concat(word);
+			map.put("search", newSearch);
+			map.put("num", num);
+			keywordMapper.updateLatestWord(map);
+		}
+	}
+
+	@PostMapping("latest/delete")
+	public void deleteLatestWord(@RequestParam int num) {
+		keywordMapper.deleteLatestWord(num);
 	}
 }

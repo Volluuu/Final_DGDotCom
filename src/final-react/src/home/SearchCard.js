@@ -25,8 +25,8 @@ const SearchCard = ({key, product, style}) => {
         <SearchElement>
             <img src={ProductUrl} alt=""/>
             <div style={{paddingLeft:"10px"}}>
-                <p style={{fontSize:"14px" , marginBottom:"5px"}}>{product.brand}</p>
-                <p style={{fontSize:"18px"}}>{product.p_name}</p>
+                <p style={{fontSize:"12px" , marginBottom:"5px"}}>{product.brand}</p>
+                <p style={{fontSize:"14px"}}>{product.p_name}</p>
             </div>
             </SearchElement>
             </Link>
