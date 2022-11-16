@@ -6,6 +6,7 @@ import data.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface KeywordMapper {
@@ -15,4 +16,7 @@ public interface KeywordMapper {
 	public void updateKeyword(String word);
 	public int isThere(String word);
 	public List<ProductDto> getHotBrand();
+	public String getLatestWord(int num);
+	public void updateLatestWord(Map<String, Object> map);
+	public void deleteLatestWord(int num);
 }

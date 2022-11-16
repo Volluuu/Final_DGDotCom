@@ -113,10 +113,9 @@ function Menu(props) {
             </Category>
         </>
 }
-                    <TransitionsModal/>
+        <TransitionsModal/>
         </span>
             </Searchbar>
-            <AnnouncementBar/>
         </>
     );
 }
