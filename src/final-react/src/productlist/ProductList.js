@@ -9,18 +9,27 @@ import SearchIcon from '@material-ui/icons/Search';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 
+//배너
+import {Swiper, SwiperSlide} from "swiper/react";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "./ProductListCss.css";
+// import required modules
+import {Autoplay, Navigation, Pagination} from "swiper";
+
 //칩
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
 
-//아코디언
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 
 import Typography from '@material-ui/core/Typography';
 
-//체크박스
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -43,7 +52,7 @@ const useStyles3 = makeStyles((theme) => ({
 const useStyles5 = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         flexWrap: 'wrap',
         listStyle: 'none',
         padding: theme.spacing(0.5),
@@ -262,10 +271,14 @@ function ProductList(props) {
 
     //칩
     const chipclasses = useStyles5();
-    const [chipData, setChipData] = React.useState([
-        { key: 0, label: 'Angular' },
-        { key: 1, label: 'jQuery' },
-    ]);
+    // const [chipData, setChipData] = React.useState([
+    //     { key: 0, label: 'Angular' },
+    //     { key: 1, label: 'jQuery' },
+    // ]);
+
+    // const handleDelete5 = (chipToDelete) => () => {
+    //     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    // };
 
     useEffect(() => {
         const infiniteScroll = (event) => {
@@ -284,11 +297,10 @@ function ProductList(props) {
             window.removeEventListener('scroll', infiniteScroll);
         };
     }, [])
-
     return (
         <div>
             <h3 style={{textAlign:'center'}} >SHOP</h3><br/>
-            <form style={{textAlign:'center', width:'950px', height:'150px',
+            <form style={{textAlign:'center', width:'950px', height:'70px',
                 marginLeft:'400px',marginTop:'50px'}}>
                 <TextField id="standard-basic" placeholder="검색어 입력"
                            value={keyword}
@@ -303,6 +315,30 @@ function ProductList(props) {
                            }}
                 />
             </form>
+
+            <div style={{marginLeft:'40px',width:'1590px',height:'150px'}}>
+
+                    <Swiper
+                        style={{
+                            "--swiper-navigation-color": "#222",
+                            "--swiper-pagination-color": "red"
+                        }}
+                        navigation={true}
+                        pagination={{clickable: true}}
+                        centeredSlides={true}
+                        loop={true}
+                        autoplay={{
+                            delay               : 3500,
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Navigation, Pagination, Autoplay]} className="mySwiper">
+                        <SwiperSlide>Slide 1</SwiperSlide>
+                        <SwiperSlide>Slide 2</SwiperSlide>
+                        <SwiperSlide>Slide 3</SwiperSlide>
+                        <SwiperSlide>Slide 4</SwiperSlide>
+                    </Swiper>
+
+            </div>
 
             <div style={{marginLeft:'1490px',width:'150px'}}>
                 <FormControl className={classes.formControl}>
@@ -324,19 +360,20 @@ function ProductList(props) {
                 </FormControl>
             </div>
 
-            <div style={{marginLeft:'335px',width:'200px'}}>
+            <div style={{marginLeft:'330px',width:'600px'}}>
                 <Paper component="ul" className={chipclasses.root}  elevation={0}>
-                    {chipData.map((data) => {
+                    {categories.map((category, index) => {
                         let icon;
 
-                        if (data.label === 'React') {
-
-                        }
+                        // if (data.label === 'React') {
+                        //     icon = <TagFacesIcon />;
+                        // }
                         return (
-                            <li key={data.key}>
+                            <li key={index}>
                                 <Chip
-                                    label={data.label}
-
+                                    label={category}
+                                    // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    onDelete={() => selectCategory(category)}
                                     className={chipclasses.chip}
                                 />
                             </li>
