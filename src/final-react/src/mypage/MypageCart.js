@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
@@ -12,16 +12,9 @@ function MypageBasket(props) {
   const productUrl = process.env.REACT_APP_URL + "/product/"; // 이미지 주소
   const [sumPayment, setSumPayment] = useState(""); //총 결제 금액
   const [u_data, setU_data] = useState(""); //유저정보
-  const [perchasedata, setPerchasedata] = useState(""); //결제정보
+  const [perchasedata, setPerchasedata] = useState({}); //결제정보
   const navi = useNavigate();
-
-  // 모달창 노출 여부 state
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // 모달창 노출
-  const showModal = () => {
-    setModalOpen(true);
-  };
+  const renderCount = useRef(0);
 
   // CommonJS
   const Swal = require("sweetalert2"); //swal창
@@ -31,88 +24,19 @@ function MypageBasket(props) {
     let userUrl = localStorage.url + "/cart/userdata?u_num=" + u_num;
 
     axios.get(userUrl).then((res) => {
-      console.log("user 호출 성공");
+      // console.log("user 호출 성공");
       setU_data(res.data);
     });
   };
-
-  //결제 버튼 클릭 시, Swal 이벤트
-  async function requestBtn() {
-    await Swal.fire({
-      title: "결제 정보 입력",
-      html: `<p style={{textAlign:'left'}}>배송받을 이름</p><br/><input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" >
-  <p style={{textAlign:'left'}}>배송받을 연락처 </p><br/><input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-없이)" maxLength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-  <p style={{textAlign:'left'}}>배송받을 주소</p><br/><div className="input-group"><input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" >
-  <p style={{textAlign:'left'}}>구매 이메일</p><br/><input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력">
-  `,
-      confirmButtonText: "결제하기",
-      focusConfirm: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showCancelButton: true,
-      preConfirm: () => {
-        const o_name = Swal.getPopup().querySelector("#o_name").value;
-        const o_hp = Swal.getPopup().querySelector("#o_hp").value;
-        const o_addr = Swal.getPopup().querySelector("#o_addr").value;
-        const o_email = Swal.getPopup().querySelector("#o_email").value;
-        if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
-          Swal.showValidationMessage(
-            `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-          );
-          return false;
-        }
-        return { o_name, o_hp, o_addr, o_email };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        requestPay(result);
-      } else if (result.isDenied) {
-        alert("취소됨");
-      }
-    });
-  }
-
-  // async function requestBtn() {
-  //   const { value: formValues } = await Swal.fire({
-  //     title: "결제 정보 입력",
-  //     html:
-  //       '<input id="swal-input1" class="swal2-input">' +
-  //       '<input id="swal-input2" class="swal2-input">' +
-  //       '<input id="swal-input3" class="swal2-input">' +
-  //       '<input id="swal-input4" class="swal2-input">',
-  //     confirmButtonText: "결제하기",
-  //     focusConfirm: false,
-  //     allowOutsideClick: false,
-  //     allowEscapeKey: false,
-  //     showCancelButton: true,
-  //     preConfirm: () => {
-  //       const o_name = document.getElementById("#swal-input1").value;
-  //       const o_hp = document.getElementById("#swal-input2").value;
-  //       const o_addr = document.getElementById("#swal-input3").value;
-  //       const o_email = document.getElementById("#swal-input4").value;
-  //       if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
-  //         Swal.showValidationMessage(
-  //           `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-  //         );
-  //         return false;
-  //       }
-  //       return { o_name, o_hp, o_addr, o_email };
-  //     },
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       Swal.fire(JSON.stringify(formValues));
-  //     }
-  //   });
-  // }
 
   //u_num에 해당하는 cart data 불러오기
   const cartdata = () => {
     const cartListUrl = localStorage.url + "/cart/list?u_num=" + u_num;
 
     axios.get(cartListUrl).then((res) => {
-      console.log("cart data 호출 성공");
+      // console.log("cart data 호출 성공");
       setCartlist(res.data);
-      console.dir("data:" + JSON.stringify(cartlist));
+      // console.dir("data:" + JSON.stringify(cartlist));
     });
   };
 
@@ -127,8 +51,9 @@ function MypageBasket(props) {
       cartlist.list.forEach((list) => checkedListArray.push(list));
       setCheckList(checkedListArray);
       // console.log("chkarr2:" + JSON.stringify(checkedListArray));
-      console.dir(checkedListArray);
+      // console.dir(checkedListArray);
       totalPay();
+      console.log("chkList:" + JSON.stringify(checkList));
     }
     // 전체 해제 시,
     else {
@@ -137,12 +62,12 @@ function MypageBasket(props) {
     }
   });
 
-  console.log("chkList:" + JSON.stringify(checkList));
   // 개별 체크 클릭 시 발생하는 함수
   const singleCheck = useCallback((checked, citem) => {
     if (checked) {
       setCheckList([...checkList, citem]);
       totalPay();
+      console.log("chkList:" + JSON.stringify(checkList));
     } else {
       setCheckList(checkList.filter((el) => el !== citem));
       totalPay();
@@ -195,51 +120,242 @@ function MypageBasket(props) {
     total = "";
   };
 
-  // 결제
-  const requestPay = (result) => {
-    const IMP = window.IMP; // 생략 가능
-    IMP.init("imp81470772"); // 가맹점 식별 코드
-    // IMP.request_pay(param, callback) 결제창 호출
-    IMP.request_pay(
-      {
-        // param
-        pg: "html5_inicis.INIpayTest", // PG 모듈
-        pay_method: "card", // 지불 수단
-        merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-        name: result.p_name, // 상품명
-        // amount: sumPayment, // 가격
-        amount: "100",
-        buyer_email: result.o_email,
-        buyer_name: result.o_name, // 구매자 이름
-        buyer_tel: result.o_hp, // 구매자 연락처
-        buyer_addr: result.o_addr, // 구매자 주소지
-        // buyer_postcode: "01181", // 구매자 우편번호
-      },
-      (rsp) => {
-        // callback
-        if (rsp.success) {
-          // 결제 성공 시, 출력 창
-          let msg = "결제가 완료되었습니다.\n";
-          msg += "고유ID : " + rsp.imp_uid + "\n";
-          msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-          msg += "결제 선택 : " + rsp.pg + "\n";
-          msg += "결제 방식 : " + rsp.pay_method + "\n";
-          msg += "결제 금액 : " + rsp.paid_amount + "\n";
-          msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-          msg += "상품명 : " + rsp.name + "\n";
-          msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-          msg += "구매자 번호 : " + rsp.buyer_hp + "\n";
-          msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-          msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+  // const sel = () => {
+  //   // let b = JSON.stringify(checkList);
 
-          alert("결제 성공:" + msg);
-        } else {
-          // 결제 실패 시 로직,
-          alert("실패 :" + rsp.error_msg);
+  //   // console.log("b:" + b);
+
+  //   // for (let i = 0; i < checkList.length; i++) {
+  //   //   let a = checkList[i];
+
+  //   //   console.dir(a);
+  //   // }
+  //   let b = JSON.stringify(checkList);
+  //   // console.log("b:" + b);
+  //   return b;
+  // };
+
+  //결제 버튼 클릭 시, Swal 이벤트
+  function requestBtn() {
+    // let b = sel();
+
+    Swal.fire({
+      title: "결제 정보 입력",
+      html: `<p style={{textAlign:'left'}}>배송받을 이름</p><br/><input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" >
+  <p style={{textAlign:'left'}}>배송받을 연락처 </p><br/><input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-없이)" maxLength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+  <p style={{textAlign:'left'}}>배송받을 주소</p><br/><div className="input-group"><input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" >
+  <p style={{textAlign:'left'}}>구매 이메일</p><br/><input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력">
+  
+  `,
+      confirmButtonText: "결제하기",
+      focusConfirm: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        // const o_name = Swal.getPopup().querySelector("#o_name").value;
+        const o_name = document.getElementById("o_name").value;
+        const o_hp = document.getElementById("o_hp").value;
+        const o_addr = document.getElementById("o_addr").value;
+        const o_email = document.getElementById("o_email").value;
+        //       <input type="hidden" id="p_name" class="swal2-input" value=${checkList.p_name}>
+        // <input type="hidden" id="c_num" class="swal2-input" value=${checkList.c_num}>
+        // <input type="hidden" id="p_num" class="swal2-input" value=${checkList.p_num}>
+        // <input type="hidden" id="p_size" class="swal2-input" value=${checkList.p_size}>
+        // <input type="hidden" id="amount" class="swal2-input" value=${checkList.amount}>
+        // <input type="hidden" id="price" class="swal2-input" value=${checkList.price}>
+        // <input type="hidden" id="discount" class="swal2-input" value=${checkList.discount}></input>
+        // const p_name = document.getElementById("p_name").value;
+        // const p_num = document.getElementById("p_num").value;
+        // const c_num = document.getElementById("c_num").value;
+        // const p_size = document.getElementById("p_size").value;
+        // const amount = document.getElementById("amount").value;
+        // const price = document.getElementById("price").value;
+        // const discount = document.getElementById("discount").value;
+        // const checklist = document.getElementById("checklist").value;
+        if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
+          Swal.showValidationMessage(
+            `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+          );
+          return false;
         }
+
+        return {
+          o_name,
+          o_hp,
+          o_addr,
+          o_email,
+          // b,
+          // p_name,
+          // c_num,
+          // p_num,
+          // p_size,
+          // amount,
+          // price,
+          // discount,
+        };
+      },
+    }).then((result) => {
+      console.dir(result);
+      // let checklist = JSON.parse(result.value.b);
+      // console.log("cccc" + result.value.b);
+      // console.log("dddd" + checklist);
+      // console.log("ooo:" + checklist.length);
+      let p_nameArr = new Array();
+      for (let i = 0; i < checkList.length; i++) {
+        p_nameArr += checkList[i].p_name;
+        console.log("aa:" + p_nameArr);
       }
-    );
-  };
+
+      if (result.isConfirmed) {
+        // console.dir(result.value);
+        console.dir(result.value);
+        // arr1(result.value);
+        //---------------------------------------------------------------
+        // if (checklist.p_name !== "") {
+        const IMP = window.IMP; // 생략 가능
+        IMP.init("imp81470772"); // 가맹점 식별 코드
+
+        // console.dir(perchasedata);
+
+        // IMP.request_pay(param, callback) 결제창 호출
+        IMP.request_pay(
+          {
+            // param
+            // pg: "html5_inicis.INIpayTest", // PG 모듈
+            pg: "kakaopay.TC0ONETIME", // PG 모듈
+            pay_method: "card", // 지불 수단
+            merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+            name:
+              p_nameArr.slice(0, 12) +
+              " ... 외 " +
+              (checkList.length - 1) +
+              "건", // 상품명
+            // amount: sumPayment, // 가격
+            amount: "100",
+            buyer_email: result.value.o_email,
+            buyer_name: result.value.o_name, // 구매자 이름
+            buyer_tel: result.value.o_hp, // 구매자 연락처
+            buyer_addr: result.value.o_addr, // 구매자 주소지
+            // buyer_postcode: "01181", // 구매자 우편번호
+          },
+          (rsp) => {
+            // callback
+            // console.log("rsp:" + JSON.stringify(rsp));
+            if (rsp.success) {
+              // 결제 성공 시, 출력 창
+              let msg = "결제가 완료되었습니다.\n";
+              msg += "고유ID : " + rsp.imp_uid + "\n";
+              msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+              msg += "결제 선택 : " + rsp.pg + "\n";
+              msg += "결제 방식 : " + rsp.pay_method + "\n";
+              msg += "결제 금액 : " + rsp.paid_amount + "\n";
+              // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+              msg += "상품명 : " + rsp.name + "\n";
+              msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+              msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+              msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+              msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+
+              alert("결제 성공:" + msg);
+
+              for (let i = 0; i < checkList.length; i++) {
+                let tradeInsertUrl = localStorage.url + "/trade/insert";
+
+                axios
+                  .post(tradeInsertUrl, {
+                    u_num,
+                    p_num: checkList[i].p_num,
+                    merchant_uid: rsp.merchant_uid,
+                    t_name: rsp.buyer_name,
+                    t_hp: rsp.buyer_tel,
+                    t_email: rsp.buyer_email,
+                    t_addr: rsp.buyer_addr,
+                    count: checkList[i].amount,
+                    lastprice: sumPayment,
+                    p_size: checkList[i].p_size,
+                    state: "결제완료",
+                  })
+                  .then((res) => {})
+                  .catch((error) => {
+                    console.log("실패" + error);
+                  });
+              }
+            } else {
+              // 결제 실패 시 로직,
+              alert("실패 :" + rsp.error_msg);
+            }
+          }
+        );
+        // }
+        //--------------------------------------------------------------------
+        // setPerchasedata([
+        //   {
+        //     o_name: result.value.o_name,
+        //     o_addr: result.value.o_addr,
+        //     o_hp: result.value.o_hp,
+        //     o_email: result.value.o_email,
+        //   },
+        // ]);
+
+        console.log("결재정보:" + JSON.stringify(perchasedata));
+      } else {
+        alert("취소됨");
+      }
+      console.log("결재정보2:" + JSON.stringify(perchasedata));
+    });
+  }
+
+  // 결제
+  // const requestPay = (perchasedata) => {
+  //   const IMP = window.IMP; // 생략 가능
+  //   IMP.init("imp81470772"); // 가맹점 식별 코드
+
+  //   console.log("독자:", JSON.stringify(perchasedata));
+
+  //   // IMP.request_pay(param, callback) 결제창 호출
+  //   IMP.request_pay(
+  //     {
+  //       // param
+  //       // pg: "html5_inicis.INIpayTest", // PG 모듈
+  //       pg: "kakaopay.TC0ONETIME", // PG 모듈
+  //       pay_method: "card", // 지불 수단
+  //       merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+  //       name: perchasedata.p_name, // 상품명
+  //       // amount: sumPayment, // 가격
+  //       amount: "100",
+  //       buyer_email: perchasedata.o_email,
+  //       buyer_name: perchasedata.o_name, // 구매자 이름
+  //       buyer_tel: perchasedata.o_hp, // 구매자 연락처
+  //       buyer_addr: perchasedata.o_addr, // 구매자 주소지
+  //       // buyer_postcode: "01181", // 구매자 우편번호
+  //     },
+  //     (rsp) => {
+  //       // callback
+  //       console.log("rsp:" + JSON.stringify(rsp));
+  //       if (rsp.success) {
+  //         // 결제 성공 시, 출력 창
+  //         let msg = "결제가 완료되었습니다.\n";
+  //         msg += "고유ID : " + rsp.imp_uid + "\n";
+  //         msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+  //         msg += "결제 선택 : " + rsp.pg + "\n";
+  //         msg += "결제 방식 : " + rsp.pay_method + "\n";
+  //         msg += "결제 금액 : " + rsp.paid_amount + "\n";
+  //         msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+  //         msg += "상품명 : " + rsp.name + "\n";
+  //         msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+  //         msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+  //         msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+  //         msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+
+  //         alert("결제 성공:" + msg);
+  //       } else {
+  //         // 결제 실패 시 로직,
+  //         alert("실패 :" + rsp.error_msg);
+  //       }
+  //     }
+  //   );
+  // };
 
   //초기 실행
   useEffect(() => {
@@ -255,7 +371,7 @@ function MypageBasket(props) {
 
   return (
     <div data-v-f263fda4="" data-v-39b2348a="" className="content_area">
-      <h1>Order / Payment</h1>
+      <h1 style={{ textAlign: "left" }}>Order / Payment</h1>
       <div data-v-f263fda4="" className="recent_purchase">
         <div
           data-v-0c307fea=""
@@ -343,7 +459,7 @@ function MypageBasket(props) {
                     name="check-item"
                     key={citem.c_num}
                     className="form-check-input"
-                    style={{ marginTop: "30px" }}
+                    style={{ marginTop: "46px" }}
                     onClick={totalPay}
                     onChange={(e) => singleCheck(e.target.checked, citem)}
                     checked={checkList.includes(citem) ? true : false}
@@ -393,7 +509,7 @@ function MypageBasket(props) {
                 <td>
                   <button
                     type="button"
-                    className="btn-3d.cyan"
+                    className="btn btn-secondary"
                     value={citem.c_num}
                   >
                     수정
@@ -401,7 +517,7 @@ function MypageBasket(props) {
                   <br />
                   <button
                     type="button"
-                    className="btn-3d.cyan"
+                    className="btn btn-secondary"
                     value={citem.c_num}
                     onClick={deleteCart}
                   >
@@ -443,7 +559,7 @@ function MypageBasket(props) {
                     결제하기
                   </button>
                 ) : (
-                  <button className="btn-3d.green" onClick={requestBtn}>
+                  <button className="btn btn-success" onClick={requestBtn}>
                     결제하기
                   </button>
                 )}

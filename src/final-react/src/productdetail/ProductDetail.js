@@ -27,8 +27,11 @@ function ProductDetail(props) {
   }, []);
 
   return (
-    <div style={{ width: "80%", margin: "0 auto" }}>
+    <div style={{ width: "70%", margin: "0 auto" }}>
+      <br />
       <h1>상품 상세 폼</h1>
+      <br />
+      <br />
       <div style={{ float: "left", width: "50%" }}>
         <DetailImage row={productdata} />
       </div>

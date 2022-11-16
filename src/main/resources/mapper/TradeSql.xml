@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.TradeMapper">
+<!--    유저정보 -->
+    <select id="userOrder" parameterType="int" resultType="UserDto">
+
+    </select>
+<!--    관리자 전체 주문 수량 확인-->
+    <select id="getOrderCount" resultType="int">
+
+    </select>
+<!--    자신 데이터 총 수향-->
+   <select id="getUserOrderCount" parameterType="int" resultType="int">
+
+   </select>
+<!--    추가-->
+    <insert id="insertOrder" parameterType="TradeDto">
+        insert into trade (t_num,u_num,p_num,merchant_uid,t_name,t_hp,t_email,t_addr,count,lastprice,p_size,state,day)
+        values(null,#{u_num},#{p_num},#{merchant_uid},#{t_name},#{t_hp},#{t_email},#{t_addr},#{count},#{lastprice},#{p_size},#{state},now())
+    </insert>
+<!-- 내역 출력 -->
+    <select id="getOrderList" parameterType="map" resultType="TradeDto">
+
+    </select>
+<!-- PK 검색-->
+   <select id="getOrderData" parameterType="int" resultType="TradeDto">
+
+   </select>
+<!-- 주문번호 검색-->
+    <select id="getUidData" parameterType="String" resultType="TradeDto">
+
+    </select>
+<!-- PK로 삭제 -->
+    <delete id="deleteorder" parameterType="int">
+
+    </delete>
+<!-- 주문내역으로 삭제-->
+    <delete id="deleteUid" parameterType="String">
+
+    </delete>
+</mapper>

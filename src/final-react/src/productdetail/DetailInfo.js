@@ -175,51 +175,56 @@ function DetailInfo(props) {
 
   return (
     <div>
-      <h1>info</h1>
-      <span>{row.brand}</span>
+      <h1>{row.category}</h1>
       <br />
-      <span>{row.p_name}</span>
+      <h3>{row.brand}</h3>
+      <h5>{row.p_name}</h5>
+
       <br />
-      <span>{row.category}</span>
-      <br />
-      <span>
+      <h5>
         {Number(row.price)
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         원
-      </span>
+      </h5>
       <br />
       <div>
-        <span>옵션 선택</span>
+        <p>옵션 선택</p>
         {selectform(row.category)}
       </div>
+      <br />
       <div>
-        <span>수량</span>
-        <br />
+        <p>수량</p>
         <RemoveCircleOutline value={amount} onClick={subamount} />
         &nbsp;<span>{amount}</span>&nbsp;
         <AddCircleOutlineRounded value={amount} onClick={addamount} />
       </div>
+      <br />
       <div>
         <h1>
-          총 결제 금액 : {itemlist.amount && itemlist.amount} //
+          총 결제 금액 : {itemlist.amount && itemlist.amount} /
           {Number(row.price * amount)
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           원
         </h1>
       </div>
-      <button type="button" className="btn btn-outline-danger purchasebtn">
-        구매
-      </button>
-      &nbsp;&nbsp;
-      <button
-        type="button"
-        className="btn btn-outline-success cartbtn"
-        onClick={addcart}
-      >
-        장바구니
-      </button>
+      <div style={{ textAlign: "center" }}>
+        <button
+          type="button"
+          className="btn btn-outline-danger btn-lg purchasebtn"
+        >
+          구매
+        </button>
+        &nbsp;&nbsp;
+        <button
+          type="button"
+          className="btn btn-outline-success btn-lg cartbtn"
+          onClick={addcart}
+        >
+          장바구니
+        </button>
+      </div>
       <br />
     </div>
   );
