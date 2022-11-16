@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components';
 import './button.css'
@@ -11,6 +11,7 @@ function AdProduct(props) {
     console.log("current page: " + currentPage);
     const [data, setData] = useState('');
     const [checkItems, setCheckItems] = useState([]);
+    const navi = useNavigate();
 
     const photoUrl = localStorage.url + "/product/";
 
@@ -54,6 +55,23 @@ function AdProduct(props) {
 
 
     console.log(checkItems.length);
+
+    //상품 삭제
+    const deleteProduct = (p_num) => {
+        const deleteUrl = localStorage.url + "/admin/deleteProduct?p_num="+p_num
+
+        if(window.confirm("삭제하시겠습니까?"))
+        {
+            alert("삭제완료");
+            axios.delete(deleteUrl)
+                .then(res => {
+                    window.location.reload();
+                })
+        }else {
+            alert("취소합니다");
+        }
+
+    }
 
 
 //currentPage 값이 변경될때마다 함수 다시 호출
@@ -128,9 +146,12 @@ function AdProduct(props) {
                             <b style={{color: 'black'}}>다음</b>
                         </Link> : ''}
                     <div style={{float: 'right'}}>
-                        <button href="#" className="btn-gradient green">추가</button>
+                        <button href="#" className="btn-gradient green" onClick={() => {
+                            navi("/admin/insertform");
+                        }}>추가</button>
                         <button href="#" className="btn-gradient purple">수정</button>
-                        <button href="#" className="btn-gradient red">삭제</button>
+                        <button className="btn-gradient red" onClick={()=>{deleteProduct(checkItems)
+                        }}>삭제</button>
                     </div>
                 </div>
             </div>

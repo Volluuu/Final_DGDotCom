@@ -7,6 +7,7 @@ import Cs from "./Cs";
 import Banner from "./Banner";
 import {useParams} from "react-router-dom";
 import logo from "../admin/logo192.png";
+import InsertForm from "./InsertForm";
 
 function AdminMenu(props) {
     const {path}=useParams();
@@ -114,6 +115,10 @@ function AdminMenu(props) {
                         {
                             path==="adproduct" &&
                             <AdProduct/>
+                        }
+                        {
+                            path==="insertform" &&
+                            <InsertForm/>
                         }
                         {
                             path==="shipping" &&
