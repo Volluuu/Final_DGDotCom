@@ -103,6 +103,7 @@ function LoginForm(props) {
                                 disabled={loginBtn ? true : false}
                                 data-v-3d1bcc82=""
                                 data-v-b02d33c2=""
+                                style={{lineHeight: "50%"}}
                         >
                             로그인
                         </button>
@@ -122,7 +123,8 @@ function LoginForm(props) {
                 <div className="social_login" data-v-b02d33c2="">
                     <button type="button" className="btn btn_login_naver full outline" data-v-3d1bcc82=""
                             data-v-b02d33c2=""
-                            disabled={true}>
+                            disabled={true}
+                            style={{lineHeight: "50%"}}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
                              data-v-b02d33c2="">
                             <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-naver"
@@ -132,7 +134,8 @@ function LoginForm(props) {
                     </button>
                     <button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""
                             data-v-b02d33c2=""
-                            disabled={true}>
+                            disabled={true}
+                            style={{lineHeight: "50%"}}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
                              data-v-b02d33c2="">
                             <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-apple"

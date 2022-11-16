@@ -443,7 +443,7 @@ function SignupForm(props) {
                                   Swal.fire(
                                       '이메일 인증이 취소되었습니다.',
                                       '',
-                                      "success"
+                                      "warning"
                                   )
                                   setEmailCodeModal("none");
                                   emailCodeRef.current.value = "";
