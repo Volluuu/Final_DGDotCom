@@ -21,15 +21,15 @@ public class CartDto {
     private  String photo;
     private int discount;
 //    유저 테이블 정보
-    private String email;
-    private String u_name;
-    private String pass;
-    private String hp;
-    private String addr;
-    private String gender;
-    private String isadmin;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
-    private Timestamp gaip;
-    private int point;
-    private String search;
+//    private String email;
+//    private String u_name;
+//    private String pass;
+//    private String hp;
+//    private String addr;
+//    private String gender;
+//    private String isadmin;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
+//    private Timestamp gaip;
+//    private int point;
+//    private String search;
 }
