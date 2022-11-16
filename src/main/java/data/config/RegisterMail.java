@@ -42,7 +42,7 @@ public class RegisterMail implements MailServiceInter {
         msgg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
         msgg += "<div style='font-size:130%;'>";
         msgg += "CODE : <strong>";
-        msgg += ePw + "</strong><br></div></div>"; // 메일에 인증번호 넣기
+        msgg += ePw + "</strong><br><br></div></div>"; // 메일에 인증번호 넣기
         message.setText(msgg, "utf-8", "html"); // 내용 charset 타입, subtype
         //보내는 사람의 이메일 주소, 보내는 사람 이름
         message.setFrom(new InternetAddress("bitcamp701@naver.com", "이동건")); // 보내는 사람

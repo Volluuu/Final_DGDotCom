@@ -27,5 +27,53 @@
         from user
         where hp = #{hp}
     </select>
-
+    <!--이메일 수정-->
+    <update id="emailChange" parameterType="UserDto">
+        update user
+        set email=#{email}
+        where u_num = #{u_num}
+    </update>
+    <!--    이전 비밀번호 체크-->
+    <select id="passCheck" parameterType="UserDto" resultType="int">
+        select count(*)
+        from user
+        where u_num = #{u_num}
+          and pass = #{pass}
+    </select>
+    <!--    비밀번호 수정-->
+    <update id="passChange" parameterType="UserDto">
+        update user
+        set pass=#{pass}
+        where u_num = #{u_num}
+    </update>
+    <!--    이름 수정-->
+    <update id="nameChange" parameterType="UserDto">
+        update user
+        set u_name=#{u_name}
+        where u_num = #{u_num}
+    </update>
+    <!--    휴대폰 번호 수정-->
+    <update id="hpChange" parameterType="UserDto">
+        update user
+        set hp=#{hp}
+        where u_num = #{u_num}
+    </update>
+    <!--    주소 수정-->
+    <update id="addrChange" parameterType="UserDto">
+        update user
+        set addr=#{addr}
+        where u_num = #{u_num}
+    </update>
+    <!--    회원 탈퇴-->
+    <delete id="deleteUser" parameterType="int">
+        delete
+        from user
+        where u_num = #{u_num}
+    </delete>
+    <!--    휴대폰 번호로 이메일 찾기-->
+    <select id="findEmailByHp" parameterType="String" resultType="String">
+        select email
+        from user
+        where hp = #{hp}
+    </select>
 </mapper>

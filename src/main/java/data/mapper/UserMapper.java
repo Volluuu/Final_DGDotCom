@@ -19,5 +19,28 @@ public interface UserMapper {
     // 핸드폰 중복 체크
     public int hpCheck(String hp);
 
+    //이메일 수정
+    public void emailChange(UserDto dto);
+
+    // 이전 비밀번호 일치 체크
+    public int passCheck(UserDto dto);
+
+    // 비밀번호 수정
+    public void passChange(UserDto dto);
+
+    // 이름 수정
+    public void nameChange(UserDto dto);
+
+    // 휴대폰 번호 수정
+    public void hpChange(UserDto dto);
+
+    // 주소 수정
+    public void addrChange(UserDto dto);
+
+    //회원 탈퇴
+    public void deleteUser(int u_num);
+
+    // 휴대폰 번호로 이메일 찾기
+    public String findEmailByHp(String hp);
 
 }

@@ -19,7 +19,7 @@ function SignupForm(props) {
 
     const passRef = useRef('');
     const [passError, setPassError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
-    let nameRef = useRef('');
+    const nameRef = useRef('');
     const [nameError, setNameError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
     const hpRef = useRef('');
     const [hpError, setHpError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
@@ -66,10 +66,8 @@ function SignupForm(props) {
     // 이메일 인증번호 확인 눌렀을 때 확인 이벤트
     // 틀리면 emailRef.current.focus(), alert 인증 실패
     // setSendedCode(''), setEmailSendBtn(false)
-
     // 맞으면 setEmailInput true, setEmailSendBtn true, alert 이메일 인증 성공
     // 확인 되었으면 codeRef "" CodeModal "none" 이메일 인풋박스 disabled
-
     const emailCodeCompare = () => {
         let code = emailCodeRef.current.value;
         if (sendedCode !== code) {
@@ -120,7 +118,6 @@ function SignupForm(props) {
     // 도로명 주소 API
     const open = useDaumPostcodePopup(postcodeScriptUrl);
     const handleComplete = (data) => {
-
         let fullAddress = data.address;
         let extraAddress = "";
 
@@ -237,224 +234,224 @@ function SignupForm(props) {
             })
     }
 
-    return (<div className="container join" data-v-6ca47fe2="" data-v-3007c576="">
-        <div className="content lg" data-v-6ca47fe2="">
-            <div className="join_area" data-v-6ca47fe2="">
-                <h2 className="join_title" data-v-6ca47fe2="">DG.com SignUp</h2>
-                <form onSubmit={onSubmitSignUp}>
-                    <div data-v-6c561060="" data-v-6ca47fe2=""
-                         className={emailError ? "input_box has_error" : "input_box"}>
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이메일 주소</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <input type="text" placeholder="예) email@naver.com" autoComplete="off" ref={emailRef}
-                                   className="input_txt" data-v-6c561060="" disabled={emailInput ? true : false}
-                                   style={{
-                                       fontSize: "1.1em",
-                                       color: emailInput ? "#bdbdbd" : "black",
-                                       fontStyle: emailInput ? "italic" : "normal",
-                                       WebkitTouchCallout: emailInput ? "none" : "default",
-                                       userSelect: emailInput ? "none" : "default",
-                                       MozUserSelect: emailInput ? "none" : "default",
-                                       msUserSelect: emailInput ? "none" : "default",
-                                       WebkitUserSelect: emailInput ? "none" : "default",
-                                   }}
-                                   onChange={(e) => {
-                                       let email = emailRef.current.value;
-                                       let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-                                       if (exptext.test(email) === false) {
-                                           setEmailError(true);
-                                           setEmailErrorMsg("이메일 주소를 정확히 입력해주세요.");
-                                           setEmailSendBtn(true);
-                                       } else {
-                                           setEmailError(false);
-                                           emailCheck(email);
-                                           setEmailSendBtn(false);
-                                       }
-                                   }}/>
+    return (
+        /* eslint-disable */
+        <div className="container join" data-v-6ca47fe2="" data-v-3007c576="">
+            <div className="content lg" data-v-6ca47fe2="">
+                <div className="join_area" data-v-6ca47fe2="">
+                    <h2 className="join_title" data-v-6ca47fe2="">DG.com SignUp</h2>
+                    <form onSubmit={onSubmitSignUp}>
+                        <div data-v-6c561060="" data-v-6ca47fe2=""
+                             className={emailError ? "input_box has_error" : "input_box"}>
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이메일 주소</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <input type="text" placeholder="예) email@naver.com" autoComplete="off" ref={emailRef}
+                                       className="input_txt" data-v-6c561060="" disabled={emailInput ? true : false}
+                                       style={{
+                                           fontSize: "1.1em",
+                                           color: emailInput ? "#bdbdbd" : "black",
+                                           fontStyle: emailInput ? "italic" : "normal",
+                                           WebkitTouchCallout: emailInput ? "none" : "default",
+                                           userSelect: emailInput ? "none" : "default",
+                                           MozUserSelect: emailInput ? "none" : "default",
+                                           msUserSelect: emailInput ? "none" : "default",
+                                           WebkitUserSelect: emailInput ? "none" : "default",
+                                       }}
+                                       onChange={(e) => {
+                                           let email = emailRef.current.value;
+                                           let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+                                           if (exptext.test(email) === false) {
+                                               setEmailError(true);
+                                               setEmailErrorMsg("이메일 주소를 정확히 입력해주세요.");
+                                               setEmailSendBtn(true);
+                                           } else {
+                                               setEmailError(false);
+                                               emailCheck(email);
+                                               setEmailSendBtn(false);
+                                           }
+                                       }}/>
+                            </div>
+                            <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">{emailErrorMsg}</p>
+                            <button data-v-3d1bcc82="" data-v-587be1b3="" type="button" style={{marginBottom: "8px"}}
+                                    className="btn btn_modify outlinegrey small"
+                                    disabled={emailSendBtn ? true : false}
+                                    onClick={emailSendBtnEvent}> 인증번호 받기
+                            </button>
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">{emailErrorMsg}</p>
-                        <button data-v-3d1bcc82="" data-v-587be1b3="" type="button" style={{marginBottom: "8px"}}
-                                className="btn btn_modify outlinegrey small"
-                                disabled={emailSendBtn ? true : false}
-                                onClick={emailSendBtnEvent}> 인증번호 받기
-                        </button>
-                    </div>
-                    <div data-v-6c561060="" data-v-6ca47fe2=""
-                         className={passError ? "input_box has_error" : "input_box"}>
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">비밀번호</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <input type="password" placeholder="영문, 숫자, 특수문자 조합 8-16자" autoComplete="off"
-                                   ref={passRef} className="input_txt" data-v-6c561060=""
-                                   onChange={(e) => {
-                                       let pw = passRef.current.value;
-                                       let num = pw.search(/[0-9]/g);
-                                       let eng = pw.search(/[a-z]/ig);
-                                       let spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+                        <div data-v-6c561060="" data-v-6ca47fe2=""
+                             className={passError ? "input_box has_error" : "input_box"}>
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">비밀번호</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <input type="password" placeholder="영문, 숫자, 특수문자 조합 8-16자" autoComplete="off"
+                                       ref={passRef} className="input_txt" data-v-6c561060=""
+                                       onChange={(e) => {
+                                           let pw = passRef.current.value;
+                                           let num = pw.search(/[0-9]/g);
+                                           let eng = pw.search(/[a-z]/ig);
+                                           let spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
 
-                                       if (pw.length < 8 || pw.length > 16) {
-                                           setPassError(true);
-                                       } else if (pw.search(/\s/) !== -1) {
-                                           setPassError(true);
-                                       } else if (num < 0 || eng < 0 || spe < 0) {
-                                           setPassError(true);
-                                       } else {
-                                           setPassError(false);
-                                       }
-                                   }}/>
+                                           if (pw.length < 8 || pw.length > 16) {
+                                               setPassError(true);
+                                           } else if (pw.search(/\s/) !== -1) {
+                                               setPassError(true);
+                                           } else if (num < 0 || eng < 0 || spe < 0) {
+                                               setPassError(true);
+                                           } else {
+                                               setPassError(false);
+                                           }
+                                       }}/>
+                            </div>
+                            <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""> 영문, 숫자, 특수문자를 조합하여 입력해주세요.
+                                (8-16자, 공백 없이) </p>
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""> 영문, 숫자, 특수문자를 조합하여 입력해주세요.
-                            (8-16자, 공백 없이) </p>
-                    </div>
 
-                    <div data-v-6c561060="" data-v-6ca47fe2=""
-                         className={nameError ? "input_box has_error" : "input_box"}>
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이름</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <input type="text" placeholder="이름을 입력하세요" autoComplete="off" ref={nameRef}
-                                   className="input_txt" data-v-6c561060=""
-                                   onChange={(e) => {
-                                       let name = nameRef.current.value;
-                                       let expname = /^[가-힣]{2,15}$/;
-                                       // 공백 일 때, 길이가 1글자일 때, 공백이 들어가 있을 때
-                                       if (name === "" || name.length <= 1 || name.search(/\s/) !== -1) {
-                                           setNameError(true);
-                                       } else if (!expname.test(name)) {
-                                           setNameError(true);
-                                       } else {
-                                           setNameError(false);
-                                       }
-                                   }}/>
+                        <div data-v-6c561060="" data-v-6ca47fe2=""
+                             className={nameError ? "input_box has_error" : "input_box"}>
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이름</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <input type="text" placeholder="이름을 입력하세요" autoComplete="off" ref={nameRef}
+                                       className="input_txt" data-v-6c561060=""
+                                       onChange={(e) => {
+                                           let name = nameRef.current.value;
+                                           let expname = /^[가-힣]{2,15}$/;
+                                           // 공백 일 때, 길이가 1글자일 때, 공백이 들어가 있을 때
+                                           if (name === "" || name.length <= 1 || name.search(/\s/) !== -1) {
+                                               setNameError(true);
+                                           } else if (!expname.test(name)) {
+                                               setNameError(true);
+                                           } else {
+                                               setNameError(false);
+                                           }
+                                       }}/>
+                            </div>
+                            <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">이름을 정확히 입력해주세요.</p>
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">이름을 정확히 입력해주세요.</p>
-                    </div>
-                    <div data-v-6c561060="" data-v-6ca47fe2=""
-                         className={hpError ? "input_box has_error" : "input_box"}>
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">핸드폰</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <input type="text" placeholder="예) 010-4154-8185 " autoComplete="off" ref={hpRef}
-                                   className="input_txt" data-v-6c561060=""
-                                   onChange={(e) => {
-                                       let hp = hpRef.current.value;
-                                       let exphp = /^(01[016789]{1})-[0-9]{3,4}-[0-9]{4}$/;
-                                       if (!exphp.test(hp)) {
-                                           setHpError(true);
-                                           setHpErrorMsg("유효하지 않는 번호 입니다. (\"-\"를 포함하여 입력해주세요)");
-                                       } else {
-                                           setHpError(false);
-                                           hpCheck(hp);
-                                       }
-                                   }}/>
+                        <div data-v-6c561060="" data-v-6ca47fe2=""
+                             className={hpError ? "input_box has_error" : "input_box"}>
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">핸드폰</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <input type="text" placeholder="예) 010-4154-8185 " autoComplete="off" ref={hpRef}
+                                       className="input_txt" data-v-6c561060=""
+                                       onChange={() => {
+                                           let hp = hpRef.current.value;
+                                           let exphp = /^(01[016789]{1})-[0-9]{3,4}-[0-9]{4}$/;
+                                           if (!exphp.test(hp)) {
+                                               setHpError(true);
+                                               setHpErrorMsg("유효하지 않는 번호 입니다. (\"-\"를 포함하여 입력해주세요)");
+                                           } else {
+                                               setHpError(false);
+                                               hpCheck(hp);
+                                           }
+                                       }}/>
+
+                            </div>
+                            <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">{hpErrorMsg}</p>
+                        </div>
+                        <div className="input_box" data-v-6c561060="" data-v-6ca47fe2="">
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">주소</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <input type="text" placeholder="예) 서울시 관악구 남현3가길 11" autoComplete="off" ref={addrRef}
+                                       className="input_txt" data-v-6c561060=""
+                                       style={{
+                                           color: "#bdbdbd",
+                                           fontStyle: "italic",
+                                           WebkitTouchCallout: "none",
+                                           userSelect: "none",
+                                           MozUserSelect: "none",
+                                           msUserSelect: "none",
+                                           WebkitUserSelect: "none",
+                                       }}
+                                       disabled={true}
+                                />
+                                <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
+                                        className="btn btn_modify outlinegrey small" style={{marginBottom: "42px"}}
+                                        onClick={handleClick}> 주소 찾기
+                                </button>
+                                <br/>
+                                <input type="text" placeholder="상세 주소" autoComplete="off" style={{marginTop: "10px"}}
+                                       className="input_txt" data-v-6c561060="" ref={extraAddressRef}/>
+                            </div>
 
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">{hpErrorMsg}</p>
-                    </div>
-                    <div className="input_box" data-v-6c561060="" data-v-6ca47fe2="">
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">주소</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <input type="text" placeholder="예) 서울시 관악구 남현3가길 11" autoComplete="off" ref={addrRef}
-                                   className="input_txt" data-v-6c561060=""
-                                   style={{
-                                       color: "#bdbdbd",
-                                       fontStyle: "italic",
-                                       WebkitTouchCallout: "none",
-                                       userSelect: "none",
-                                       MozUserSelect: "none",
-                                       msUserSelect: "none",
-                                       WebkitUserSelect: "none",
-                                   }}
-                                   disabled={true}
-                            />
+                        <div className="input_box" data-v-6c561060="" data-v-6ca47fe2="">
+                            <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">성별</h3>
+                            <div className="input_item" data-v-6c561060="">
+                                <select className="v-select" value={gender}
+                                        onChange={(e) => setGender(e.target.value)}>
+                                    <option hidden value="N">성별을 고르세요</option>
+                                    <option value="M">남자</option>
+                                    <option value="F">여자</option>
+                                </select>
+                            </div>
+                            <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""></p>
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""></p>
-                        <button data-v-3d1bcc82="" data-v-587be1b3="" type="button" style={{marginBottom: "8px"}}
-                                className="btn btn_modify outlinegrey small"
-                                style={{marginBottom: "72px"}}
-                                onClick={handleClick}> 주소 찾기
-                        </button>
-
                         <br/>
-                        <input type="text" placeholder="상세 주소" autoComplete="off"
-                               className="input_txt" data-v-6c561060="" ref={extraAddressRef}/>
+                        <button type={"submit"}
+                                className="btn btn_join full solid" data-v-3d1bcc82=""
+                                data-v-6ca47fe2="" style={{lineHeight: "50%"}}> 가입하기
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {/* 이메일 인증 모달 */}
+            <div data-v-1f7c6d3f="" data-v-28cabbb5="" data-v-f263fda4="" className="layer_point layer lg"
+                 style={{display: emailCodeModal}}>
+                <div data-v-1f7c6d3f="" className="layer_container">
+                    <div data-v-1f7c6d3f="" className="layer_header"><h2 data-v-28cabbb5=""
+                                                                         data-v-1f7c6d3f=""
+                                                                         className="title"><br/><br/>
+                        4자리 코드를 입력해주세요.</h2>
                     </div>
-                    <div className="input_box" data-v-6c561060="" data-v-6ca47fe2="">
-                        <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">성별</h3>
-                        <div className="input_item" data-v-6c561060="">
-                            <select className="v-select" value={gender}
-                                    onChange={(e) => setGender(e.target.value)}>
-                                <option hidden value="N">성별을 고르세요</option>
-                                <option value="M">남자</option>
-                                <option value="F">여자</option>
-                            </select>
+                    <div data-v-1f7c6d3f="" className="layer_content">
+                        <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn">
+                            <input type={'text'}
+                                   style={{
+                                       width: "100px",
+                                       border: "1px solid black",
+                                       borderRadius: "10px",
+                                       textIndent: "25px",
+                                       marginRight: "10px"
+                                   }} maxLength={4}
+                                   ref={emailCodeRef}/>
+                            <Link
+                                data-v-3d1bcc82=""
+                                data-v-28cabbb5=""
+                                to="#!"
+                                className="btn outline medium"
+                                data-v-1f7c6d3f=""
+                                style={{width: "100px"}}
+                                onClick={emailCodeCompare}> 확인 </Link>
                         </div>
-                        <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""></p>
                     </div>
-                    <br/>
-                    <button type={"submit"}
-                            className="btn btn_join full solid" data-v-3d1bcc82=""
-                            data-v-6ca47fe2="" style={{lineHeight: "50%"}}> 가입하기
-                    </button>
-                </form>
-            </div>
-        </div>
-        {/* 이메일 인증 모달 */}
-        <div data-v-1f7c6d3f="" data-v-28cabbb5="" data-v-f263fda4="" className="layer_point layer lg"
-             style={{display: emailCodeModal}}>
-            <div data-v-1f7c6d3f="" className="layer_container">
-                <div data-v-1f7c6d3f="" className="layer_header"><h2 data-v-28cabbb5=""
-                                                                     data-v-1f7c6d3f=""
-                                                                     className="title"><br/><br/>
-                    4자리 코드를 입력해주세요.</h2>
-                </div>
-                <div data-v-1f7c6d3f="" className="layer_content">
-                    <div data-v-28cabbb5="" data-v-1f7c6d3f="" className="layer_btn">
-                        <input type={'text'}
-                               style={{
-                                   width: "100px",
-                                   border: "1px solid black",
-                                   borderRadius: "10px",
-                                   textIndent: "25px",
-                                   marginRight: "10px"
-                               }} maxLength={4}
-                               ref={emailCodeRef}/>
-                        <Link
-                            data-v-3d1bcc82=""
-                            data-v-28cabbb5=""
-                            to="#!"
-                            className="btn outline medium"
-                            data-v-1f7c6d3f=""
-                            style={{width: "100px"}}
-                            onClick={emailCodeCompare}> 확인 </Link>
-                    </div>
-                </div>
-                <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
-                      onClick={() => {
-                          Swal.fire({
-                              title: '이메일 인증을 취소하시겠습니까?',
-                              icon: 'warning',
-                              showCancelButton: true,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: '승인',
-                              cancelButtonText: '취소',
-                              reverseButtons: false, // 버튼 순서 거꾸로
+                    <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
+                          onClick={() => {
+                              Swal.fire({
+                                  title: '이메일 인증을 취소하시겠습니까?',
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#3085d6',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: '승인',
+                                  cancelButtonText: '취소',
+                                  reverseButtons: false, // 버튼 순서 거꾸로
 
-                          }).then((result) => {
-                              if (result.isConfirmed) {
-                                  Swal.fire(
-                                      '이메일 인증이 취소되었습니다.',
-                                      '',
-                                      "warning"
-                                  )
-                                  setEmailCodeModal("none");
-                                  emailCodeRef.current.value = "";
-                              }
-                          })
-                      }}>
-                    <Close/>
-                </Link>
+                              }).then((result) => {
+                                  if (result.isConfirmed) {
+                                      Swal.fire(
+                                          '이메일 인증이 취소되었습니다.',
+                                          '',
+                                          "warning"
+                                      )
+                                      setEmailCodeModal("none");
+                                      emailCodeRef.current.value = "";
+                                  }
+                              })
+                          }}>
+                        <Close/>
+                    </Link>
+                </div>
             </div>
-        </div>
-    </div>);
+        </div>);
 }
 
 export default SignupForm;

@@ -55,6 +55,7 @@ function LoginForm(props) {
     }, [email, pass])
 
     return (
+        /* eslint-disable */
         <div className="content lg" data-v-b02d33c2="">
             <div className="login_area" data-v-b02d33c2="">
                 <h2 style={{textAlign: "center"}}><span>DG.com Login</span></h2>
@@ -114,10 +115,10 @@ function LoginForm(props) {
                         <Link to="/user/signup" className="look_link" data-v-b02d33c2=""> 회원가입 </Link>
                     </li>
                     <li className="look_list" data-v-b02d33c2="">
-                        <Link to="/login/find_email" className="look_link" data-v-b02d33c2=""> 아이디 찾기 </Link>
+                        <Link to="/user/find_email" className="look_link" data-v-b02d33c2=""> 아이디 찾기 </Link>
                     </li>
                     <li className="look_list" data-v-b02d33c2="">
-                        <Link to="/login/find_password" className="look_link" data-v-b02d33c2=""> 비밀번호 찾기 </Link>
+                        <Link to="/user/find_password" className="look_link" data-v-b02d33c2=""> 비밀번호 찾기 </Link>
                     </li>
                 </ul>
                 <div className="social_login" data-v-b02d33c2="">
