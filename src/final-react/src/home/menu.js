@@ -4,6 +4,7 @@ import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
 import axios from "axios";
 import AnnouncementBar from "./AnnouncementBar";
+import Swal from "sweetalert2";
 
 const Menubar = styled.div`
   padding-top: 10px;
@@ -64,8 +65,15 @@ function Menu(props) {
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("u_num");
         sessionStorage.removeItem("loginok");
-        window.location.reload();
-        console.log("로그아웃 성공");
+        Swal.fire({
+            icon: "success",
+            text: "로그아웃 완료"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.reload();
+            }
+        })
+
     }
 
     return (

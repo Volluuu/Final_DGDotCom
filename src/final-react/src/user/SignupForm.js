@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, {useRef, useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom';
 import {Close} from "@mui/icons-material";
+import {useDaumPostcodePopup} from "react-daum-postcode";
+import {postcodeScriptUrl} from "react-daum-postcode/lib/loadPostcode";
+import Swal from "sweetalert2";
 
 function SignupForm(props) {
     const emailRef = useRef('');
@@ -21,8 +24,10 @@ function SignupForm(props) {
     const hpRef = useRef('');
     const [hpError, setHpError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
     const [hpErrorMsg, setHpErrorMsg] = useState("유효하지 않는 번호 입니다. (\"-\"를 포함하여 입력해주세요)");
-    const addrRef = useRef('');
     const [gender, setGender] = useState("N");
+    const addrRef = useRef('');
+    const [addrFindBtn, setaddrFindBtn] = useState(false); // 주소 고르면 false
+    const extraAddressRef = useRef('');
 
     const navi = useNavigate();
 
@@ -31,8 +36,6 @@ function SignupForm(props) {
         let emailCheckUrl = process.env.REACT_APP_URL + "/user/emailcheck?email=" + email;
         axios.get(emailCheckUrl)
             .then(res => {
-                console.log("이메일 중복 체크");
-                console.dir(res.data);
                 if (res.data > 0) {
                     setEmailErrorMsg("이미 사용 중인 이메일 입니다");
                     setEmailError(true);
@@ -53,7 +56,10 @@ function SignupForm(props) {
                 setSendedCode(res.data);
                 setEmailCodeModal("");
                 emailCodeRef.current.focus();
-                alert("인증 번호가 발송되었습니다.");
+                Swal.fire({
+                    icon: "warning",
+                    title: "인증번호가 발송되었습니다.",
+                })
             })
     }
 
@@ -74,7 +80,11 @@ function SignupForm(props) {
             setEmailCheckMsg("no");
             emailCodeRef.current.value = "";
             emailRef.current.focus();
-            alert("인증번호가 다릅니다");
+            Swal.fire({
+                icon: "error",
+                title: "인증번호가 일치하지 않습니다.",
+                text: "다시 인증해주세요.",
+            })
         } else {
             setEmailCodeModal("none");
             setSendedCode('');
@@ -83,7 +93,10 @@ function SignupForm(props) {
             setEmailCheckMsg("yes");
             emailCodeRef.current.value = "";
             passRef.current.focus();
-            alert("인증이 완료되었습니다.");
+            Swal.fire({
+                icon: "info",
+                title: "인증이 완료되었습니다.",
+            })
         }
     }
 
@@ -104,49 +117,99 @@ function SignupForm(props) {
             })
     }
 
+    // 도로명 주소 API
+    const open = useDaumPostcodePopup(postcodeScriptUrl);
+    const handleComplete = (data) => {
+
+        let fullAddress = data.address;
+        let extraAddress = "";
+
+        if (data.addressType !== "R") {
+            if (data.bname !== "") {
+                extraAddress += data.bname;
+            }
+            if (data.buildingName !== "") {
+                extraAddress += extraAddress !== "" ? `,${data.buildingName}` : data.buildingName;
+            }
+            fullAddress += extraAddress !== "" ? `(${extraAddress})` : "";
+        }
+        addrRef.current.value = fullAddress;
+    };
+    const handleClick = () => {
+        open({onComplete: handleComplete});
+    };
+
     const onSubmitSignUp = (e) => {
         e.preventDefault();
         // 이메일이 공백이거나 에러가 true 일 때 리턴
         if (emailRef.current.value === "" || emailError) {
-            alert("유효한 이메일을 입력해주세요");
+            Swal.fire({
+                icon: "error",
+                title: "유효한 이메일을 입력해주세요",
+            })
             emailRef.current.value = "";
             emailRef.current.focus();
             return;
         } else if (emailCheckMsg === "no") {
-            alert("이메일을 인증해주세요");
+            Swal.fire({
+                icon: "warning",
+                title: "이메일 인증을 해주세요.",
+            })
             return;
         }
         // 비밀번호가 공백이거나 에러가 true 일 때 리턴
         if (passRef.current.value === "" || passError) {
-            alert("유효한 비밀번호를 입력해주세요");
+            Swal.fire({
+                icon: "warning",
+                title: "유효한 비밀번호를 입력해주세요",
+            })
             passRef.current.value = "";
             passRef.current.focus();
             return;
         }
         // 이름이 공백이거나 에러가 true 일 때 리턴
         if (nameRef.current.value === "" || nameError) {
-            alert("유효한 이름을 입력해주세요");
+            Swal.fire({
+                icon: "warning",
+                title: "유효한 이름을 입력해주세요",
+            })
             nameRef.current.value = "";
             nameRef.current.focus();
             return;
         }
         // 핸드폰이 공백이거나 에러가 true 일 때 리턴
         if (hpRef.current.value === "" || hpError) {
-            alert("유효한 핸드폰 번호를 입력해주세요");
+            Swal.fire({
+                icon: "warning",
+                title: "유효한 핸드폰 번호를 입력해주세요",
+            })
             hpRef.current.value = "";
             hpRef.current.focus();
             return;
         }
         // 주소가 공백일 때 리턴
         if (addrRef.current.value === "") {
-            alert("주소를 입력해주세요");
-            addrRef.current.value = "";
+            Swal.fire({
+                icon: "warning",
+                title: "주소를 검색해주세요",
+            })
             addrRef.current.focus();
+            return;
+        }
+        if (extraAddressRef.current.value === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "상세 주소를 입력해주세요",
+            })
+            extraAddressRef.current.focus();
             return;
         }
         // 성별이 N이 아닐 때
         if (gender === "N") {
-            alert("성별을 선택해주세요");
+            Swal.fire({
+                icon: "warning",
+                title: "성별을 선택해주세요",
+            })
             return;
         }
         let signupUrl = process.env.REACT_APP_URL + "/user/signup";
@@ -155,15 +218,22 @@ function SignupForm(props) {
             u_name: nameRef.current.value,
             pass: passRef.current.value,
             hp: hpRef.current.value,
-            addr: addrRef.current.value,
+            addr: addrRef.current.value.concat(" " + extraAddressRef.current.value),
             gender
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
+                Swal.fire({
+                    icon: "success",
+                    title: "회원가입이 완료되었습니다.",
+                    text: `아이디 : ${emailRef.current.value} `,
+                })
                 navi("/user/login");
-                console.log("회원가입 성공");
             })
             .catch(error => {
-                alert(error.response.status + "에러");
+                Swal.fire({
+                    icon: "error",
+                    title: `${error.response.status} 에러`,
+                })
             })
     }
 
@@ -178,6 +248,16 @@ function SignupForm(props) {
                         <div className="input_item" data-v-6c561060="">
                             <input type="text" placeholder="예) email@naver.com" autoComplete="off" ref={emailRef}
                                    className="input_txt" data-v-6c561060="" disabled={emailInput ? true : false}
+                                   style={{
+                                       fontSize: "1.1em",
+                                       color: emailInput ? "#bdbdbd" : "black",
+                                       fontStyle: emailInput ? "italic" : "normal",
+                                       WebkitTouchCallout: emailInput ? "none" : "default",
+                                       userSelect: emailInput ? "none" : "default",
+                                       MozUserSelect: emailInput ? "none" : "default",
+                                       msUserSelect: emailInput ? "none" : "default",
+                                       WebkitUserSelect: emailInput ? "none" : "default",
+                                   }}
                                    onChange={(e) => {
                                        let email = emailRef.current.value;
                                        let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
@@ -272,9 +352,29 @@ function SignupForm(props) {
                         <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">주소</h3>
                         <div className="input_item" data-v-6c561060="">
                             <input type="text" placeholder="예) 서울시 관악구 남현3가길 11" autoComplete="off" ref={addrRef}
-                                   className="input_txt" data-v-6c561060=""/>
+                                   className="input_txt" data-v-6c561060=""
+                                   style={{
+                                       color: "#bdbdbd",
+                                       fontStyle: "italic",
+                                       WebkitTouchCallout: "none",
+                                       userSelect: "none",
+                                       MozUserSelect: "none",
+                                       msUserSelect: "none",
+                                       WebkitUserSelect: "none",
+                                   }}
+                                   disabled={true}
+                            />
                         </div>
                         <p className="input_error" data-v-6c561060="" data-v-6ca47fe2=""></p>
+                        <button data-v-3d1bcc82="" data-v-587be1b3="" type="button" style={{marginBottom: "8px"}}
+                                className="btn btn_modify outlinegrey small"
+                                style={{marginBottom: "72px"}}
+                                onClick={handleClick}> 주소 찾기
+                        </button>
+
+                        <br/>
+                        <input type="text" placeholder="상세 주소" autoComplete="off"
+                               className="input_txt" data-v-6c561060="" ref={extraAddressRef}/>
                     </div>
                     <div className="input_box" data-v-6c561060="" data-v-6ca47fe2="">
                         <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">성별</h3>
@@ -291,9 +391,8 @@ function SignupForm(props) {
                     <br/>
                     <button type={"submit"}
                             className="btn btn_join full solid" data-v-3d1bcc82=""
-                            data-v-6ca47fe2=""> 가입하기
+                            data-v-6ca47fe2="" style={{lineHeight: "50%"}}> 가입하기
                     </button>
-                    {/*disabled*/}
                 </form>
             </div>
         </div>
@@ -329,10 +428,27 @@ function SignupForm(props) {
                 </div>
                 <Link data-v-28cabbb5="" data-v-1f7c6d3f="" to="#!" className="btn_layer_close"
                       onClick={() => {
-                          if (window.confirm("메일 인증을 취소하시겠습니까?")) {
-                              setEmailCodeModal("none");
-                              emailCodeRef.current.value = "";
-                          }
+                          Swal.fire({
+                              title: '이메일 인증을 취소하시겠습니까?',
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: '승인',
+                              cancelButtonText: '취소',
+                              reverseButtons: false, // 버튼 순서 거꾸로
+
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  Swal.fire(
+                                      '이메일 인증이 취소되었습니다.',
+                                      '',
+                                      "warning"
+                                  )
+                                  setEmailCodeModal("none");
+                                  emailCodeRef.current.value = "";
+                              }
+                          })
                       }}>
                     <Close/>
                 </Link>

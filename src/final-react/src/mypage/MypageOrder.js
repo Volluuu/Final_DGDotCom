@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Close, StarBorderRounded, StarRounded} from "@mui/icons-material";
+import Swal from "sweetalert2";
 
 function MypageOrder(props) {
     // const [currentPage, setCurrentPage]=useState(1);
@@ -26,22 +27,41 @@ function MypageOrder(props) {
     const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
     const [today, setToday] = useState(new Date());
 
+
     // u_num 을 가진 거래내역 페이징 처리
     const getOrderList = () => {
-        let orderListUrl = process.env.REACT_APP_URL + "/mypage/orderlist?u_num=" + u_num + "&currentPage=" + (currentPage === undefined ? "1" : currentPage) + "&startDate=" + startDate + "&endDate=" + endDate;
-        axios.get(orderListUrl)
+        let orderListUrl = process.env.REACT_APP_URL + "/mypage/order?u_num=" + u_num + "&currentPage=" + (currentPage === undefined ? "1" : currentPage) + "&startDate=" + startDate + "&endDate=" + endDate;
+        axios.get(orderListUrl, {
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+        })
             .then(res => {
                 setTradeData(res.data);
-            })
+                console.dir(res.data);
+            }).catch(error => {
+            if (error.response.status === 401) {
+                Swal.fire({
+                    icon: "error",
+                    title: "로그인 해주세요.",
+                }).then(result => navi("/user/login"))
+            } else if (error.response.status === 403) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "권한이 없습니다.",
+                }).then(result => navi("/"))
+            }
+        });
     }
 
     useEffect(() => {
         getOrderList();
     }, [currentPage])
 
+
     const onReviewModal = (p_num) => {
         let reviewModalUrl = process.env.REACT_APP_URL + "/mypage/reviewmodal?p_num=" + p_num;
-        axios.get(reviewModalUrl)
+        axios.get(reviewModalUrl, {
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+        })
             .then(res => setProductDto(res.data))
     }
 
@@ -61,7 +81,9 @@ function MypageOrder(props) {
             return;
         }
         let reviewInsertUrl = process.env.REACT_APP_URL + "/mypage/reviewinsert";
-        axios.post(reviewInsertUrl, {u_num, p_num, content: textRef.current.value, star: score})
+        axios.post(reviewInsertUrl, {
+            u_num, p_num, content: textRef.current.value, star: score
+        }, {headers: {Authorization: `Bearer ${localStorage.accessToken}`}})
             .then(res => {
                 alert("소중한 리뷰 감사합니다.")
                 // 작성 후 리로드
@@ -73,7 +95,9 @@ function MypageOrder(props) {
     const onUpdateModal = async (p_num, r_num) => {
         let updateModalUrl = process.env.REACT_APP_URL + "/mypage/reviewdetail?p_num=" + p_num + "&r_num=" + r_num + "&u_num=" + u_num;
         // 동기 처리를 위한 async await
-        await axios.get(updateModalUrl)
+        await axios.get(updateModalUrl, {
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+        })
             .then(res => {
                 //리뷰 내역을 들고 오면 ReviewDto에 담기
                 setReviewDto(res.data);
@@ -96,7 +120,10 @@ function MypageOrder(props) {
             return;
         }
         let reviewUpdateUrl = process.env.REACT_APP_URL + "/mypage/reviewupdate";
-        axios.put(reviewUpdateUrl, {content: updateRef.current.value, star: score, r_num: reviewDto.r_num})
+        axios.put(reviewUpdateUrl, {
+            content: updateRef.current.value, star: score, r_num: reviewDto.r_num,
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+        })
             .then(res => {
                 alert("리뷰 수정이 완료되었습니다.");
                 // 수정 후 리로드
@@ -128,7 +155,7 @@ function MypageOrder(props) {
                 <div data-v-88eb18f6="" className="content_title">
                     <div data-v-88eb18f6="" className="title">
                         <h3 data-v-88eb18f6=""><b>주문 내역</b>
-                            <span style={{fontSize: "0.6em"}}>{tradeData.user && tradeData.user.u_name} 님의 주문내역을 한 눈에 볼 수 있습니다!</span>
+                            <span style={{fontSize: "0.6em"}}>{tradeData.u_name && tradeData.u_name} 님의 주문내역을 한 눈에 볼 수 있습니다!</span>
                         </h3>
                     </div>
                 </div>
@@ -138,7 +165,10 @@ function MypageOrder(props) {
                             <dl data-v-0c307fea="" className="tab_box">
                                 <dt data-v-0c307fea="" className="title">결제 금액</dt>
                                 <dd data-v-0c307fea="" className="count">
-                                    {tradeData.totalPrice && tradeData.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                                    {tradeData.joined &&
+                                        tradeData.joined.map(item => item.lastprice * item.count)
+                                            .reduce((prev, curr) => prev + curr, 0)
+                                            .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                                 </dd>
                             </dl>
                         </Link>
@@ -149,7 +179,7 @@ function MypageOrder(props) {
                                 <dt data-v-0c307fea="" className="title">내역</dt>
                                 <dd data-v-0c307fea="" className="count"
                                     style={{color: "#0000FF"}}>
-                                    {tradeData.totalCount && tradeData.totalCount}
+                                    {tradeData.joined && tradeData.joined.length}
                                 </dd>
                             </dl>
                         </Link>
@@ -160,7 +190,9 @@ function MypageOrder(props) {
                                 <dt data-v-0c307fea="" className="title">배송 전</dt>
                                 <dd data-v-0c307fea="" className="count"
                                     style={{color: "#FF0000"}}>
-                                    {tradeData.stateCount && tradeData.stateCount[0]}
+                                    {tradeData.joined &&
+                                        tradeData.joined.map(item => item.state === "배송 전")
+                                            .reduce((prev, curr) => prev + curr, 0)}
                                 </dd>
 
                             </dl>
@@ -171,7 +203,7 @@ function MypageOrder(props) {
                     <div className="period_month">
                         <ul className="month_list">
                             <li className="month_item">
-                                <Link to="#" className="month_link"
+                                <Link to="#!" className="month_link"
                                       onClick={() => {
                                           setStartDate(tradeData.minDate.slice(0, 10));
                                           setEndDate(today.toISOString().slice(0, 10));
@@ -231,48 +263,69 @@ function MypageOrder(props) {
                     </div>
                 </div>
 
-                <div data-v-f263fda4="">
-                    <div data-v-50c8b1d2="" data-v-f263fda4="" className="purchase_list all bid">
-                        <div style={{
-                            display: "grid",
-                            gridTemplateRows: "repeat(14, 1fr)",
-                            gridTemplateColumns: "1fr 3fr 1fr 1fr 1fr 1fr",
-                            textAlign: "center"
-                        }}>
-                            <div style={{gridColumn: "1/7", gridRow: "1/2"}}>
-                                <hr/>
+                {tradeData.joined && tradeData.joined.length === 0 ? (
+                    // 해당 유저의 주문 내역이 없을 경우
+                    <div data-v-f263fda4="">
+                        <div
+                            data-v-50c8b1d2=""
+                            data-v-f263fda4=""
+                            className="purchase_list all bid"
+                        >
+                            <div
+                                data-v-541a17ff=""
+                                data-v-50c8b1d2=""
+                                className="empty_area"
+                            >
+                                <p data-v-541a17ff="" className="desc">
+                                    주문 내역이 없습니다.
+                                </p>
                             </div>
-                            <b style={{paddingTop: "6px"}}>주문일자</b>
-                            <b style={{paddingTop: "6px"}}>상품명</b>
-                            <b style={{paddingTop: "6px", textAlign: "right"}}>개당 가격x수량</b>
-                            <b style={{paddingTop: "6px", textAlign: "right"}}>총 결제 금액</b>
-                            <b style={{paddingTop: "6px"}}>배송상태</b>
-                            <b style={{paddingTop: "6px", textAlign: "left"}}>후기</b>
-                            <div style={{gridColumn: "1/7", gridRow: "3/4"}}>
-                                <hr/>
-                            </div>
-                            {tradeData.joinPaging && tradeData.joinPaging.map((jitem, idx) => (
-                                <React.Fragment key={idx}>
-                                    <span>{jitem.day.substring(0, 10)}</span>
-                                    <span style={{
-                                        textAlign: "left",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"
-                                    }}><Link to={`/product/detail/${jitem.p_num}`}>
+                        </div>
+                    </div>
+                ) : (
+                    <div data-v-f263fda4="">
+                        <div data-v-50c8b1d2="" data-v-f263fda4="" className="purchase_list all bid">
+                            <div style={{
+                                display: "grid",
+                                gridTemplateRows: "repeat(14, 1fr)",
+                                gridTemplateColumns: "1fr 3fr 1fr 1fr 1fr 1fr",
+                                textAlign: "center"
+                            }}>
+                                <div style={{gridColumn: "1/7", gridRow: "1/2"}}>
+                                    <hr/>
+                                </div>
+                                <b style={{paddingTop: "6px"}}>주문일자</b>
+                                <b style={{paddingTop: "6px"}}>상품명</b>
+                                <b style={{paddingTop: "6px", textAlign: "right"}}>개당 가격x수량</b>
+                                <b style={{paddingTop: "6px", textAlign: "right"}}>총 결제 금액</b>
+                                <b style={{paddingTop: "6px"}}>배송상태</b>
+                                <b style={{paddingTop: "6px", textAlign: "left"}}>후기</b>
+                                <div style={{gridColumn: "1/7", gridRow: "3/4"}}>
+                                    <hr/>
+                                </div>
+
+                                {tradeData.joinPaging && tradeData.joinPaging.map((jitem, idx) => (
+                                    <React.Fragment key={idx}>
+                                        <span>{jitem.day.substring(0, 10)}</span>
+                                        <span style={{
+                                            textAlign: "left",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"
+                                        }}><Link to={`/product/detail/${jitem.p_num}`}>
                                             <img alt={""} src={productUrl + jitem.photo}
                                                  style={{maxWidth: "33px"}}/>&nbsp;
-                                        {jitem.p_name}
+                                            {jitem.p_name}
                                         </Link>
                                         </span>
-                                    <span><span style={{float: "right"}}>*{jitem.count}개</span><span
-                                        style={{float: "right"}}>{jitem.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span></span>
-                                    <span
-                                        style={{textAlign: "right"}}>{(jitem.lastprice * jitem.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span>
-                                    <span
-                                        style={{color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"}}>{jitem.state}</span>
-                                    <span>
+                                        <span><span style={{float: "right"}}>*{jitem.count}개</span><span
+                                            style={{float: "right"}}>{jitem.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span></span>
+                                        <span
+                                            style={{textAlign: "right"}}>{(jitem.lastprice * jitem.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</span>
+                                        <span
+                                            style={{color: jitem.state === "배송 전" ? "#FF0000" : jitem.state === "배송 중" ? "#0000FF" : "#A020F0"}}>{jitem.state}</span>
+                                        <span>
                                             {jitem.state === "배송 완료" && tradeData.rlist[idx] === null ?
                                                 <button type={"button"} style={{float: "left"}}
                                                         className={"btn btn-primary btn-sm"}
@@ -296,24 +349,27 @@ function MypageOrder(props) {
                                                                                      className={"btn btn-light btn-sm"}
                                                                                      disabled>불가</button>}
                                         </span>
-                                </React.Fragment>))}
-                            <div style={{gridColumn: "1/7", gridRow: "14/15"}}>
-                                {tradeData && tradeData.startPage > 1 ?
-                                    <Link className={'pagenum'} to={`/mypage/order/${tradeData.startPage - 1}`}
-                                    ><b style={{color: 'black'}}>이전</b></Link> : <></>}
-                                {tradeData.pidx && tradeData.pidx.map((n, i) => <NavLink key={i} className={'pagenum'}
-                                                                                         style={{color: n === Number(currentPage) ? 'red' : 'blue'}}
-                                                                                         to={`/mypage/order/${n}`}
-                                ><b>{n}</b></NavLink>)
+                                    </React.Fragment>))}
+                                <div style={{gridColumn: "1/7", gridRow: "14/15"}}>
+                                    {tradeData && tradeData.startPage > 1 ?
+                                        <Link className={'pagenum'} to={`/mypage/order/${tradeData.startPage - 1}`}
+                                        ><b style={{color: 'black'}}>이전</b></Link> : <></>}
+                                    {tradeData.pidx && tradeData.pidx.map((n, i) => <NavLink key={i}
+                                                                                             className={'pagenum'}
+                                                                                             style={{color: n === Number(currentPage) ? 'red' : 'blue'}}
+                                                                                             to={`/mypage/order/${n}`}
+                                    ><b>{n}</b></NavLink>)
 
-                                }
-                                {tradeData && tradeData.endPage < tradeData.totalPage ?
-                                    <Link className={'pagenum'} to={`/mypage/order/${tradeData.endPage + 1}`}
-                                    ><b style={{color: 'black'}}>다음</b></Link> : <></>}
+                                    }
+                                    {tradeData && tradeData.endPage < tradeData.totalPage ?
+                                        <Link className={'pagenum'} to={`/mypage/order/${tradeData.endPage + 1}`}
+                                        ><b style={{color: 'black'}}>다음</b></Link> : <></>}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )
+                }
                 <ul data-v-a54c4c26="" className="search_info">
                     <li data-v-a54c4c26="" className="info_item"><p data-v-a54c4c26="">첫 주문 일자 이후부터 조회 가능합니다.</p>
                     </li>
@@ -324,7 +380,7 @@ function MypageOrder(props) {
                 </ul>
                 <div data-v-50c8b1d2="" className="purchase_list bidding ask">
                     <div data-v-541a17ff="" data-v-50c8b1d2="" className="empty_area">
-                        <Link data-v-3d1bcc82="" data-v-541a17ff="" to="/product/list/1"
+                        <Link data-v-3d1bcc82="" data-v-541a17ff="" to="/product/list"
                               className="btn outlinegrey small"> SHOP 바로가기 </Link></div>
                 </div>
             </div>

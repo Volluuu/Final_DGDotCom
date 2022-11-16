@@ -61,9 +61,9 @@ public class UserController {
     @PostMapping("/mailconfirm")
     public String mailConfirm(@RequestBody Map<String, String> map) throws Exception {
         String email = map.get("email");
-        System.out.println(email);
+//        System.out.println(email);
         String code = registerMail.sendSimpleMessage(email);
-        System.out.println("인증 코드 : " + code);
+//        System.out.println("인증 코드 : " + code);
         return code;
     }
 
