@@ -29,18 +29,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     //    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
+//        System.out.println(username);
         UserDto user = userMapper.getUserInfo(username);
         if (user == null) {
-            System.out.println(username);
+//            System.out.println(username);
             throw new UsernameNotFoundException(username + "-> DB에서 찾을 수 없습니다.");
 
         } else {
-            System.out.println("******************* Found user *******************");
+//            System.out.println("******************* Found user *******************");
 //            System.out.println("id : " + users.getUsername());
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getIsadmin().toString());
-            System.out.println(grantedAuthority);
-            System.out.println(new User(user.getEmail(), user.getEmail(), Collections.singleton(grantedAuthority)));
+//            System.out.println(grantedAuthority);
+//            System.out.println(new User(user.getEmail(), user.getEmail(), Collections.singleton(grantedAuthority)));
             return new User(user.getEmail(), user.getPass(), Collections.singleton(grantedAuthority));
 //                    (
 //                    userDto.getEmail(),

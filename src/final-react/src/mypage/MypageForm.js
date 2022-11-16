@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {useParams, Link, useNavigate} from "react-router-dom";
 import {Close} from "@mui/icons-material";
+import Swal from "sweetalert2";
 
 function MypageForm(props) {
-    const {currentPage} = useParams(); // currentPage 값 받아오기
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
     const [userDto, setUserDto] = useState(""); // 세션의 u_num으로 받아온 유저 데이터
     const [tradeData, setTradeData] = useState({}); // 페이징 처리할 모든 데이터 담기
@@ -14,50 +14,31 @@ function MypageForm(props) {
     const navi = useNavigate();
 
     // 세션의 u_num으로 받아오는 유저 정보
-    const userByNum = () => {
-        // u_num 으로 UserDto 담아오기
-        let userByNumUrl =
-            process.env.REACT_APP_URL + "/mypage/userbynum?u_num=" + u_num;
-        axios.get(userByNumUrl, {
-            withCredentials: true,
-            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
-        }).then((res) => {
-            setUserDto(res.data);
-        })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    alert("인증되지 않은 유저입니다.");
-                    navi("/user/login");
-                } else if (error.response.status === 403) {
-                    alert("권한이 없습니다.");
-                    navi("/");
-                }
-            })
-        ;
-
+    const mypageform = () => {
         // u_num, currentPage로 주문 내역 받아오기
         let orderListUrl =
             process.env.REACT_APP_URL +
-            "/mypage/orderlist?u_num=" +
-            u_num +
-            "&currentPage=" +
-            (currentPage === undefined ? 1 : currentPage);
+            "/mypage/mypageform?u_num=" +
+            u_num;
         axios.get(orderListUrl, {
             withCredentials: true,
             headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         }).then((res) => {
-            setTradeData(res.data);
-        })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    alert("인증되지 않은 유저입니다.");
-                    navi("/user/login");
-                } else if (error.response.status === 403) {
-                    alert("권한이 없습니다.");
-                    navi("/");
-                }
-            })
-        ;
+            setTradeData(res.data.joined);
+            setUserDto(res.data.user);
+        }).catch(error => {
+            if (error.response.status === 401) {
+                Swal.fire({
+                    icon: "error",
+                    title: "로그인 해주세요.",
+                }).then(result => navi("/user/login"))
+            } else if (error.response.status === 403) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "권한이 없습니다.",
+                }).then(result => navi("/"))
+            }
+        });
     };
 
     //u_num에 해당하는 cart data 불러오기
@@ -71,21 +52,11 @@ function MypageForm(props) {
             console.log("cart data 호출 성공");
             setCartlist(res.data);
             console.dir("data:" + JSON.stringify(cartlist));
-        })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    alert("인증되지 않은 유저입니다.");
-                    navi("/user/login");
-                } else if (error.response.status === 403) {
-                    alert("권한이 없습니다.");
-                    navi("/");
-                }
-            })
-        ;
+        });
     };
 
     useEffect(() => {
-        userByNum();
+        mypageform();
         cartdata();
     }, []);
 
@@ -214,7 +185,7 @@ function MypageForm(props) {
                                                 className="count"
                                                 style={{color: "#31B46E"}}
                                             >
-                                                {tradeData.totalCount}
+                                                {tradeData && tradeData.length}
                                             </dd>
                                         </dl>
                                     </Link>
@@ -231,7 +202,9 @@ function MypageForm(props) {
                                                 className="count"
                                                 style={{color: "#FF0000"}}
                                             >
-                                                {tradeData.stateCount && tradeData.stateCount[0]}
+                                                {tradeData &&
+                                                    tradeData.map(item => item.state === "배송 전")
+                                                        .reduce((prev, curr) => prev + curr, 0)}
                                             </dd>
                                         </dl>
                                     </Link>
@@ -248,7 +221,9 @@ function MypageForm(props) {
                                                 className="count"
                                                 style={{color: "#0000FF"}}
                                             >
-                                                {tradeData.stateCount && tradeData.stateCount[1]}
+                                                {tradeData &&
+                                                    tradeData.map(item => item.state === "배송 중")
+                                                        .reduce((prev, curr) => prev + curr, 0)}
                                             </dd>
                                         </dl>
                                     </Link>
@@ -265,13 +240,15 @@ function MypageForm(props) {
                                                 className="count"
                                                 style={{color: "#A020F0"}}
                                             >
-                                                {tradeData.stateCount && tradeData.stateCount[2]}
+                                                {tradeData &&
+                                                    tradeData.map(item => item.state === "배송 완료")
+                                                        .reduce((prev, curr) => prev + curr, 0)}
                                             </dd>
                                         </dl>
                                     </Link>
                                 </div>
                             </div>
-                            {tradeData.mapsize === 0 ? (
+                            {tradeData && tradeData.length === 0 ? (
                                 // 해당 유저의 주문 내역이 없을 경우
                                 <div data-v-f263fda4="">
                                     <div
@@ -290,7 +267,7 @@ function MypageForm(props) {
                                             <Link
                                                 data-v-3d1bcc82=""
                                                 data-v-541a17ff=""
-                                                to="/product/list/1"
+                                                to="/product/list"
                                                 className="btn outlinegrey small"
                                             >
                                                 {" "}
@@ -323,8 +300,8 @@ function MypageForm(props) {
                                             </b>
                                             <b style={{paddingTop: "6px"}}>배송상태</b>
                                             <hr style={{gridColumn: "1/5", gridRow: "3/4"}}/>
-                                            {tradeData.joined &&
-                                                tradeData.joined.slice(0, 5).map((jitem, idx) => (
+                                            {tradeData &&
+                                                tradeData.slice(0, 5).map((jitem, idx) => (
                                                     <React.Fragment key={idx}>
                             <span style={{fontWeight: "inherit"}}>
                               {jitem.day}
@@ -498,7 +475,7 @@ function MypageForm(props) {
                                 <Link
                                     data-v-3d1bcc82=""
                                     data-v-541a17ff=""
-                                    to="/product/list/1"
+                                    to="/product/list"
                                     className="btn outlinegrey small"
                                 >
                                     {" "}

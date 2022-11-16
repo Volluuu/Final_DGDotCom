@@ -17,7 +17,10 @@ function MypageProfile(props) {
 
     const userByNum = () => {
         let userByNumUrl = process.env.REACT_APP_URL + "/mypage/userbynum?u_num=" + u_num;
-        axios.get(userByNumUrl)
+        axios.get(userByNumUrl,
+            {
+                headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+            })
             .then(res => {
                 setUserDto(res.data);
             })

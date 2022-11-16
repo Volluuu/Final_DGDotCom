@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import "./UserCss.css";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function LoginForm(props) {
     const [email, setEmail] = useState('');
@@ -22,14 +23,19 @@ function LoginForm(props) {
             email, pass
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
-                console.dir(res.data);
                 localStorage.accessToken = res.data.accessToken;
-                sessionStorage.accessToken = res.data.accessToken;
                 sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
+                Swal.fire({
+                    icon: "success",
+                    text: `로그인 완료`
+                })
                 navi("/");
             }).catch(error => {
-            alert(error);
+            Swal.fire({
+                icon: "error",
+                text: `아이디 또는 비밀번호를 확인해주세요.`
+            })
         })
     }
 
@@ -42,24 +48,6 @@ function LoginForm(props) {
             setLoginBtn(true);
         }
     }
-
-    // const loginBtnEvent = () => {
-    //     let signinUrl = process.env.REACT_APP_URL + "/user/signin";
-    //
-    //     axios.post(signinUrl, {email, pass})
-    //         .then(res => {
-    //             if (res.data === 0) {
-    //                 alert("아이디나 비밀번호가 틀렸습니다.");
-    //                 window.location.reload();
-    //                 sessionStorage.loginok = "no";
-    //             } else {
-    //                 alert("로그인 성공");
-    //                 window.location.reload();
-    //                 sessionStorage.u_num = res.data;
-    //                 sessionStorage.loginok = "yes";
-    //             }
-    //         })
-    // }
 
     // email, pass 바뀔 때마다 렌더링
     useEffect(() => {
@@ -102,7 +90,8 @@ function LoginForm(props) {
                          className="input_box">
                         <h3 className="input_title" data-v-6c561060="" data-v-b02d33c2="">비밀번호</h3>
                         <div className="input_item" data-v-6c561060="">
-                            <input type="password" placeholder="" autoComplete="off" className="input_txt" name="pass"
+                            <input type="password" placeholder="영문, 숫자, 특수문자 조합 8-16자" autoComplete="off"
+                                   className="input_txt" name="pass"
                                    data-v-6c561060="" value={pass} id="pass"
                                    onChange={(e) => {
                                        setPass(e.target.value);
@@ -132,7 +121,8 @@ function LoginForm(props) {
                 </ul>
                 <div className="social_login" data-v-b02d33c2="">
                     <button type="button" className="btn btn_login_naver full outline" data-v-3d1bcc82=""
-                            data-v-b02d33c2="">
+                            data-v-b02d33c2=""
+                            disabled={true}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
                              data-v-b02d33c2="">
                             <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-naver"
@@ -141,7 +131,8 @@ function LoginForm(props) {
                         네이버로 로그인
                     </button>
                     <button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""
-                            data-v-b02d33c2="">
+                            data-v-b02d33c2=""
+                            disabled={true}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
                              data-v-b02d33c2="">
                             <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-apple"
