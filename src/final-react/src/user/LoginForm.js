@@ -23,14 +23,16 @@ function LoginForm(props) {
             email, pass
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
+                localStorage.refreshToken = res.data.refreshToken;
                 localStorage.accessToken = res.data.accessToken;
                 sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
                 Swal.fire({
                     icon: "success",
-                    text: `로그인 완료`
+                    title: "로그인 완료"
                 })
                 navi("/");
+
             }).catch(error => {
             Swal.fire({
                 icon: "error",
@@ -64,7 +66,8 @@ function LoginForm(props) {
                          className={emailError ? "input_box has_error" : "input_box"}>
                         <h3 className="input_title" data-v-6c561060="" data-v-b02d33c2="">이메일 주소</h3>
                         <div className="input_item" data-v-6c561060="">
-                            <input type="text" placeholder="예) email@email.com" autoComplete="off" className="input_txt"
+                            <input type="text" placeholder="예) ostschloss@gmail.com" autoComplete="off"
+                                   className="input_txt"
                                    value={email} data-v-6c561060="" id="email"
                                    onChange={(e) => {
                                        setEmail(e.target.value);

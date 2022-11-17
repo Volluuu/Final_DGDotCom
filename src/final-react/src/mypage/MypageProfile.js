@@ -5,6 +5,10 @@ import Swal from "sweetalert2";
 import {Close} from "@mui/icons-material";
 import {useDaumPostcodePopup} from "react-daum-postcode";
 import {postcodeScriptUrl} from "react-daum-postcode/lib/loadPostcode";
+import F from "./picture/F.png";
+import M from "./picture/M.png";
+import N from "./picture/N.png";
+import K from "./picture/K.png";
 
 function MypageProfile(props) {
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -291,6 +295,7 @@ function MypageProfile(props) {
                     icon: "info",
                     title: "탈퇴 되었습니다.",
                 }).then(res => {
+                    localStorage.removeItem("refreshToken");
                     localStorage.removeItem("accessToken");
                     sessionStorage.removeItem("u_num");
                     sessionStorage.removeItem("loginok");
@@ -306,26 +311,29 @@ function MypageProfile(props) {
         /* eslint-disable */
         <div data-v-587be1b3="" data-v-39b2348a="" className="content_area">
             <div data-v-587be1b3="" className="my_profile">
-                <div data-v-88eb18f6="" data-v-587be1b3="" className="content_title border">
+                <div data-v-88eb18f6="" data-v-587be1b3="" className="content_title">
                     <div data-v-88eb18f6="" className="title">
-                        <h3 data-v-88eb18f6="">프로필 정보</h3>
+                        <h3 data-v-88eb18f6=""><strong>프로필 정보</strong></h3>
                     </div>
                 </div>
                 <div data-v-6dea036d="" data-v-587be1b3="" className="user_profile">
                     <div data-v-6dea036d="" className="profile_thumb">
                         <img data-v-6dea036d="" alt="사용자 이미지" className="thumb_img"
-                             src="https://kream-phinf.pstatic.net/MjAyMjExMDhfOSAg/MDAxNjY3ODc2MTAyMzgz.BT0jn7UXH7k600dgkczo_x_l9IBu93cz-OOVjsrwzEQg.hBpb4a21Swhk6BqPbJOfAUrc5UZ8V3t37vazXgiPOG8g.PNG/p_3e240138bd144a8a955371d751af02fb.PNG?type=m"/>
+                             src={userDto.isadmin === "ROLE_ADMIN" ? K : userDto.gender === "M" ? M : userDto.gender === "F" ? F : N}/>
                     </div>
                     <div data-v-6dea036d="" className="profile_detail">
-                        <strong data-v-6dea036d="" className="name">{userDto.u_name}</strong>
+                        <strong data-v-6dea036d=""
+                                className="name">{userDto.u_name}&nbsp;
+                            <sub>{userDto.isadmin === "ROLE_ADMIN" ? "관리자" : "회원"}님</sub></strong>
                         <div data-v-6dea036d="" className="profile_btn_box">
-                            <Link data-v-3d1bcc82="" data-v-6dea036d="" to="#!" className="btn outlinegrey small"
-                                  style={{pointerEvents: "none"}}>
-                                이미지 변경
-                            </Link>
-                            <Link data-v-3d1bcc82="" data-v-6dea036d="" to="#!"
-                                  className="btn outlinegrey small"
-                                  style={{pointerEvents: "none"}}> 이미지 삭제 </Link></div>
+                            {/*<Link data-v-3d1bcc82="" data-v-6dea036d="" to="#!" className="btn outlinegrey small"*/}
+                            {/*      style={{pointerEvents: "none"}}>*/}
+                            {/*    이미지 변경*/}
+                            {/*</Link>*/}
+                            {/*<Link data-v-3d1bcc82="" data-v-6dea036d="" to="#!"*/}
+                            {/*      className="btn outlinegrey small"*/}
+                            {/*      style={{pointerEvents: "none"}}> 이미지 삭제 </Link>*/}
+                        </div>
                     </div>
                 </div>
                 <input data-v-587be1b3="" type="file" accept="image/jpeg,image/png" hidden="hidden"/>

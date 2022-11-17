@@ -26,7 +26,6 @@ function SignupForm(props) {
     const [hpErrorMsg, setHpErrorMsg] = useState("유효하지 않는 번호 입니다. (\"-\"를 포함하여 입력해주세요)");
     const [gender, setGender] = useState("N");
     const addrRef = useRef('');
-    const [addrFindBtn, setaddrFindBtn] = useState(false); // 주소 고르면 false
     const extraAddressRef = useRef('');
 
     const navi = useNavigate();
@@ -245,7 +244,8 @@ function SignupForm(props) {
                              className={emailError ? "input_box has_error" : "input_box"}>
                             <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이메일 주소</h3>
                             <div className="input_item" data-v-6c561060="">
-                                <input type="text" placeholder="예) email@naver.com" autoComplete="off" ref={emailRef}
+                                <input type="text" placeholder="예) ostschloss@gmail.com" autoComplete="off"
+                                       ref={emailRef}
                                        className="input_txt" data-v-6c561060="" disabled={emailInput ? true : false}
                                        style={{
                                            fontSize: "1.1em",
@@ -257,7 +257,7 @@ function SignupForm(props) {
                                            msUserSelect: emailInput ? "none" : "default",
                                            WebkitUserSelect: emailInput ? "none" : "default",
                                        }}
-                                       onChange={(e) => {
+                                       onChange={() => {
                                            let email = emailRef.current.value;
                                            let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
                                            if (exptext.test(email) === false) {

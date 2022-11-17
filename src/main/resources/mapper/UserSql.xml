@@ -76,4 +76,17 @@
         from user
         where hp = #{hp}
     </select>
+    <!--    휴대폰 번호, 이메일에 맞는 아이디 있는지 체크-->
+    <select id="findPassCheck" parameterType="UserDto" resultType="int">
+        select count(*)
+        from user
+        where hp = #{hp}
+          and email = #{email}
+    </select>
+    <update id="findPassUpdate" parameterType="UserDto">
+        update user
+        set pass=#{pass}
+        where hp = #{hp}
+          and email = #{email}
+    </update>
 </mapper>

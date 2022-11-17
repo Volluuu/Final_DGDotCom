@@ -43,4 +43,10 @@ public interface UserMapper {
     // 휴대폰 번호로 이메일 찾기
     public String findEmailByHp(String hp);
 
+    // 휴대폰 번호, 이메일에 맞는 아이디 있는지 체크
+    public int findPassCheck(UserDto dto);
+
+    // 임시 비밀번호로 변경
+    public void findPassUpdate(UserDto dto);
+
 }
