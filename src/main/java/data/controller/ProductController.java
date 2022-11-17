@@ -27,9 +27,10 @@ public class ProductController {
             @RequestParam(required = false) String[] brands,
             @RequestParam(required = false) String[] genders,
             @RequestParam(required = false) String[] sizes,
+            @RequestParam (required = false) String[] prices,
             @RequestParam(required = false) String priceOrderBy
     ) {
-//        System.out.println("ProCP:"+currentPage);
+//        System.out.println("ProCP:"+curr@RequestParam (required = false) String[] prices,entPage);
 
         //페이징처리
         int totalCount = productMapper.getTotalCount();
@@ -74,6 +75,7 @@ public class ProductController {
         map.put("genders", genders);
         map.put("priceOrderBy", priceOrderBy);
         map.put("sizes", sizes);
+        map.put("prices", prices);
 
         List<ProductDto> list = productMapper.getProductList(map);
 
