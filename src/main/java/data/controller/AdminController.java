@@ -6,7 +6,7 @@ import data.dto.ProductDto;
 import data.dto.UserDto;
 import data.mapper.AdminMapper;
 import data.util.FileUtil;
-import org.hibernate.mapping.Join;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +23,8 @@ public class AdminController {
 
     @Autowired
     AdminMapper adminMapper;
+
+    List<String> newProductPhotoList = new ArrayList<String>();
     /*------------------------- 유저 시작 ---------------------------*/
 
     //유저 리스트
@@ -185,6 +187,28 @@ public class AdminController {
         return uploadFileName;
     }
 
+    //수정 사진 업로드
+    @PostMapping("/pimgupload2")
+    public List<String> fileUpload2(@RequestParam List<MultipartFile> uploadFile,
+                                    HttpServletRequest request)
+    {
+        newProductPhotoList.clear();
+        System.out.println(uploadFile.size() + "개 업로드");
+        //업로드할 폴더
+        String path = request.getSession().getServletContext().getRealPath("/product");
+        for (MultipartFile multi : uploadFile) {
+            System.out.println(multi.getOriginalFilename());
+            try {
+                multi.transferTo(new File(path + "/" + multi.getOriginalFilename()));
+                newProductPhotoList.add(multi.getOriginalFilename());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return newProductPhotoList;
+    }
+
     @PostMapping("/productInsert")
             public void InsertProduct(@RequestBody JoinDto dto)
     {
@@ -206,6 +230,22 @@ public class AdminController {
         }
         return "redirect:/admin/adproduct?currentPage="+currentPage;
     }
+    @PostMapping("/updateProduct")
+    public void UpdateProduct(@RequestBody JoinDto udto)
+    {
+        System.out.println(udto);
+        udto.setPhoto(uploadFileName);
+        adminMapper.UpdateProduct(udto);
+        adminMapper.UpdateInven(udto);
+        uploadFileName = null;
+    }
+
+    @GetMapping("/select")
+   public JoinDto selectProduct(@RequestParam int p_num)
+    {
+       return adminMapper.selectProduct(p_num);
+    }
+
     /*------------------------- 배너 시작 ---------------------------*/
 
 //

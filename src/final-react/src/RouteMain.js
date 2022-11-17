@@ -11,6 +11,7 @@ import AdminRoute from "./admin/AdminRoute";
 import UserInfo from "./admin/UserInfo";
 import AdminMenu from "./admin/AdminMenu";
 import Footer from "./home/Footer";
+import InsertForm from "./admin/insertForm";
 
 function RouteMain(props) {
   return (
@@ -62,7 +63,7 @@ function RouteMain(props) {
 
 
         {/* 관리자 페이지 */}
-        <Route path={"/admin"}>
+          <Route path={"/admin"}>
           <Route path={":path"} element={
               <React.Fragment>
                   <AdminRoute/>
@@ -73,6 +74,12 @@ function RouteMain(props) {
                     <AdminRoute/>
                 </React.Fragment>
             }/>
+
+              {/*<Route path={":pnum"} element={*/}
+              {/*    <React.Fragment>*/}
+              {/*        <AdminRoute/>*/}
+              {/*    </React.Fragment>*/}
+              {/*}/>*/}
           </Route>
         </Route>
 
