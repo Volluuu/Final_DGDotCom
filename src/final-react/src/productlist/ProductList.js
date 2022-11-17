@@ -12,12 +12,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 //배너
 import {Swiper, SwiperSlide} from "swiper/react";
 // Import Swiper styles
-import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./ProductListCss.css";
 // import required modules
-import {Autoplay, Navigation, Pagination} from "swiper";
+import {Autoplay, Navigation, Pagination} from "swiper"
 
 //칩
 import Chip from '@material-ui/core/Chip';
@@ -120,6 +119,7 @@ function ProductList(props) {
     const brands = searchParams.getAll('brands');
     const genders = searchParams.getAll('genders');
     const sizes = searchParams.getAll('sizes');
+    const prices = searchParams.getAll('prices');
     let currentPage = searchParams.get('currentPage') || 1;
     const [isConnection, setIsConnection] = useState(false);
 
@@ -136,6 +136,8 @@ function ProductList(props) {
             brands,
             genders,
             sizes,
+            prices,
+            priceOrderBy: parms?.priceOrderBy || priceOrderBy,
             keyword
         }
         if (!parms?.currentPage) delete _params.currentPage;
@@ -224,6 +226,22 @@ function ProductList(props) {
 
     const checkSize = (size) => {
         return sizes.includes(size);
+    };
+
+    const selectPrice = (price) => {
+        if (prices.includes(price)) {
+            prices.splice(prices.findIndex((c) => c === price), 1);
+        } else {
+            prices.push(price);
+        }
+        navigate({
+            pathname: '',
+            search: '?' + makeSearchParms()
+        });
+    };
+
+    const checkPrice = (price) => {
+        return prices.includes(price);
     };
 
     useEffect(() => {
@@ -318,25 +336,28 @@ function ProductList(props) {
 
             <div style={{marginLeft:'40px',width:'1590px',height:'150px'}}>
 
-                    <Swiper
-                        style={{
-                            "--swiper-navigation-color": "#222",
-                            "--swiper-pagination-color": "red"
-                        }}
-                        navigation={true}
-                        pagination={{clickable: true}}
-                        centeredSlides={true}
-                        loop={true}
-                        autoplay={{
-                            delay               : 3500,
-                            disableOnInteraction: false,
-                        }}
-                        modules={[Navigation, Pagination, Autoplay]} className="mySwiper">
-                        <SwiperSlide>Slide 1</SwiperSlide>
-                        <SwiperSlide>Slide 2</SwiperSlide>
-                        <SwiperSlide>Slide 3</SwiperSlide>
-                        <SwiperSlide>Slide 4</SwiperSlide>
-                    </Swiper>
+                <Swiper
+                    style={{
+                        "--swiper-navigation-color": "#222",
+                        "--swiper-pagination-color": "orange",
+                        width:'1580px',
+                        height:'140px',
+                        color:'orange'
+                    }}
+                    navigation={true}
+                    pagination={{clickable: true}}
+                    centeredSlides={true}
+                    loop={true}
+                    autoplay={{
+                        delay               : 3500,
+                        disableOnInteraction: false,
+                    }}
+                    modules={[Navigation, Pagination, Autoplay]} className="mySwiper">
+                    <SwiperSlide>Slide 1</SwiperSlide>
+                    <SwiperSlide>Slide 2</SwiperSlide>
+                    <SwiperSlide>Slide 3</SwiperSlide>
+                    <SwiperSlide>Slide 4</SwiperSlide>
+                </Swiper>
 
             </div>
 
@@ -508,10 +529,10 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox/>} label="10만원 이하"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="10만원 - 30만원 이하"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="30만원 - 50만원 이하"/><br/>
-                            <FormControlLabel control={<Checkbox/>} label="50만원 이상"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectPrice('-100000')}} checked={checkPrice('-100000')} />} label="10만원 이하"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectPrice('100000-300000')}} checked={checkPrice('100000-300000')} />} label="10만원 - 30만원 이하"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectPrice('300000-500000')}} checked={checkPrice('300000-500000')} />} label="30만원 - 50만원 이하"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectPrice('500000+')}} checked={checkPrice('500000+')} />} label="50만원 이상"/><br/>
                         </Typography>
                     </AccordionDetails>
                 </Accordion>

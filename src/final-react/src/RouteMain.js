@@ -121,18 +121,19 @@ function RouteMain(props) {
           <Route path={"AddressApi"} element={<AddressApi />}></Route>
         </Route>
 
-        {/* 잘못된 주소*/}
-        <Route
-          path={"*"}
-          element={
-            <div>
-              <img alt={""} src={"404.png"} style={{ width: "800px" }} />
-            </div>
-          }
-        />
-      </Routes>
-    </div>
-  );
+
+                {/* 잘못된 주소*/}
+                <Route
+                    path={"*"}
+                    element={
+                        <div>
+                            <img alt={""} src={"404.png"} style={{width: "800px"}}/>
+                        </div>
+                    }
+                />
+            </Routes>
+        </div>
+    );
 }
 
 export default RouteMain;

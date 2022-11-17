@@ -29,7 +29,7 @@ public class MailConfig {
         properties.setProperty("mail.transport.protocol", "smtp"); // 프로토콜 설정
         properties.setProperty("mail.smtp.auth", "true"); // smtp 인증
         properties.setProperty("mail.smtp.starttls.enable", "true"); // smtp starttls 사용
-        properties.setProperty("mail.debug", "true"); // 디버그 사용
+        properties.setProperty("mail.debug", "false"); // true 디버그 사용 , false 사용 안함
         properties.setProperty("mail.smtp.ssl.trust", "smtp.naver.com"); // ssl 인증 서버는 smtp.naver.com
         properties.setProperty("mail.smtp.ssl.enable", "true"); // ssl 사용
 

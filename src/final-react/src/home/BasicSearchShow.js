@@ -48,7 +48,7 @@ const PopLink = styled(Link)`
   margin-bottom: 5px;
 `
 const BasicSearchShow = (props) => {
-    const {latest, setLatest, word, open, handleOpen, handleClose} = props;
+    const {latest, setLatest, word, open, handleOpen, handleClose, deleteLatest} = props;
     const recommend = ["시계", "긴팔 티셔츠", "쥬얼리", "스커트", "코트", "패딩", "니트 웨어", "바지", "자켓"];
     const [hot, setHot] = useState([]);
     const [hot_brand, setHot_brand] = useState([]);
@@ -70,12 +70,14 @@ const BasicSearchShow = (props) => {
 
     return (
         <WrapperDiv>
-            <Title_p>최근 검색어<button>지우기</button></Title_p>
+            <Title_p>최근 검색어<span onClick={deleteLatest} style={{cursor:"pointer", marginLeft:"10px"}}>지우기</span></Title_p>
+            <EltDiv>
             {
                 // user table에서 search 컬럼을 가져와서 list.map 구현
                 latest.length < 1 ? <p>최근검색어 없음</p> :
-                latest.map((elt, idx) => <RecLink key={idx} to={`/product/list/?keyword=${elt}`}>{elt}</RecLink>)
+                latest.map((elt, idx) => <RecLink key={idx} to={`/product/list/?keyword=${elt}`} handleClose={handleClose}>{elt}</RecLink>)
             }
+            </EltDiv>
             <Title_p style={{marginBottom: "5px"}}>추천 검색어 </Title_p>
             <EltDiv>
                 {

@@ -3,6 +3,10 @@ import axios from "axios";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Close } from "@mui/icons-material";
 import Swal from "sweetalert2";
+import F from "./picture/F.png";
+import M from "./picture/M.png";
+import N from "./picture/N.png";
+import K from "./picture/K.png";
 
 function MypageForm(props) {
   const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -63,111 +67,111 @@ function MypageForm(props) {
     cartdata();
   }, []);
 
-  return (
-    <div data-v-f263fda4="" data-v-39b2348a="" className="content_area">
-      {userDto && (
-        // 회원 정보 구역
-        <div data-v-f263fda4="" className="my_home">
-          <div
-            data-v-5acef129=""
-            data-v-f263fda4=""
-            className="user_membership"
-          >
-            <div data-v-5acef129="" className="user_detail">
-              <div data-v-5acef129="" className="user_thumb">
-                <img
-                  data-v-5acef129=""
-                  src="/_nuxt/img/blank_profile.4347742.png"
-                  alt="사용자 이미지"
-                  className="thumb_img"
-                />
-              </div>
-              <div data-v-5acef129="" className="user_info">
-                <div data-v-5acef129="" className="info_box">
-                  {/* 이름 */}
-                  <strong data-v-5acef129="" className="name">
-                    {`${userDto.u_name} ${
-                      userDto.isadmin === "ADMIN" ? "관리자" : "고객님 정보"
-                    }`}
-                  </strong>
-                  {/* 이메일 */}
-                  <p data-v-5acef129="" className="email">
-                    {
-                      userDto.email.charAt(0) + // 첫 번째 글자 출력
-                        "*".repeat(userDto.email.split("@")[0].length - 2) + // 마지막 글자 제외하고 * 출력
-                        userDto.email.charAt(userDto.email.indexOf("@") - 1) + // 마지막 글자 출력
-                        "@" +
-                        userDto.email.split("@")[1] // @ 뒤 주소 출력
-                    }
-                  </p>
-                  {/* 프로필 버튼 */}
-                  <Link
-                    data-v-3d1bcc82=""
-                    data-v-5acef129=""
-                    to="/mypage/profile"
-                    className="btn btn outlinegrey small"
-                    type="button"
-                  >
-                    프로필 수정
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div data-v-5acef129="" className="membership_detail">
-              {/* 고객 권한, 가입일 */}
-              <Link
-                data-v-5acef129=""
-                to="#!"
-                className="membership_item disabled"
-              >
-                <strong
-                  data-v-5acef129=""
-                  className="info"
-                  style={{ color: userDto.isadmin === "ADMIN" ? "red" : "" }}
-                >
-                  {userDto.isadmin === "ADMIN" ? "관리자" : "일반 회원"}
-                </strong>
-                <p data-v-5acef129="" className="title">
-                  {userDto.gaip.substring(0, 10)} 가입
-                </p>
-              </Link>
-              {/* 적립금 및 알림창 */}
-              <Link
-                data-v-5acef129=""
-                to="#!"
-                className="membership_item"
-                onClick={() => {
-                  setPointStyle("");
-                }}
-              >
-                <strong data-v-5acef129="" className="info">
-                  {userDto.point
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  P
-                </strong>
-                <p data-v-5acef129="" className="title">
-                  {" "}
-                  적립금{" "}
-                </p>
-              </Link>
-            </div>
-          </div>
-          <div data-v-f263fda4="" className="inventory_box">
-            <div data-v-77bfdc51="" data-v-f263fda4="">
-              <div
-                data-v-6752ceb2=""
-                data-v-77bfdc51=""
-                className="my_home_title"
-              >
-                <h3 data-v-6752ceb2="" className="title">
-                  주문 내역
-                </h3>
-                <Link
-                  data-v-6752ceb2=""
-                  to="/mypage/order"
-                  className="btn_more"
-                >
+    return (
+        <div data-v-f263fda4="" data-v-39b2348a="" className="content_area">
+            {userDto && (
+                // 회원 정보 구역
+                <div data-v-f263fda4="" className="my_home">
+                    <div
+                        data-v-5acef129=""
+                        data-v-f263fda4=""
+                        className="user_membership"
+                    >
+                        <div data-v-5acef129="" className="user_detail">
+                            <div data-v-5acef129="" className="user_thumb">
+                                <img
+                                    data-v-5acef129=""
+                                    src={userDto.isadmin === "ROLE_ADMIN" ? K : userDto.gender === "M" ? M : userDto.gender === "F" ? F : N}
+                                    alt="사용자 이미지"
+                                    className="thumb_img"
+                                />
+                            </div>
+                            <div data-v-5acef129="" className="user_info">
+                                <div data-v-5acef129="" className="info_box">
+                                    {/* 이름 */}
+                                    <strong data-v-5acef129="" className="name">
+                                        {userDto.u_name}
+                                        <span
+                                            style={{fontSize: "0.8em"}}>{userDto.isadmin !== "ROLE_ADMIN" ? "고객님 정보" : ""}</span>
+                                    </strong>
+                                    {/* 이메일 */}
+                                    <p data-v-5acef129="" className="email">
+                                        {
+                                            userDto.email.charAt(0) + // 첫 번째 글자 출력
+                                            "*".repeat(userDto.email.split("@")[0].length - 2) + // 마지막 글자 제외하고 * 출력
+                                            userDto.email.charAt(userDto.email.indexOf("@") - 1) + // 마지막 글자 출력
+                                            "@" +
+                                            userDto.email.split("@")[1] // @ 뒤 주소 출력
+                                        }
+                                    </p>
+                                    {/* 프로필 버튼 */}
+                                    <Link
+                                        data-v-3d1bcc82=""
+                                        data-v-5acef129=""
+                                        to="/mypage/profile"
+                                        className="btn btn outlinegrey small"
+                                        type="button"
+                                    >
+                                        프로필 수정
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-v-5acef129="" className="membership_detail">
+                            {/* 고객 권한, 가입일 */}
+                            <Link
+                                data-v-5acef129=""
+                                to="#!"
+                                className="membership_item disabled"
+                            >
+                                <strong
+                                    data-v-5acef129=""
+                                    className="info"
+                                    style={{color: userDto.isadmin === "ROLE_ADMIN" ? "red" : ""}}
+                                >
+                                    {userDto.isadmin === "ROLE_ADMIN" ? "관리자" : "일반 회원"}
+                                </strong>
+                                <p data-v-5acef129="" className="title">
+                                    {userDto.gaip.substring(0, 10)} 가입
+                                </p>
+                            </Link>
+                            {/* 적립금 및 알림창 */}
+                            <Link
+                                data-v-5acef129=""
+                                to="#!"
+                                className="membership_item"
+                                onClick={() => {
+                                    setPointStyle("");
+                                }}
+                            >
+                                <strong data-v-5acef129="" className="info">
+                                    {userDto.point
+                                        .toString()
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                    P
+                                </strong>
+                                <p data-v-5acef129="" className="title">
+                                    {" "}
+                                    적립금{" "}
+                                </p>
+                            </Link>
+                        </div>
+                    </div>
+                    <div data-v-f263fda4="" className="inventory_box">
+                        <div data-v-77bfdc51="" data-v-f263fda4="">
+                            <div
+                                data-v-6752ceb2=""
+                                data-v-77bfdc51=""
+                                className="my_home_title"
+                            >
+                                <h3 data-v-6752ceb2="" className="title">
+                                    주문 내역
+                                </h3>
+                                <Link
+                                    data-v-6752ceb2=""
+                                    to="/mypage/order"
+                                    className="btn_more"
+                                >
                   <span data-v-6752ceb2="" className="btn_txt">
                     더보기
                   </span>
