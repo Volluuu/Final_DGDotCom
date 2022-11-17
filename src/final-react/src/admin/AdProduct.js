@@ -4,10 +4,12 @@ import axios from "axios";
 import styled from 'styled-components';
 import './button.css'
 import Checkbox from "@material-ui/core/Checkbox";
+import EditIcon from '@material-ui/icons/Edit';
 
 
 function AdProduct(props) {
     const {currentPage} = useParams();
+    const {i_num} = useParams();
     console.log("current page: " + currentPage);
     const [data, setData] = useState('');
     const [checkItems, setCheckItems] = useState([]);
@@ -106,6 +108,7 @@ function AdProduct(props) {
                         <th className='th-hj'>판매수</th>
                         <th className='th-hj'>사이즈</th>
                         <th className='th-hj'>재고 수</th>
+                        <th className='th-hj'>수정</th>
                     </tr>
                     </thead>
 
@@ -127,6 +130,11 @@ function AdProduct(props) {
                         <td className='td-hj'>{r.sellamount}</td>
                         <td className='td-hj'>{r.p_size}</td>
                         <td className='td-hj'>{r.amount}</td>
+                        <td className='td-hj'><EditIcon
+                            style={{cursor:'pointer'}}
+                            onClick={() => {
+                            navi(`/admin/pupdateform/${r.i_num}`);
+                        }}/></td>
                     </tr>)}
                     </tbody>
                 </table>
@@ -149,7 +157,7 @@ function AdProduct(props) {
                         <button href="#" className="btn-gradient green" onClick={() => {
                             navi("/admin/insertform");
                         }}>추가</button>
-                        <button href="#" className="btn-gradient purple">수정</button>
+
                         <button className="btn-gradient red" onClick={()=>{deleteProduct(checkItems)
                         }}>삭제</button>
                     </div>

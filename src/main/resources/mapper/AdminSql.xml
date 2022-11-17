@@ -83,18 +83,39 @@
     </delete>
 
     <!--상품 업데이트-->
-    <update id="UpdateProduct" parameterType="int">
-        update product set category=#{category}, brand=#{brand}, gender=#{gender}, p_name=#{p_name},
-        price=#{price}, discount=#{discount}
+    <update id="UpdateProduct" parameterType="JoinDto">
+        update product set category=#{category}, brand=#{brand},price=#{price},
+                           gender=#{gender}, p_name=#{p_name}
         <if test="photo != null">
             ,photo=#{photo}
         </if>
         where p_num = #{p_num}
     </update>
+<!--    인벤 업데이트-->
+    <update id="UpdateInven" parameterType="JoinDto">
+        update inven set p_size=#{p_size},amount=#{amount} where p_num = #{p_num}
+    </update>
 
 <!--    Join한 inven테이블에 p_num을 넣기위한 sql문-->
     <select id="getMaxPnum" resultType="int">
         select max(p_num) from product
+    </select>
+
+<!--    선택 정보 가져오기-->
+    <select id="selectProduct" parameterType="int" resultType="JoinDto">
+        SELECT product.p_num,
+               product.category,
+               product.photo,
+               product.brand,
+               product.p_name,
+               product.price,
+               product.gender,
+               inven.i_num,
+               inven.sellamount,
+               inven.p_size,
+               inven.amount
+        from product
+                 left join inven on product.p_num = inven.p_num where inven.i_num=#{i_num}
     </select>
 
     <!--=================================배너시작=============================================-->
