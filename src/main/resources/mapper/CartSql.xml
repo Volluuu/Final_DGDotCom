@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.CartMapper">
+<!--    유저정보 얻어오기-->
+    <select id="userCart" parameterType="int" resultType="UserDto">
+        select * from user where u_num = #{u_num}
+    </select>
+
+    <!--    총 수량 얻기 ( 페이징처리)-->
+    <select id="getCartCount" resultType="int">
+        select count(*) from cart
+    </select>
+
+    <select id="getUserCartCount" parameterType="int" resultType="int">
+        select count(*) from cart where u_num=#{u_num}
+    </select>
+
+    <insert id="insertCart" parameterType="CartDto">
+        insert into cart values (null,#{u_num},#{p_num},#{p_size},#{amount},now())
+    </insert>
+    <!-- list 출력 및 페이징 처리용-->
+    <select id="getCartList" parameterType="Map" resultType="CartDto">
+        select * from cart C join product P where C.p_num=P.p_num and u_num=#{u_num} order by c_num desc limit #{startNum},#{perPage}
+    </select>
+    <!-- p_num으로 데이터 얻어오기-->
+    <select id="getData" parameterType="int" resultType="CartDto">
+        select * from cart where c_num=#{c_num}
+    </select>
+
+    <delete id="deleteCart" parameterType="int">
+        delete from cart where c_num=#{c_num}
+    </delete>
+
+    <update id="updateCart" parameterType="CartDto">
+        update cart set amount=#{amount} where c_num=#{c_num} and u_num=#{u_num}
+    </update>
+</mapper>

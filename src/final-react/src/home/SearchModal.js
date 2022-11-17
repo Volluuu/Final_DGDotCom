@@ -5,6 +5,9 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import {NavLink, useNavigate} from "react-router-dom";
 import axios from "axios";
+import SearchListVirtual from "./SearchListVirtual";
+import BasicSearchShow from "./BasicSearchShow";
+import styled from "styled-components";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -17,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
         border         : '2px solid #000',
         boxShadow      : theme.shadows[5],
         padding        : theme.spacing(2, 4, 3),
+        display        : 'flex',
     },
 }));
+
 
 export default function TransitionsModal() {
     const classes = useStyles();
@@ -30,11 +35,13 @@ export default function TransitionsModal() {
 
     const handleClose = () => {
         setOpen(false);
+        setWord('');
     };
     //검색 리스트를 가져오는 이벤트 **********************************
     const [word, setWord] = useState('');
     const navigate = useNavigate();
     const [searchList, setSearchList] = useState([]);
+    const [latest, setLatest] = useState([]);
     const changeWord = useCallback(
         (e) => {
             setWord(e.target.value);
@@ -42,40 +49,64 @@ export default function TransitionsModal() {
         [],
     );
 
-    const selectList = useCallback(
-        (e) => {
-            //axios 호출
-        },
-        [],
-    );
-
     const onSubmit = useCallback(
         (e) => {
             e.preventDefault();
-            setOpen(false);
-            setWord(e.target.value);
-            navigate("/product/list/1");
-        },
-        [],
-    );
-    // useEffect(() => {
-    //     if(!word.equal('')) {
-    //         const debounce = setTimeout(()=>{
-    //             if(word) updateData();
-    //         },200)
-    //         return () => {
-    //             clearTimeout(debounce);
-    //         }
-    //         axios.get("http://localhost:9003/list/search").then(res=>{
-    //             setSearchList(res.data);
-    //         },)
-    //     }
-    // }, [word]);
+            if (word === '') {
+                navigate("/product/list");
+                setOpen(false);
 
+            } else {
+                navigate(`/product/list?keyword=${word}`)
+                axios.post(`http://localhost:9003/list/keyword?word=${word}`).then(res => {
+                });
+                setOpen(false);
+                setWord('');
+            }
+            const setOpenAndWord = () => {
+                setWord('');
+            }
+            concatLatest().then();
+        },
+        [word],
+    );
+    const updateLatest = async () => {
+        const num = sessionStorage.u_num;
+        const res = await axios.get(`http://localhost:9003/list/latest/get?num=${num}`);
+        setLatest(res.data);
+    }
+    const concatLatest = async () => {
+        const num = sessionStorage.u_num;
+        await axios.post(`http://localhost:9003/list/latest/update?num=${num}&word=${word}`);
+    }
+
+    const deleteLatest = () => {
+        const num = sessionStorage.u_num;
+        axios.post(`http://localhost:9003/list/latest/delete?num=${num}`).then();
+    }
+    const updateWord = () => {
+        const res = axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
+            setSearchList(res.data);
+        })
+    }
+
+    useEffect(() => {
+        updateLatest().then(r=>{});
+        const debounce = setTimeout(() => {
+            if (word) {
+                updateWord();
+            } else {
+                setSearchList([]);
+            }
+        }, 200)
+        return () => {
+            clearTimeout(debounce);
+        }
+    }, [word, latest]);
     return (
-        <div>
+        <>
             <button type="button" onClick={handleOpen}
-                    style={{width: "100px", height: "100px", border: "3px solid black"}}>
+                    style={{width: "60px", height: "30px", border: "3px solid black"}}>
                 검색
             </button>
             <Modal
@@ -91,30 +122,59 @@ export default function TransitionsModal() {
                 }}
             >
                 <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2 id="transition-modal-title">찾으시는 상품의 상품명을 입력해주세요</h2>
+                    <div className={classes.paper} style={{height: "100%", display: "flex", overflowY: "auto"}}>
                         <p id="transition-modal-description">
                             <form onSubmit={onSubmit}>
-                                <input type="text" placeholder={"상품명 입력"} style={{
-                                    border     : "1px solid #ccc",
-                                    width      : "90%",
-                                    height     : "34px",
-                                    marginRight: "20px",
-                                }} name={"word"} value={word} onChange={changeWord}/>
-                                <button type={"submit"}
-                                        style={{backgroundColor: "black", color: "white", padding: "5px"}}>검색
-                                </button>
-                                <div style={{width: "768px", height: "600px"}}>
+                                <InputBar>
+                                    <input className={"in"} type="text" placeholder={"상품명 입력"} autoFocus={true} style={{
+                                        border     : "1px solid #ccc",
+                                        width      : "90%",
+                                        height     : "34px",
+                                        marginRight: "20px",
+                                        marginTop  : "20px",
+                                    }} name={"word"} value={word} onChange={changeWord}/>
+                                    <button type={"submit"}
+                                            style={{
+                                                backgroundColor: "black",
+                                                color          : "white",
+                                                padding        : "5px",
+                                                marginTop      : "20px",
+                                                height         : "34px",
+                                                width          : "50px",
+                                            }}>검색
+                                    </button>
+                                </InputBar>
+                                <div style={{margin: "0 auto"}}>
                                     {
-                                        searchList.map((product, idx)=><p key={idx}>{product.p_name}</p>)
+                                        word === '' ? <BasicSearchShow latest={latest} deleteLatest={deleteLatest} setLatest={setLatest} open={open} handOpen={handleOpen} handleClose={handleClose}/> : searchList.length < 1 ?
+                                            <NoResult>no result</NoResult> :
+                                            <SearchListVirtual searchlist={searchList} open={open} handOpen={handleOpen} handleClose={handleClose}/>
                                     }
                                 </div>
-                                <NavLink to={"/product/list/1"} onClick={handleClose}>리스트로 이동</NavLink><br/>
                             </form>
                         </p>
                     </div>
                 </Fade>
             </Modal>
-        </div>
+        </>
     );
 }
+
+const InputBar = styled.div`
+  width: 700px;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 768px) {
+    width: 415px;
+    & > input {
+      width: auto;
+    }
+  }
+`
+const NoResult = styled.div`
+  width: 700px;
+  height: 800px;
+  @media (max-width: 768px) {
+    width: 415px;
+  }
+`

@@ -6,8 +6,87 @@
         from user
         where email = #{email}
     </select>
+    <select id="getUserByNum" parameterType="int" resultType="UserDto">
+        select *
+        from user
+        where u_num = #{u_num}
+    </select>
     <insert id="insertUser" parameterType="UserDto">
         insert into user
-        values (null, #{email}, #{u_name}, #{pass}, #{hp}, #{addr}, #{gender}, user, now())
+        values (null, #{email}, #{u_name}, #{pass}, #{hp}, #{addr}, #{gender}, 'ROLE_USER', now(), 0, null)
     </insert>
+    <!--    아이디 중복 체크-->
+    <select id="emailCheck" parameterType="String" resultType="int">
+        select count(*)
+        from user
+        where email = #{email}
+    </select>
+    <!--    핸드폰 중복 체크-->
+    <select id="hpCheck" parameterType="String" resultType="int">
+        select count(*)
+        from user
+        where hp = #{hp}
+    </select>
+    <!--이메일 수정-->
+    <update id="emailChange" parameterType="UserDto">
+        update user
+        set email=#{email}
+        where u_num = #{u_num}
+    </update>
+    <!--    이전 비밀번호 체크-->
+    <select id="passCheck" parameterType="UserDto" resultType="int">
+        select count(*)
+        from user
+        where u_num = #{u_num}
+          and pass = #{pass}
+    </select>
+    <!--    비밀번호 수정-->
+    <update id="passChange" parameterType="UserDto">
+        update user
+        set pass=#{pass}
+        where u_num = #{u_num}
+    </update>
+    <!--    이름 수정-->
+    <update id="nameChange" parameterType="UserDto">
+        update user
+        set u_name=#{u_name}
+        where u_num = #{u_num}
+    </update>
+    <!--    휴대폰 번호 수정-->
+    <update id="hpChange" parameterType="UserDto">
+        update user
+        set hp=#{hp}
+        where u_num = #{u_num}
+    </update>
+    <!--    주소 수정-->
+    <update id="addrChange" parameterType="UserDto">
+        update user
+        set addr=#{addr}
+        where u_num = #{u_num}
+    </update>
+    <!--    회원 탈퇴-->
+    <delete id="deleteUser" parameterType="int">
+        delete
+        from user
+        where u_num = #{u_num}
+    </delete>
+    <!--    휴대폰 번호로 이메일 찾기-->
+    <select id="findEmailByHp" parameterType="String" resultType="String">
+        select email
+        from user
+        where hp = #{hp}
+    </select>
+    <!--    휴대폰 번호, 이메일에 맞는 아이디 있는지 체크-->
+    <select id="findPassCheck" parameterType="UserDto" resultType="int">
+        select count(*)
+        from user
+        where hp = #{hp}
+          and email = #{email}
+    </select>
+    <update id="findPassUpdate" parameterType="UserDto">
+        update user
+        set pass=#{pass}
+        where hp = #{hp}
+          and email = #{email}
+    </update>
 </mapper>

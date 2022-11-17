@@ -7,7 +7,7 @@ import DetailInfo from "./DetailInfo";
 function ProductDetail(props) {
   const { p_num } = useParams();
   console.log("p_num:" + p_num);
-  const [productdata, setProductdata] = useState([]);
+  const [productdata, setProductdata] = useState({});
 
   const productUrl = localStorage.url + "/product/";
 
@@ -27,9 +27,12 @@ function ProductDetail(props) {
   }, []);
 
   return (
-    <div>
+    <div style={{ width: "70%", margin: "0 auto" }}>
+      <br />
       <h1>상품 상세 폼</h1>
-      <div style={{ float: "left", width: "40%" }}>
+      <br />
+      <br />
+      <div style={{ float: "left", width: "50%" }}>
         <DetailImage row={productdata} />
       </div>
       <div>

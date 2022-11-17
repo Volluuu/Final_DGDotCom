@@ -1,34 +1,88 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import {
+  AddCircleOutlineRounded,
+  RemoveCircleOutline,
+} from "@material-ui/icons";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function DetailInfo(props) {
+  // DetailDto
   const { row } = props;
-  const [sum, setSum] = useState(0);
+
+  //이동 Hook
+  const navi = useNavigate();
+
+  //로그인한 u_num
   const u_num = sessionStorage.u_num;
   console.log("u_num:" + Number(u_num));
-  const [addlist, setAddlist] = useState([
-    {
-      ...row,
-      size: "",
-      amount: "",
-    },
-  ]);
-  const [itemlist, setItemlist] = useState([]);
 
+  //amount(수량)
+  const [amount, setAmount] = useState(1);
+  const [cnt, setCnt] = useState(0);
+
+  //수량 증가
+  const addamount = () => {
+    if (amount < 5) {
+      setAmount(amount + 1);
+    }
+    setItemlist({ ...itemlist, amount });
+  };
+  //수량 감소
+  const subamount = () => {
+    if (amount > 1) {
+      setAmount(amount - 1);
+    }
+    setItemlist({ ...itemlist, amount });
+  };
+
+  //데이터를 담을 배열
+  const [itemlist, setItemlist] = useState({});
   console.log("1. itemlist:" + JSON.stringify(itemlist));
 
-  const arritem = (e) => setItemlist(itemlist.concat(addlist));
-
+  //데이터 담는 함수
   const additemlist = (e) => {
-    setAddlist([
-      {
-        ...row,
-        size: e.target.selected,
-        amount: e.target.value,
-      },
-      setItemlist(addlist),
-    ]);
+    setItemlist({
+      ...row,
+      p_size: e.target.value,
+      amount: amount,
+    });
   };
+
+  useEffect(() => {
+    setItemlist({
+      ...row,
+      p_size: itemlist.p_size,
+      amount: amount,
+    });
+  }, [amount]);
+
+  console.log("amount:" + amount);
+  //장바구니 이벤트
+  const addcart = (e) => {
+    let insertUrl = localStorage.url + "/cart/insert";
+
+    if (itemlist.p_size != null) {
+      axios
+        .post(insertUrl, {
+          u_num,
+          p_num: itemlist.p_num,
+          p_size: itemlist.p_size,
+          amount,
+        })
+        .then((res) => {
+          alert("장바구니 추가");
+          setItemlist([]);
+          setAmount(1);
+          navi("/product/list");
+        });
+    } else {
+      alert("사이즈를 선택해주세요");
+      return;
+    }
+  };
+
+  // select 양식 함수
   function selectform() {
     const category = row.category;
     switch (category) {
@@ -42,11 +96,15 @@ function DetailInfo(props) {
       case "시계":
         return (
           <select
-            className="form-select sizeselect"
+            className="form-select"
             p_num={row.p_num}
-            onChange={arritem}
+            onClick={additemlist}
+            style={{ width: "300px" }}
           >
-            <option value="F">Free</option>
+            <option disabled selected>
+              선택
+            </option>
+            <option value="Free">Free</option>
           </select>
         );
       case "자켓":
@@ -64,8 +122,12 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={arritem}
+            onClick={additemlist}
+            style={{ width: "300px" }}
           >
+            <option disabled selected>
+              선택
+            </option>
             <option value="S">S</option>
             <option value="M">M</option>
             <option value="L">L</option>
@@ -81,8 +143,12 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onChange={additemlist}
+            onClick={additemlist}
+            style={{ width: "300px" }}
           >
+            <option disabled selected>
+              선택
+            </option>
             <option value="230">230mm</option>
             <option value="240">240mm</option>
             <option value="250">250mm</option>
@@ -93,10 +159,15 @@ function DetailInfo(props) {
         );
       default:
         return (
-          <select className="form-select sizeselect">
-            <option selected disabled>
-              재고 없음
+          <select
+            className="form-select sizeselect"
+            onClick={additemlist}
+            style={{ width: "300px" }}
+          >
+            <option disabled selected>
+              선택
             </option>
+            <option disabled>재고 없음</option>
           </select>
         );
     }
@@ -104,48 +175,57 @@ function DetailInfo(props) {
 
   return (
     <div>
-      <h1>info</h1>
-      <span>{row.brand}</span>
+      <h1>{row.category}</h1>
       <br />
-      <span>{row.p_name}</span>
+      <h3>{row.brand}</h3>
+      <h5>{row.p_name}</h5>
+
       <br />
-      <span>{row.category}</span>
-      <br />
-      <div>{selectform(row.category)}</div>
-      <span>
+      <h5>
         {Number(row.price)
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         원
-      </span>
+      </h5>
       <br />
       <div>
-        11
-        {itemlist !== null ? (
-          <div>
-            <span>{itemlist.p_name}</span>
-            <br />
-            <input
-              type={"number"}
-              step={1}
-              name="amount"
-              className="form-control"
-              onChange={(e) => setAddlist({ size: e.target.value })}
-            />
-            <br />
-          </div>
-        ) : (
-          <></>
-        )}
+        <p>옵션 선택</p>
+        {selectform(row.category)}
       </div>
       <br />
-      <button type="button" className="btn btn-outline-danger purchasebtn">
-        구매
-      </button>
-      &nbsp;&nbsp;
-      <button type="button" className="btn btn-outline-success cartbtn">
-        장바구니
-      </button>
+      <div>
+        <p>수량</p>
+        <RemoveCircleOutline value={amount} onClick={subamount} />
+        &nbsp;<span>{amount}</span>&nbsp;
+        <AddCircleOutlineRounded value={amount} onClick={addamount} />
+      </div>
+      <br />
+      <div>
+        <h1>
+          총 결제 금액 : {itemlist.amount && itemlist.amount} /
+          {Number(row.price * amount)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          원
+        </h1>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <button
+          type="button"
+          className="btn btn-outline-danger btn-lg purchasebtn"
+        >
+          구매
+        </button>
+        &nbsp;&nbsp;
+        <button
+          type="button"
+          className="btn btn-outline-success btn-lg cartbtn"
+          onClick={addcart}
+        >
+          장바구니
+        </button>
+      </div>
+      <br />
     </div>
   );
 }

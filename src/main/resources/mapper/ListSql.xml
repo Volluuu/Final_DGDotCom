@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.ListMapper">
+
     <select id="getSearchList" parameterType="String" resultType="ProductDto">
-        select * from product where p_name like concat('%',#{word},'%')
+        select * from product where p_name like concat('%',#{word},'%') or category like concat('%',#{word},'%')
     </select>
+    <select id="getBannerList" resultType="ProductDto">
+        select * from product order by readcount desc limit 4
+    </select>
+    <select id="getElt" parameterType="int" resultType="ProductDto">
+        select * from product where p_num = #{num}
+    </select>
+
 </mapper>

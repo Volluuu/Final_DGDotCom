@@ -30,7 +30,7 @@
     </select>
     <!--    검색한 목록의 총 금액-->
     <select id="tradeTotalPrice" parameterType="Map" resultType="int">
-        select sum(count * lastprice)
+        select ifnull(sum(count * lastprice),0)
         from trade
         where u_num = #{u_num}
         <if test="startDate!=null and endDate!=null">
@@ -70,9 +70,47 @@
         where p_num = #{p_num}
     </select>
 
-<!--    review(리뷰) CRUD-->
-<!--    리뷰 insert-->
+    <!--    review(리뷰) CRUD-->
+    <!--    리뷰 insert-->
     <insert id="reviewInsert" parameterType="ReviewDto">
-        insert into review values (null, #{u_num}, #{p_num}, #{content}, #{star}, now())
+        insert into review
+        values (null, #{u_num}, #{p_num}, #{content}, #{star}, now())
+    </insert>
+    <!--    리뷰 수정하기 위한 디테일-->
+    <select id="reviewDetail" parameterType="ReviewDto" resultType="ReviewDto">
+        select * from review where p_num=#{p_num} and u_num=#{u_num}
+        <if test="r_num!=0">
+            and r_num=#{r_num}
+        </if>
+    </select>
+    <!--    리뷰 수정-->
+    <update id="reviewUpdate" parameterType="ReviewDto">
+        update review
+        set content=#{content},
+            star=#{star}
+        where r_num = #{r_num}
+    </update>
+    <!--    리뷰 작성 시 1,000포인트 지급-->
+    <update id="awardPoint" parameterType="int">
+        update user
+        set point=point + 1000
+        where u_num = #{u_num}
+    </update>
+
+    <!--    Inven 데이터 넣기-->
+    <!--    상품 정보 다 들고 오기-->
+    <select id="selectAllProduct" resultType="ProductDto">
+        select *
+        from product
+    </select>
+    <select id="checkInven" parameterType="Map" resultType="int">
+        select count(*)
+        from inven
+        where p_num = #{p_num}
+          and p_size = #{p_size}
+    </select>
+    <insert id="insertInven" parameterType="InvenDto">
+        insert into inven
+        values (null, #{p_num}, 0, #{p_size}, #{amount})
     </insert>
 </mapper>

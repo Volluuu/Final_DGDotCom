@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.KeywordMapper">
+    <select id="getTopTen" resultType="KeywordDto">
+        select * from keyword order by word_count desc limit 10
+    </select>
+    <select id="isThere" parameterType="String" resultType="int">
+        select count(*) from keyword where word = #{word}
+    </select>
+    <select id="getHotBrand" resultType="ProductDto">
+        select distinct readcount, brand from product group by brand order by readcount desc limit 10
+    </select>
+
+    <insert id="insertKeyword" parameterType="String">
+        insert into keyword(word_num, word, word_count) values (null, #{word}, 1)
+    </insert>
+    <update id="updateKeyword" parameterType="String">
+        update keyword set word_count=word_count+1 where word = #{word}
+    </update>
+
+<!--    최근 검색어 관련 SQL-->
+    <select id="getLatestWord" parameterType="int" resultType="String">
+        select search from user where u_num = #{num}
+    </select>
+    <update id="updateLatestWord" parameterType="Map">
+        update user set search = #{search} where u_num=#{num}
+    </update>
+    <update id="deleteLatestWord" parameterType="int">
+        update user set search = null where u_num = #{num}
+    </update>
+</mapper>

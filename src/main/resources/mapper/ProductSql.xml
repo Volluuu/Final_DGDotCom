@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.ProductMapper">
-<!--    총 수량 얻기 ( 페이징처리)-->
+    <!--    총 수량 얻기 ( 페이징처리)-->
     <select id="getTotalCount" resultType="int">
         select count(*) from product
     </select>
-<!-- list 출력 및 페이징 처리용-->
+    <!-- list 출력 및 페이징 처리용-->
     <select id="getProductList" parameterType="Map" resultType="ProductDto">
-        select * from product order by p_num desc limit #{startNum},#{perPage}
+        select * from product
+        where 1 = 1
+        <if test="categories != null and categories.length > 0">
+            and category in
+            <foreach collection="categories" item="category" index="index" separator=", " open="(" close=")">
+                #{category}
+            </foreach>
+        </if>
+        <if test="brands != null and brands.length > 0">
+            and brand in
+            <foreach collection="brands" item="brand" index="index" separator=", " open="(" close=")">
+                #{brand}
+            </foreach>
+        </if>
+        <if test="genders != null and genders.length > 0">
+            and gender in
+            <foreach collection="genders" item="gender" index="index" separator=", " open="(" close=")">
+                #{gender}
+            </foreach>
+        </if>
+        <if test="sizes != null and sizes.length > 0">
+            and p_num in (
+            select p_num from inven where p_size in
+            <foreach collection="sizes" item="size" index="index" separator=", " open="(" close=")">
+                #{size}
+            </foreach>
+            )
+        </if>
+        <if test="prices != null and prices.length > 0">
+            and
+            <foreach collection="prices" item="price" index="index" separator=" or " open="(" close=")">
+                <if test="price == '-100000'">price <![CDATA[ <= ]]> 100000</if>
+                <if test="price == '100000-300000'">(price between 100000 and 300000)</if>
+                <if test="price == '300000-500000'">(price between 300000 and 500000)</if>
+                <if test="price == '500000+'">price >= 500000</if>
+            </foreach>
+        </if>
+        <if test="priceOrderBy != null and priceOrderBy == 'desc'">
+            order by price desc
+        </if>
+        <if test="priceOrderBy != null and priceOrderBy == 'asc'">
+            order by price asc
+        </if>
+        limit #{startNum},#{perPage}
     </select>
-<!-- p_num으로 데이터 얻어오기-->
+    <!-- p_num으로 데이터 얻어오기-->
     <select id="getProduct" parameterType="int" resultType="ProductDto">
         select * from product where p_num=#{p_num}
     </select>
