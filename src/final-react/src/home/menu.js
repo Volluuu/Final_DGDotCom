@@ -29,7 +29,7 @@ const Category = styled(NavLink)`
     color: #ccc;
   }
 
-  &.active {
+  &.active.underline {
     font-weight: 600;
     border-bottom: 4px solid #495057;
     color: #495057;
@@ -79,13 +79,13 @@ function Menu(props) {
     return (
         <>
             <Menubar>
-                <Category to={"/product/list"} className={"down"}>
+                <Category to={"/product/list"} className={"down underline"}>
                     상품 리스트
                 </Category>
-                <Category to={"/product/detail/1703"} className={"up"}>
+                <Category to={"/product/detail/1703"} className={"up underline"}>
                     상품 상세
                 </Category>
-                <Category to={"/admin/dashboard"} className={"up"}>
+                <Category to={"/admin/dashboard"} className={"up underline"}>
                     관리자페이지
                 </Category>
                 {/*<button type={'button'} onClick={()=>{*/}

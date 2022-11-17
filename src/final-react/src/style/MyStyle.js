@@ -14,15 +14,34 @@ const MyStyle = () => {
                     #캐트릿 #발렌시아가 #오뭐신 #유니온 #KREAM스타일 #마르지엘라 #데일리룩 #윈디챌린지
                 </KeywordBind>
                 <SocialFeed>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
-                    <TestBlock></TestBlock>
+                    <TestBlock><SocialImg src={"404.png"}/><CardDetail>
+                        <div className="user_name">abcd</div>
+                        <div className="text_box">#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd</div>
+                        <ul className="product_list">나이키 신발</ul>
+                    </CardDetail></TestBlock>
+                    <ul style={{width:"23%"}}>
+                        <li style={{width:"400px"}}>
+                            <TestBlock>
+                                <SocialImg src={"404.png"}/>
+                                <CardDetail>
+                                    <div className="user_name">abcd</div>
+                                    <div
+                                        className="text_box">#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd#asdf#werewr#sdfs#sfsd
+                                    </div>
+                                    <ul className="product_list"><li>나이키신발</li></ul>
+                                </CardDetail>
+                            </TestBlock>
+                        </li>
+                    </ul>
+                    <ul>
+
+                    </ul>
+                    <ul>
+
+                    </ul>
+                    <ul>
+
+                    </ul>
                 </SocialFeed>
             </div>
         </>
@@ -53,21 +72,39 @@ const SocialFeed = styled.div`
 
   }
 `
-const TestBlock = styled.div`
+const TestBlock = styled.span`
   width: 23%;
-  height: 400px;
   background-color: mediumpurple;
-  margin: 1%  ;
+  margin: 1%;
   @media (max-width: 768px) {
     width: 47.5%;
     margin: 1.25%;
   }
 `
-const socialImg =styled.img`
-    
+const SocialImg = styled.img`
+  width: 100%;
+  border-radius: 10px;
 `
 const CardDetail = styled.div`
-    
+  padding: 8px 4px 0px;
+
+  & > img {
+
+  }
+
+  & > .user_name {
+
+  }
+
+  & > div.text_box {
+    width: 100%;
+    word-break: break-all;
+    flex-wrap: wrap;
+  }
+
+  & > .product_list {
+
+  }
 `
 
 export default MyStyle;
