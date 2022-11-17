@@ -15,5 +15,10 @@
         from refresh_token
         where rt_key = #{rt_key}
     </select>
-
+    <!-- u_num이 가진 refreshToken 반환-->
+    <select id="selectRefreshToken" parameterType="String" resultType="RTDto">
+        select *
+        from refresh_token
+        where rt_key = #{rt_key}
+    </select>
 </mapper>

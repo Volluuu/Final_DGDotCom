@@ -62,6 +62,7 @@ function Menu(props) {
     }, []);
 
     const logout = () => {
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("u_num");
         sessionStorage.removeItem("loginok");
@@ -76,10 +77,33 @@ function Menu(props) {
 
     }
 
+    const reissue = () => {
+        let reissueUrl = process.env.REACT_APP_URL + "/user/reissue";
+
+        axios.post(reissueUrl, {
+            u_num: sessionStorage.u_num,
+            accessToken: localStorage.accessToken,
+            refreshToken: localStorage.refreshToken
+        }).then(res => {
+            console.dir(res.data)
+            localStorage.accessToken = res.data.accessToken;
+            localStorage.refreshToken = res.data.refreshToken;
+            //window.location.reload();
+            Swal.fire({
+                icon: "success",
+                title: "로그인을 30분 연장했습니다."
+            })
+        }).catch(error => {
+            console.dir(error);
+            console.dir(error.response);
+        })
+    }
+
     return (
         <>
             <Menubar>
-                <Category to={"/product/list"} className={"down underline"}>
+
+                <Category to={"/product/list"} className={"up underline"}>
                     상품 리스트
                 </Category>
                 <Category to={"/product/detail/1703"} className={"up underline"}>
@@ -103,25 +127,28 @@ function Menu(props) {
 {
     loginok !== 'yes' ?
         <>
-            <Category to={"/user/login"} className={"up"}>
+            <Category to={"/user/login"} className={"down underline"}>
                 로그인
             </Category>
-            <Category to={"/user/signup"} className={"up"}>
+            <Category to={"/user/signup"} className={"down underline"}>
                 회원가입
             </Category>
         </> : <>
-            <Category className={"up"} onClick={logout}>
+            <Category onClick={reissue} className={"down"}>
+                토큰 재발급
+            </Category>
+            <Category onClick={logout} className={"down"}>
                 로그아웃
             </Category>
-            <Category to={"/mypage/cart"} className={"down"}>
+            <Category to={"/mypage/cart"} className={"down underline"}>
                 장바구니
             </Category>
-            <Category to={"/mypage/all"} className={"down"}>
+            <Category to={"/mypage/all"} className={"down underline"}>
                 마이페이지
             </Category>
         </>
 }
-        <TransitionsModal/>
+                    <TransitionsModal/>
         </span>
             </Searchbar>
         </>

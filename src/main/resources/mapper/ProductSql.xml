@@ -29,11 +29,20 @@
         </if>
         <if test="sizes != null and sizes.length > 0">
             and p_num in (
-                select p_num from inven where p_size in
-                <foreach collection="sizes" item="size" index="index" separator=", " open="(" close=")">
-                    #{size}
-                </foreach>
+            select p_num from inven where p_size in
+            <foreach collection="sizes" item="size" index="index" separator=", " open="(" close=")">
+                #{size}
+            </foreach>
             )
+        </if>
+        <if test="prices != null and prices.length > 0">
+            and
+            <foreach collection="prices" item="price" index="index" separator=" or " open="(" close=")">
+                <if test="price == '-100000'">price <![CDATA[ <= ]]> 100000</if>
+                <if test="price == '100000-300000'">(price between 100000 and 300000)</if>
+                <if test="price == '300000-500000'">(price between 300000 and 500000)</if>
+                <if test="price == '500000+'">price >= 500000</if>
+            </foreach>
         </if>
         <if test="priceOrderBy != null and priceOrderBy == 'desc'">
             order by price desc

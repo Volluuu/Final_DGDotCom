@@ -10,4 +10,7 @@ public interface TokenMapper {
     public void updateRefreshToken(RefreshTokenDto RTDto);
 
     public int countRefreshToken(RefreshTokenDto RTDto);
+
+    // u_num이 가진 refreshToken 반환
+    public RefreshTokenDto selectRefreshToken(String rt_key);
 }
