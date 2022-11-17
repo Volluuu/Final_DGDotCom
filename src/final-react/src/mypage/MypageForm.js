@@ -3,6 +3,10 @@ import axios from "axios";
 import {useParams, Link, useNavigate} from "react-router-dom";
 import {Close} from "@mui/icons-material";
 import Swal from "sweetalert2";
+import F from "./picture/F.png";
+import M from "./picture/M.png";
+import N from "./picture/N.png";
+import K from "./picture/K.png";
 
 function MypageForm(props) {
     const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -74,7 +78,7 @@ function MypageForm(props) {
                             <div data-v-5acef129="" className="user_thumb">
                                 <img
                                     data-v-5acef129=""
-                                    src="/_nuxt/img/blank_profile.4347742.png"
+                                    src={userDto.isadmin === "ROLE_ADMIN" ? K : userDto.gender === "M" ? M : userDto.gender === "F" ? F : N}
                                     alt="사용자 이미지"
                                     className="thumb_img"
                                 />
@@ -83,9 +87,9 @@ function MypageForm(props) {
                                 <div data-v-5acef129="" className="info_box">
                                     {/* 이름 */}
                                     <strong data-v-5acef129="" className="name">
-                                        {`${userDto.u_name} ${
-                                            userDto.isadmin === "ADMIN" ? "관리자" : "고객님 정보"
-                                        }`}
+                                        {userDto.u_name}
+                                        <span
+                                            style={{fontSize: "0.8em"}}>{userDto.isadmin !== "ROLE_ADMIN" ? "고객님 정보" : ""}</span>
                                     </strong>
                                     {/* 이메일 */}
                                     <p data-v-5acef129="" className="email">
@@ -120,9 +124,9 @@ function MypageForm(props) {
                                 <strong
                                     data-v-5acef129=""
                                     className="info"
-                                    style={{color: userDto.isadmin === "ADMIN" ? "red" : ""}}
+                                    style={{color: userDto.isadmin === "ROLE_ADMIN" ? "red" : ""}}
                                 >
-                                    {userDto.isadmin === "ADMIN" ? "관리자" : "일반 회원"}
+                                    {userDto.isadmin === "ROLE_ADMIN" ? "관리자" : "일반 회원"}
                                 </strong>
                                 <p data-v-5acef129="" className="title">
                                     {userDto.gaip.substring(0, 10)} 가입
