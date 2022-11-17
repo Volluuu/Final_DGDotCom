@@ -1,10 +1,13 @@
+import { height } from "@mui/system";
 import axios from "axios";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import DaumPostcodeEmbed from "react-daum-postcode";
 import { Link, useNavigate } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
 // import ModalBasic from "./ModalBasic";
 import "../admin/button.css";
+import AddressApi from "./AddressApi";
 
 function MypageBasket(props) {
   const [u_num, setU_num] = useState(sessionStorage.u_num); // 세션의 u_num으로 초기값 설정
@@ -14,7 +17,6 @@ function MypageBasket(props) {
   const [u_data, setU_data] = useState(""); //유저정보
   const [perchasedata, setPerchasedata] = useState({}); //결제정보
   const navi = useNavigate();
-  const renderCount = useRef(0);
 
   // CommonJS
   const Swal = require("sweetalert2"); //swal창
@@ -53,7 +55,7 @@ function MypageBasket(props) {
       // console.log("chkarr2:" + JSON.stringify(checkedListArray));
       // console.dir(checkedListArray);
       totalPay();
-      console.log("chkList:" + JSON.stringify(checkList));
+      // console.log("chkList:" + JSON.stringify(checkList));
     }
     // 전체 해제 시,
     else {
@@ -67,7 +69,7 @@ function MypageBasket(props) {
     if (checked) {
       setCheckList([...checkList, citem]);
       totalPay();
-      console.log("chkList:" + JSON.stringify(checkList));
+      // console.log("chkList:" + JSON.stringify(checkList));
     } else {
       setCheckList(checkList.filter((el) => el !== citem));
       totalPay();
@@ -76,11 +78,11 @@ function MypageBasket(props) {
 
   //장바구니 삭제
   const deleteCart = (e) => {
-    console.log("c_num" + e.target.value);
+    // console.log("c_num" + e.target.value);
     let deleteUrl = localStorage.url + "/cart/delete?c_num=" + e.target.value;
 
     axios.get(deleteUrl).then((res) => {
-      console.log("axios 삭제 호출");
+      // console.log("axios 삭제 호출");
       alert("삭제되었습니다.");
       window.location.reload();
     });
@@ -91,7 +93,7 @@ function MypageBasket(props) {
     let num = "";
     for (let i = 0; i < checkList.length; i++) {
       let c_num = checkList[i].c_num;
-      console.log(num);
+      // console.log(num);
 
       let selDeleteUrl = localStorage.url + "/cart/delete?c_num=" + c_num;
 
@@ -113,27 +115,57 @@ function MypageBasket(props) {
           : checkList[i].price * checkList[i].amount
       );
     }
-    if (checkList.length == 0) {
+    if (checkList.length === 0) {
       total = 0;
     }
     setSumPayment(total);
     total = "";
   };
 
-  // const sel = () => {
-  //   // let b = JSON.stringify(checkList);
+  //주소 state
+  // const [modalState, setModalState] = useState(false);
+  // const [inputAddressValue, setInputAddressValue] = useState("");
+  // const [inputZipCodeValue, setInputZipCodeValue] = useState("");
+  const inputAddressValue = "";
+  const inputZipCodeValue = "";
 
-  //   // console.log("b:" + b);
+  // //주소 찾기
+  // const postCodeStyle = {
+  //   width: "400px",
+  //   height: "400px",
+  //   display: modalState ? "block" : "none",
+  // }; // 스타일 정의 code
 
-  //   // for (let i = 0; i < checkList.length; i++) {
-  //   //   let a = checkList[i];
+  // const onCompletePost = (data) => {
+  //   setModalState(false);
+  //   setInputAddressValue(data.address);
+  //   setInputZipCodeValue(data.zonecode);
+  // }; // onCompletePost 함수
 
-  //   //   console.dir(a);
-  //   // }
-  //   let b = JSON.stringify(checkList);
-  //   // console.log("b:" + b);
-  //   return b;
+  //주소 데이터
+  // const [inputZipCodeValue, setInputZipCodeValue] = useState("");
+  // const [inputAddressValue, setInputAddressValue] = useState("");
+
+  // const getData = (inputZipCodeValue, inputAddressValue) => {
+  //   setInputZipCodeValue(inputZipCodeValue);
+  //   setInputAddressValue(inputAddressValue);
   // };
+  // 팝업창 상태 관리
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // 팝업창 열기
+  const openPostCode = () => {
+    setIsPopupOpen(true);
+  };
+
+  // 팝업창 닫기
+  const closePostCode = () => {
+    setIsPopupOpen(false);
+  };
+
+  function onCompletePost() {
+    alert("전달");
+  }
 
   //결제 버튼 클릭 시, Swal 이벤트
   function requestBtn() {
@@ -141,12 +173,23 @@ function MypageBasket(props) {
 
     Swal.fire({
       title: "결제 정보 입력",
-      html: `<p style={{textAlign:'left'}}>배송받을 이름</p><br/><input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" >
-  <p style={{textAlign:'left'}}>배송받을 연락처 </p><br/><input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-없이)" maxLength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
-  <p style={{textAlign:'left'}}>배송받을 주소</p><br/><div className="input-group"><input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" >
-  <p style={{textAlign:'left'}}>구매 이메일</p><br/><input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력">
-  
-  `,
+      html: `<h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 이름</h6><br/>
+          <input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" value=${u_data.u_name} style="width:80%">
+        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 연락처 </h6><br/>
+          <input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-포함)" maxLength="13" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" value=${u_data.hp} style="width:80%">
+        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 주소</h6><br/>
+        <div class="input-group">
+          <input type="address" id="addrcode" class="swal2-input" placeholder="우편번호" style="width:40%; margin-left:45px" >
+          <button type='button' class="btn btn-secondary" style="width:30%; height:50px; margin-top:20px" onclick='window.open("AddressApi", "new window", "width=500,height=700")'>주소찾기</button>
+        </div>
+         <input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" style="width:80%"  >
+         <input type="address" id="o_addrdetail" class="swal2-input" placeholder="상세 주소 입력" style="width:80%">
+        <h6 style="float:left;margin-left:50px;margin-top:30px">구매 이메일</h6><br/>
+          <input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력" value=${u_data.email} style="width:80%">`,
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
       confirmButtonText: "결제하기",
       focusConfirm: false,
       allowOutsideClick: false,
@@ -156,24 +199,18 @@ function MypageBasket(props) {
         // const o_name = Swal.getPopup().querySelector("#o_name").value;
         const o_name = document.getElementById("o_name").value;
         const o_hp = document.getElementById("o_hp").value;
+        const addrcode = document.getElementById("addrcode").value;
         const o_addr = document.getElementById("o_addr").value;
+        const o_addrdetail = document.getElementById("o_addrdetail").value;
         const o_email = document.getElementById("o_email").value;
-        //       <input type="hidden" id="p_name" class="swal2-input" value=${checkList.p_name}>
-        // <input type="hidden" id="c_num" class="swal2-input" value=${checkList.c_num}>
-        // <input type="hidden" id="p_num" class="swal2-input" value=${checkList.p_num}>
-        // <input type="hidden" id="p_size" class="swal2-input" value=${checkList.p_size}>
-        // <input type="hidden" id="amount" class="swal2-input" value=${checkList.amount}>
-        // <input type="hidden" id="price" class="swal2-input" value=${checkList.price}>
-        // <input type="hidden" id="discount" class="swal2-input" value=${checkList.discount}></input>
-        // const p_name = document.getElementById("p_name").value;
-        // const p_num = document.getElementById("p_num").value;
-        // const c_num = document.getElementById("c_num").value;
-        // const p_size = document.getElementById("p_size").value;
-        // const amount = document.getElementById("amount").value;
-        // const price = document.getElementById("price").value;
-        // const discount = document.getElementById("discount").value;
-        // const checklist = document.getElementById("checklist").value;
-        if (o_name === "" || o_addr === "" || o_hp === "" || o_email === "") {
+        if (
+          o_name === "" ||
+          o_addr === "" ||
+          o_hp === "" ||
+          o_email === "" ||
+          addrcode === "" ||
+          o_addrdetail === ""
+        ) {
           Swal.showValidationMessage(
             `잘못된 정보입니다. 다시 확인 후 입력해주세요`
           );
@@ -184,39 +221,24 @@ function MypageBasket(props) {
           o_name,
           o_hp,
           o_addr,
+          addrcode,
+          o_addrdetail,
           o_email,
-          // b,
-          // p_name,
-          // c_num,
-          // p_num,
-          // p_size,
-          // amount,
-          // price,
-          // discount,
         };
       },
     }).then((result) => {
-      console.dir(result);
-      // let checklist = JSON.parse(result.value.b);
-      // console.log("cccc" + result.value.b);
-      // console.log("dddd" + checklist);
-      // console.log("ooo:" + checklist.length);
+      // console.dir(result);
       let p_nameArr = new Array();
       for (let i = 0; i < checkList.length; i++) {
         p_nameArr += checkList[i].p_name;
-        console.log("aa:" + p_nameArr);
+        // console.log("aa:" + p_nameArr);
       }
 
       if (result.isConfirmed) {
-        // console.dir(result.value);
-        console.dir(result.value);
-        // arr1(result.value);
         //---------------------------------------------------------------
-        // if (checklist.p_name !== "") {
+
         const IMP = window.IMP; // 생략 가능
         IMP.init("imp81470772"); // 가맹점 식별 코드
-
-        // console.dir(perchasedata);
 
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay(
@@ -236,28 +258,42 @@ function MypageBasket(props) {
             buyer_email: result.value.o_email,
             buyer_name: result.value.o_name, // 구매자 이름
             buyer_tel: result.value.o_hp, // 구매자 연락처
-            buyer_addr: result.value.o_addr, // 구매자 주소지
+            buyer_addr:
+              "(" +
+              result.value.addrcode +
+              ")" +
+              result.value.o_addr +
+              ", " +
+              result.value.o_addrdetail, // 구매자 주소지
             // buyer_postcode: "01181", // 구매자 우편번호
+            // m_redirect_url: localStorage.url+"/c"
           },
           (rsp) => {
             // callback
             // console.log("rsp:" + JSON.stringify(rsp));
             if (rsp.success) {
-              // 결제 성공 시, 출력 창
-              let msg = "결제가 완료되었습니다.\n";
-              msg += "고유ID : " + rsp.imp_uid + "\n";
-              msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-              msg += "결제 선택 : " + rsp.pg + "\n";
-              msg += "결제 방식 : " + rsp.pay_method + "\n";
-              msg += "결제 금액 : " + rsp.paid_amount + "\n";
-              // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-              msg += "상품명 : " + rsp.name + "\n";
-              msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-              msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-              msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-              msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+              // // 결제 성공 시, 출력 창
+              // let msg = "결제가 완료되었습니다.\n";
+              // msg += "고유ID : " + rsp.imp_uid + "\n";
+              // msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+              // msg += "결제 선택 : " + rsp.pg + "\n";
+              // msg += "결제 방식 : " + rsp.pay_method + "\n";
+              // msg += "결제 금액 : " + rsp.paid_amount + "\n";
+              // // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+              // msg += "상품명 : " + rsp.name + "\n";
+              // msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+              // msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+              // msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+              // msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
 
-              alert("결제 성공:" + msg);
+              // alert("결제 성공:" + msg);
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "결제가 완료되었습니다",
+                showConfirmButton: false,
+                timer: 1500,
+              });
 
               for (let i = 0; i < checkList.length; i++) {
                 let tradeInsertUrl = localStorage.url + "/trade/insert";
@@ -276,7 +312,16 @@ function MypageBasket(props) {
                     p_size: checkList[i].p_size,
                     state: "결제완료",
                   })
-                  .then((res) => {})
+                  .then((res) => {
+                    let deleteUrl =
+                      localStorage.url +
+                      "/cart/delete?c_num=" +
+                      checkList[i].c_num;
+
+                    axios.get(deleteUrl).then((res) => {
+                      window.location.reload();
+                    });
+                  })
                   .catch((error) => {
                     console.log("실패" + error);
                   });
@@ -287,75 +332,18 @@ function MypageBasket(props) {
             }
           }
         );
-        // }
         //--------------------------------------------------------------------
-        // setPerchasedata([
-        //   {
-        //     o_name: result.value.o_name,
-        //     o_addr: result.value.o_addr,
-        //     o_hp: result.value.o_hp,
-        //     o_email: result.value.o_email,
-        //   },
-        // ]);
-
-        console.log("결재정보:" + JSON.stringify(perchasedata));
       } else {
-        alert("취소됨");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "결제가 취소되었습니다",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
-      console.log("결재정보2:" + JSON.stringify(perchasedata));
     });
   }
-
-  // 결제
-  // const requestPay = (perchasedata) => {
-  //   const IMP = window.IMP; // 생략 가능
-  //   IMP.init("imp81470772"); // 가맹점 식별 코드
-
-  //   console.log("독자:", JSON.stringify(perchasedata));
-
-  //   // IMP.request_pay(param, callback) 결제창 호출
-  //   IMP.request_pay(
-  //     {
-  //       // param
-  //       // pg: "html5_inicis.INIpayTest", // PG 모듈
-  //       pg: "kakaopay.TC0ONETIME", // PG 모듈
-  //       pay_method: "card", // 지불 수단
-  //       merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-  //       name: perchasedata.p_name, // 상품명
-  //       // amount: sumPayment, // 가격
-  //       amount: "100",
-  //       buyer_email: perchasedata.o_email,
-  //       buyer_name: perchasedata.o_name, // 구매자 이름
-  //       buyer_tel: perchasedata.o_hp, // 구매자 연락처
-  //       buyer_addr: perchasedata.o_addr, // 구매자 주소지
-  //       // buyer_postcode: "01181", // 구매자 우편번호
-  //     },
-  //     (rsp) => {
-  //       // callback
-  //       console.log("rsp:" + JSON.stringify(rsp));
-  //       if (rsp.success) {
-  //         // 결제 성공 시, 출력 창
-  //         let msg = "결제가 완료되었습니다.\n";
-  //         msg += "고유ID : " + rsp.imp_uid + "\n";
-  //         msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-  //         msg += "결제 선택 : " + rsp.pg + "\n";
-  //         msg += "결제 방식 : " + rsp.pay_method + "\n";
-  //         msg += "결제 금액 : " + rsp.paid_amount + "\n";
-  //         msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-  //         msg += "상품명 : " + rsp.name + "\n";
-  //         msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-  //         msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-  //         msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-  //         msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
-
-  //         alert("결제 성공:" + msg);
-  //       } else {
-  //         // 결제 실패 시 로직,
-  //         alert("실패 :" + rsp.error_msg);
-  //       }
-  //     }
-  //   );
-  // };
 
   //초기 실행
   useEffect(() => {
@@ -529,13 +517,23 @@ function MypageBasket(props) {
           {cartlist && cartlist.list.length !== 0 ? (
             <tr>
               <td colSpan={2}>
-                <button
-                  type="button"
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={selectDeleteCart}
-                >
-                  선택 삭제
-                </button>
+                {checkList && checkList.length === 0 ? (
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => alert("선택된 항목이 없습니다")}
+                  >
+                    선택 삭제
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={selectDeleteCart}
+                  >
+                    선택 삭제
+                  </button>
+                )}
               </td>
               <td colSpan={5} style={{ textAlign: "center" }}>
                 <p>
@@ -543,7 +541,7 @@ function MypageBasket(props) {
                   {sumPayment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </p>
               </td>
-              <td colSpan={2} style={{ textAlign: "right" }}>
+              <td colSpan={2} style={{ textAlign: "center" }}>
                 {/* <button
                   type="button"
                   className="btn btn-outline-success"
@@ -563,9 +561,6 @@ function MypageBasket(props) {
                     결제하기
                   </button>
                 )}
-                <button type="button" className="btn btn-danger">
-                  확인용
-                </button>
               </td>
             </tr>
           ) : (
@@ -592,6 +587,18 @@ function MypageBasket(props) {
       </table>
       {/* <button onClick={showModal}>모달 띄우기</button>
       {modalOpen && <ModalBasic setModalOpen={setModalOpen} />} */}
+      {/* <DaumPostcodeEmbed
+        style={postCodeStyle}
+        onComplete={onCompletePost}
+      ></DaumPostcodeEmbed> */}
+      {false && <AddressApi onCompletePost={onCompletePost} />}
+      {/* <div id="popupDom">
+        {isPopupOpen && (
+          <PopupDom>
+            <PopupPostCode onClose={closePostCode} />
+          </PopupDom>
+        )}
+      </div> */}
     </div>
   );
 }
