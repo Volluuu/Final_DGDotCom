@@ -6,7 +6,6 @@ import MypageCart from "./MypageCart";
 import MypageProfile from "./MypageProfile";
 import MypageForm from "./MypageForm";
 import "./MypageCss.css";
-import MypageOrderList from "./MypageOrderList";
 
 function MypageRoute(props) {
   const { path } = useParams();
