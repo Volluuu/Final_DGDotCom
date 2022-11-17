@@ -57,27 +57,42 @@ public class ListController {
 	@GetMapping("/latest/get")
 	public List<String> getLatestword(@RequestParam int num) {
 		String search = keywordMapper.getLatestWord(num);
+		if (search == null) {
+			return null;
+		}
 		return Arrays.asList(search.split(","));
 	}
 
 	@PostMapping("/latest/update")
 	public void updateLatestWord(@RequestParam String word, @RequestParam int num) {
 		String search = keywordMapper.getLatestWord(num);
+		int listSize;
+		if (search == null) {
+			listSize = 0;
+		} else {
+			listSize = Arrays.asList(search.split(",")).size();
+		}
+		String newSearch;
 		Map<String, Object> map = new HashMap<>();
-		if (word != null && Arrays.asList(search.split(",")).size() <= 5) {
-			String newSearch = search.concat(word);
+		if (word != null && listSize == 0) {
+			newSearch = word;
 			map.put("search", newSearch);
 			map.put("num", num);
 			keywordMapper.updateLatestWord(map);
-		} else if (word != null && Arrays.asList(search.split(",")).size() > 5) {
-			String newSearch = search.substring(search.indexOf(",") + 1).concat(word);
+		} else if (word != null && listSize <= 4) {
+			newSearch = search.concat("," + word);
+			map.put("search", newSearch);
+			map.put("num", num);
+			keywordMapper.updateLatestWord(map);
+		} else if (word != null && listSize > 4) {
+			newSearch = search.substring(search.indexOf(",") + 1).concat(","+word);
 			map.put("search", newSearch);
 			map.put("num", num);
 			keywordMapper.updateLatestWord(map);
 		}
 	}
 
-	@PostMapping("latest/delete")
+	@PostMapping("/latest/delete")
 	public void deleteLatestWord(@RequestParam int num) {
 		keywordMapper.deleteLatestWord(num);
 	}

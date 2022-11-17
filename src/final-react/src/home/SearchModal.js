@@ -66,20 +66,23 @@ export default function TransitionsModal() {
             const setOpenAndWord = () => {
                 setWord('');
             }
+            concatLatest().then();
         },
         [word],
     );
     const updateLatest = async () => {
         const num = sessionStorage.u_num;
-        const res = await axios.get(`http://localhost:9003/list/latest/get?u_num=${num}`)
+        const res = await axios.get(`http://localhost:9003/list/latest/get?num=${num}`);
         setLatest(res.data);
     }
     const concatLatest = async () => {
-
+        const num = sessionStorage.u_num;
+        await axios.post(`http://localhost:9003/list/latest/update?num=${num}&word=${word}`);
     }
 
-    const deleteLatest = async () => {
-
+    const deleteLatest = () => {
+        const num = sessionStorage.u_num;
+        axios.post(`http://localhost:9003/list/latest/delete?num=${num}`).then();
     }
     const updateWord = () => {
         const res = axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
@@ -88,7 +91,7 @@ export default function TransitionsModal() {
     }
 
     useEffect(() => {
-        updateLatest().then();
+        updateLatest().then(r=>{});
         const debounce = setTimeout(() => {
             if (word) {
                 updateWord();
@@ -99,7 +102,7 @@ export default function TransitionsModal() {
         return () => {
             clearTimeout(debounce);
         }
-    }, [word]);
+    }, [word, latest]);
     return (
         <>
             <button type="button" onClick={handleOpen}
@@ -143,7 +146,7 @@ export default function TransitionsModal() {
                                 </InputBar>
                                 <div style={{margin: "0 auto"}}>
                                     {
-                                        word === '' ? <BasicSearchShow latest={latest} setLatest={setLatest} open={open} handOpen={handleOpen} handleClose={handleClose}/> : searchList.length < 1 ?
+                                        word === '' ? <BasicSearchShow latest={latest} deleteLatest={deleteLatest} setLatest={setLatest} open={open} handOpen={handleOpen} handleClose={handleClose}/> : searchList.length < 1 ?
                                             <NoResult>no result</NoResult> :
                                             <SearchListVirtual searchlist={searchList} open={open} handOpen={handleOpen} handleClose={handleClose}/>
                                     }
