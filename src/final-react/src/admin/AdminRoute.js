@@ -1,11 +1,5 @@
 import './userTable.css';
 import { useParams} from "react-router-dom";
-import DashBoard from "./DashBoard";
-import UserInfo from "./UserInfo";
-import AdProduct from "./AdProduct";
-import Shipping from "./Shipping";
-import Cs from "./Cs";
-import Banner from "./Banner";
 import React from "react"
 import AdminMenu from "./AdminMenu";
 function AdminRoute(props) {
@@ -13,7 +7,7 @@ function AdminRoute(props) {
 
 
     return (
-        <div>
+        <div className='hjhj'>
                 <AdminMenu/>
         </div>
     );

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { ResponsivePie} from "@nivo/pie";
+// import { ResponsivePie} from "@nivo/pie";
 import './admin.css';
 import {PieChart} from "@material-ui/icons";
 import axios from "axios";
