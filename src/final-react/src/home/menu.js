@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import TransitionsModal from "./SearchModal";
 import axios from "axios";
 import AnnouncementBar from "./AnnouncementBar";
 import Swal from "sweetalert2";
+import AuthTimer from "../user/AuthTimer";
 
 const Menubar = styled.div`
   padding-top: 10px;
@@ -54,55 +55,85 @@ const Category = styled(NavLink)`
 `;
 
 function Menu(props) {
-    const [loginok, setLoginok] = useState("");
-    const navi = useNavigate();
 
-    useEffect(() => {
-        setLoginok(sessionStorage.loginok);
-    }, []);
 
+    // 로그아웃
     const logout = () => {
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("accessToken");
-        sessionStorage.removeItem("u_num");
-        sessionStorage.removeItem("loginok");
-        Swal.fire({
-            icon: "success",
-            text: "로그아웃 완료"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.reload();
-            }
-        })
-
-    }
-
-    const reissue = () => {
-        let reissueUrl = process.env.REACT_APP_URL + "/user/reissue";
-
-        axios.post(reissueUrl, {
-            u_num: sessionStorage.u_num,
-            accessToken: localStorage.accessToken,
-            refreshToken: localStorage.refreshToken
-        }).then(res => {
-            console.dir(res.data)
-            localStorage.accessToken = res.data.accessToken;
-            localStorage.refreshToken = res.data.refreshToken;
-            //window.location.reload();
-            Swal.fire({
-                icon: "success",
-                title: "로그인을 30분 연장했습니다."
+        // DB에서 refresh_token 지우기
+        let deleteRefreshToken = process.env.REACT_APP_URL + "/user/logout?u_num=" + sessionStorage.u_num;
+        axios.delete(deleteRefreshToken)
+            .then(res => {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
             })
-        }).catch(error => {
-            console.dir(error);
-            console.dir(error.response);
-        })
+            .then(res => {
+                Swal.fire({
+                    icon: "success",
+                    text: "로그아웃 완료"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                })
+            })
     }
+
+    // 로그인 연장 버튼 이벤트
+    const reissue = () => {
+        if (sessionStorage.loginok === "yes") {
+            let reissueUrl = process.env.REACT_APP_URL + "/user/reissue";
+
+            axios.post(reissueUrl, {
+                u_num: sessionStorage.u_num,
+                accessToken: localStorage.accessToken,
+                refreshToken: localStorage.refreshToken
+            }).then(res => {
+                console.dir(res.data)
+                localStorage.accessToken = res.data.accessToken;
+                localStorage.refreshToken = res.data.refreshToken;
+            }).then(res => {
+                window.location.reload();
+            })
+                .catch(error => {
+                    console.dir(error);
+                    console.dir(error.response);
+                })
+        }
+    }
+
+    // 새로고침 했을 때 로그인 연장 이벤트
+    const reissueReload = () => {
+        if (sessionStorage.loginok === "yes") {
+            let reissueUrl = process.env.REACT_APP_URL + "/user/reissue";
+
+            axios.post(reissueUrl, {
+                u_num: sessionStorage.u_num,
+                accessToken: localStorage.accessToken,
+                refreshToken: localStorage.refreshToken
+            }).then(res => {
+                console.dir(res.data)
+                localStorage.accessToken = res.data.accessToken;
+                localStorage.refreshToken = res.data.refreshToken;
+            }).catch(error => {
+                console.dir(error);
+                console.dir(error.response);
+            })
+        }
+    }
+
+    window.addEventListener('beforeunload', (event) => {
+        event.preventDefault();
+        // 변경사항이 저장되지 않을 수 있습니다. alert 창 (크롬)
+        // event.returnValue = '';
+        reissueReload();
+
+    })
 
     return (
         <>
             <Menubar>
-
                 <Category to={"/product/list"} className={"up underline"}>
                     상품 리스트
                 </Category>
@@ -125,7 +156,7 @@ function Menu(props) {
                 <span style={{marginRight: "20px"}}>
 
 {
-    loginok !== 'yes' ?
+    sessionStorage.loginok !== 'yes' ?
         <>
             <Category to={"/user/login"} className={"down underline"}>
                 로그인
@@ -135,7 +166,7 @@ function Menu(props) {
             </Category>
         </> : <>
             <Category onClick={reissue} className={"down"}>
-                토큰 재발급
+                로그인 연장
             </Category>
             <Category onClick={logout} className={"down"}>
                 로그아웃

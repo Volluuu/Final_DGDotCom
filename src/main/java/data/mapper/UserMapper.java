@@ -49,4 +49,7 @@ public interface UserMapper {
     // 임시 비밀번호로 변경
     public void findPassUpdate(UserDto dto);
 
+    // refresh_token 삭제
+    public void deleteRefreshToken(String u_num);
+
 }

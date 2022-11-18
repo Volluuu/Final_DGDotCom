@@ -94,6 +94,12 @@ public class UserController {
         return tokenDto;
     }
 
+    // 로그아웃
+    @DeleteMapping("/logout")
+    public void logout(int u_num) {
+        userMapper.deleteRefreshToken(Integer.toString(u_num));
+    }
+
     //토큰 재 발급
     @PostMapping("/reissue")
     public TokenDto reissue(@RequestBody TokenDto dto) {

@@ -3,14 +3,13 @@ import {Link, useNavigate} from 'react-router-dom';
 import "./UserCss.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import {REST_API_KEY, REDIRECT_URI} from './kakaoLoginData';
 
 function LoginForm(props) {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
     const [emailErrorMsg, setEmailErrorMsg] = useState("이메일 주소를 정확히 입력해주세요.");
-
     const [pass, setPass] = useState('');
-    const [passError, setPassError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
     const [loginBtn, setLoginBtn] = useState(true); // 로그인 버튼
 
     const navi = useNavigate();
@@ -27,18 +26,28 @@ function LoginForm(props) {
                 localStorage.accessToken = res.data.accessToken;
                 sessionStorage.u_num = res.data.u_num;
                 sessionStorage.loginok = "yes";
-                Swal.fire({
-                    icon: "success",
-                    title: "로그인 완료"
-                })
-                navi("/");
-
-            }).catch(error => {
-            Swal.fire({
-                icon: "error",
-                text: `아이디 또는 비밀번호를 확인해주세요.`
-            })
+            }).then(res => {
+            navi("/");
+        }).then(res => {
+            window.location.reload();
         })
+            .catch(error => {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
+                Swal.fire({
+                    icon: "error",
+                    text: `아이디 또는 비밀번호를 확인해주세요.`
+                })
+
+
+            })
+    }
+    // 카카오 로그인
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    const kakaoLogin = () => {
+        window.location.href = KAKAO_AUTH_URL;
     }
 
     const onLoginBtnState = () => {
@@ -125,21 +134,14 @@ function LoginForm(props) {
                     </li>
                 </ul>
                 <div className="social_login" data-v-b02d33c2="">
-                    <button type="button" className="btn btn_login_naver full outline" data-v-3d1bcc82=""
-                            data-v-b02d33c2=""
-                            disabled={true}
-                            style={{lineHeight: "50%"}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
-                             data-v-b02d33c2="">
-                            <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-naver"
-                                 data-v-b02d33c2=""></use>
-                        </svg>
-                        네이버로 로그인
+                    <button type="button" onClick={kakaoLogin}>
+                        <img src={require("./social/kakao_login_medium_wide.png")} alt="카카오"
+                             style={{width: "400px", height: "52px"}}/>
                     </button>
                     <button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""
                             data-v-b02d33c2=""
-                            disabled={true}
-                            style={{lineHeight: "50%"}}>
+                        // disabled={true}
+                            style={{lineHeight: "50%", marginTop: "10px"}}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
                              data-v-b02d33c2="">
                             <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-apple"
