@@ -1,6 +1,7 @@
 package data.mapper;
 
 import data.dto.CartDto;
+import data.dto.TradeDto;
 import data.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -26,4 +27,6 @@ public interface CartMapper {
     public void deleteCart(int c_num);
 //    수정
 //    public updateCart(CartDto dto);
+    // 결제
+    public void insertTrade(TradeDto dto);
 }

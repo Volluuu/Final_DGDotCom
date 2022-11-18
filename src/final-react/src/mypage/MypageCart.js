@@ -1,7 +1,15 @@
-import { height } from "@mui/system";
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@material-ui/core";
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
-import DaumPostcodeEmbed from "react-daum-postcode";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
@@ -122,228 +130,246 @@ function MypageBasket(props) {
     total = "";
   };
 
-  //주소 state
-  // const [modalState, setModalState] = useState(false);
-  // const [inputAddressValue, setInputAddressValue] = useState("");
-  // const [inputZipCodeValue, setInputZipCodeValue] = useState("");
-  const inputAddressValue = "";
-  const inputZipCodeValue = "";
+  //결제 정보 입력 dialog
+  const [open, setOpen] = useState(false);
 
-  // //주소 찾기
-  // const postCodeStyle = {
-  //   width: "400px",
-  //   height: "400px",
-  //   display: modalState ? "block" : "none",
-  // }; // 스타일 정의 code
-
-  // const onCompletePost = (data) => {
-  //   setModalState(false);
-  //   setInputAddressValue(data.address);
-  //   setInputZipCodeValue(data.zonecode);
-  // }; // onCompletePost 함수
-
-  //주소 데이터
-  // const [inputZipCodeValue, setInputZipCodeValue] = useState("");
-  // const [inputAddressValue, setInputAddressValue] = useState("");
-
-  // const getData = (inputZipCodeValue, inputAddressValue) => {
-  //   setInputZipCodeValue(inputZipCodeValue);
-  //   setInputAddressValue(inputAddressValue);
-  // };
-  // 팝업창 상태 관리
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-  // 팝업창 열기
-  const openPostCode = () => {
-    setIsPopupOpen(true);
+  const handleClickOpen = (e) => {
+    setOpen(true);
   };
 
-  // 팝업창 닫기
-  const closePostCode = () => {
-    setIsPopupOpen(false);
-  };
-
-  function onCompletePost() {
-    alert("전달");
-  }
-
-  //결제 버튼 클릭 시, Swal 이벤트
-  function requestBtn() {
-    // let b = sel();
-
+  const handleClose = () => {
+    setAddressData("");
+    setOpen(false);
+    setPopup(!popup);
     Swal.fire({
-      title: "결제 정보 입력",
-      html: `<h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 이름</h6><br/>
-          <input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" value=${u_data.u_name} style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 연락처 </h6><br/>
-          <input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-포함)" maxLength="13" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" value=${u_data.hp} style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 주소</h6><br/>
-        <div class="input-group">
-          <input type="address" id="addrcode" class="swal2-input" placeholder="우편번호" style="width:40%; margin-left:45px" >
-          <button type='button' class="btn btn-secondary" style="width:30%; height:50px; margin-top:20px" onclick='window.open("AddressApi", "new window", "width=500,height=700")'>주소찾기</button>
-        </div>
-         <input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" style="width:80%"  >
-         <input type="address" id="o_addrdetail" class="swal2-input" placeholder="상세 주소 입력" style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">구매 이메일</h6><br/>
-          <input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력" value=${u_data.email} style="width:80%">`,
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
-      },
-      confirmButtonText: "결제하기",
-      focusConfirm: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showCancelButton: true,
-      preConfirm: () => {
-        // const o_name = Swal.getPopup().querySelector("#o_name").value;
-        const o_name = document.getElementById("o_name").value;
-        const o_hp = document.getElementById("o_hp").value;
-        const addrcode = document.getElementById("addrcode").value;
-        const o_addr = document.getElementById("o_addr").value;
-        const o_addrdetail = document.getElementById("o_addrdetail").value;
-        const o_email = document.getElementById("o_email").value;
-        if (
-          o_name === "" ||
-          o_addr === "" ||
-          o_hp === "" ||
-          o_email === "" ||
-          addrcode === "" ||
-          o_addrdetail === ""
-        ) {
-          Swal.showValidationMessage(
-            `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-          );
-          return false;
-        }
-
-        return {
-          o_name,
-          o_hp,
-          o_addr,
-          addrcode,
-          o_addrdetail,
-          o_email,
-        };
-      },
-    }).then((result) => {
-      // console.dir(result);
-      let p_nameArr = new Array();
-      for (let i = 0; i < checkList.length; i++) {
-        p_nameArr += checkList[i].p_name;
-        // console.log("aa:" + p_nameArr);
-      }
-
-      if (result.isConfirmed) {
-        //---------------------------------------------------------------
-
-        const IMP = window.IMP; // 생략 가능
-        IMP.init("imp81470772"); // 가맹점 식별 코드
-
-        // IMP.request_pay(param, callback) 결제창 호출
-        IMP.request_pay(
-          {
-            // param
-            // pg: "html5_inicis.INIpayTest", // PG 모듈
-            pg: "kakaopay.TC0ONETIME", // PG 모듈
-            pay_method: "card", // 지불 수단
-            merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-            name:
-              p_nameArr.slice(0, 12) +
-              " ... 외 " +
-              (checkList.length - 1) +
-              "건", // 상품명
-            // amount: sumPayment, // 가격
-            amount: "100",
-            buyer_email: result.value.o_email,
-            buyer_name: result.value.o_name, // 구매자 이름
-            buyer_tel: result.value.o_hp, // 구매자 연락처
-            buyer_addr:
-              "(" +
-              result.value.addrcode +
-              ")" +
-              result.value.o_addr +
-              ", " +
-              result.value.o_addrdetail, // 구매자 주소지
-            // buyer_postcode: "01181", // 구매자 우편번호
-            // m_redirect_url: localStorage.url+"/c"
-          },
-          (rsp) => {
-            // callback
-            // console.log("rsp:" + JSON.stringify(rsp));
-            if (rsp.success) {
-              // // 결제 성공 시, 출력 창
-              // let msg = "결제가 완료되었습니다.\n";
-              // msg += "고유ID : " + rsp.imp_uid + "\n";
-              // msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-              // msg += "결제 선택 : " + rsp.pg + "\n";
-              // msg += "결제 방식 : " + rsp.pay_method + "\n";
-              // msg += "결제 금액 : " + rsp.paid_amount + "\n";
-              // // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-              // msg += "상품명 : " + rsp.name + "\n";
-              // msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-              // msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-              // msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-              // msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
-
-              // alert("결제 성공:" + msg);
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "결제가 완료되었습니다",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-
-              for (let i = 0; i < checkList.length; i++) {
-                let tradeInsertUrl = localStorage.url + "/trade/insert";
-
-                axios
-                  .post(tradeInsertUrl, {
-                    u_num,
-                    p_num: checkList[i].p_num,
-                    merchant_uid: rsp.merchant_uid,
-                    t_name: rsp.buyer_name,
-                    t_hp: rsp.buyer_tel,
-                    t_email: rsp.buyer_email,
-                    t_addr: rsp.buyer_addr,
-                    count: checkList[i].amount,
-                    lastprice: sumPayment,
-                    p_size: checkList[i].p_size,
-                    state: "결제완료",
-                  })
-                  .then((res) => {
-                    let deleteUrl =
-                      localStorage.url +
-                      "/cart/delete?c_num=" +
-                      checkList[i].c_num;
-
-                    axios.get(deleteUrl).then((res) => {
-                      window.location.reload();
-                    });
-                  })
-                  .catch((error) => {
-                    console.log("실패" + error);
-                  });
-              }
-            } else {
-              // 결제 실패 시 로직,
-              alert("실패 :" + rsp.error_msg);
-            }
-          }
-        );
-        //--------------------------------------------------------------------
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "결제가 취소되었습니다",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
+      position: "center",
+      icon: "error",
+      title: "결제가 취소되었습니다",
+      showConfirmButton: false,
+      timer: 1500,
     });
-  }
+  };
+
+  //주소 이벤트
+  const [addressData, setAddressData] = useState({
+    addr: u_data.address,
+  });
+
+  //주소 API 오픈
+  const [popup, setPopup] = useState(false);
+
+  const handleInput = (e) => {
+    setAddressData({
+      ...u_data,
+      ...addressData,
+      email: e.target.value,
+      u_name: e.target.value,
+      addr: e.target.value,
+      hp: e.target.value,
+      t_addrdetail: e.target.value,
+    });
+  };
+
+  const handleComplete = (data) => {
+    setPopup(!popup);
+  };
+
+  //ref
+  const t_nameref = useRef("");
+  const t_hpref = useRef("");
+  const t_addrref = useRef("");
+  const t_addrdetailref = useRef("");
+  const t_emailref = useRef("");
+
+  //결제 이벤트
+  const requestBtn = (e) => {
+    setPerchasedata({
+      ...checkList,
+      t_name: t_nameref.current.value,
+      t_hp: t_hpref.current.value,
+      t_addr: t_addrref.current.value + "," + t_addrdetailref.current.value,
+      t_email: t_emailref.current.value,
+    });
+  };
+  console.log("data:" + JSON.stringify(perchasedata));
+  //결제 버튼 클릭 시, Swal 이벤트
+  // function requestBtn() {
+  //   // let b = sel();
+
+  //   Swal.fire({
+  //     title: "결제 정보 입력",
+  //     html: `<h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 이름</h6><br/>
+  //         <input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" value=${u_data.u_name} style="width:80%">
+  //       <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 연락처 </h6><br/>
+  //         <input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-포함)" maxLength="13" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" value=${u_data.hp} style="width:80%">
+  //       <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 주소</h6><br/>
+  //       <div class="input-group">
+  //         <input type="address" id="addrcode" class="swal2-input" placeholder="우편번호" style="width:40%; margin-left:45px" value=${localStorage.address}>
+  //         <button type='button' class="btn btn-secondary" style="width:30%; height:50px; margin-top:20px" onclick='window.open("AddressApi", "", "width=500,height=700")' value=${inputZipCodeValue}>주소찾기</button>
+  //       </div>
+  //        <input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" style="width:80%"  >
+  //        <input type="address" id="o_addrdetail" class="swal2-input" placeholder="상세 주소 입력" style="width:80%">
+  //       <h6 style="float:left;margin-left:50px;margin-top:30px">구매 이메일</h6><br/>
+  //         <input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력" value=${u_data.email} style="width:80%">
+  //         `,
+  //     customClass: {
+  //       confirmButton: "btn btn-success",
+  //       cancelButton: "btn btn-danger",
+  //     },
+  //     confirmButtonText: "결제하기",
+  //     focusConfirm: false,
+  //     allowOutsideClick: false,
+  //     allowEscapeKey: false,
+  //     showCancelButton: true,
+  //     preConfirm: () => {
+  //       // const o_name = Swal.getPopup().querySelector("#o_name").value;
+  //       const o_name = document.getElementById("o_name").value;
+  //       const o_hp = document.getElementById("o_hp").value;
+  //       const addrcode = document.getElementById("addrcode").value;
+  //       const o_addr = document.getElementById("o_addr").value;
+  //       const o_addrdetail = document.getElementById("o_addrdetail").value;
+  //       const o_email = document.getElementById("o_email").value;
+  //       if (
+  //         o_name === "" ||
+  //         o_addr === "" ||
+  //         o_hp === "" ||
+  //         o_email === "" ||
+  //         addrcode === "" ||
+  //         o_addrdetail === ""
+  //       ) {
+  //         Swal.showValidationMessage(
+  //           `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+  //         );
+  //         return false;
+  //       }
+
+  //       return {
+  //         o_name,
+  //         o_hp,
+  //         o_addr,
+  //         addrcode,
+  //         o_addrdetail,
+  //         o_email,
+  //       };
+  //     },
+  //   }).then((result) => {
+  //     // console.dir(result);
+  //     let p_nameArr = new Array();
+  //     for (let i = 0; i < checkList.length; i++) {
+  //       p_nameArr += checkList[i].p_name;
+  //       // console.log("aa:" + p_nameArr);
+  //     }
+
+  //     if (result.isConfirmed) {
+  //       //---------------------------------------------------------------
+
+  //       const IMP = window.IMP; // 생략 가능
+  //       IMP.init("imp81470772"); // 가맹점 식별 코드
+
+  //       // IMP.request_pay(param, callback) 결제창 호출
+  //       IMP.request_pay(
+  //         {
+  //           // param
+  //           // pg: "html5_inicis.INIpayTest", // PG 모듈
+  //           pg: "kakaopay.TC0ONETIME", // PG 모듈
+  //           pay_method: "card", // 지불 수단
+  //           merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+  //           name:
+  //             p_nameArr.slice(0, 12) +
+  //             " ... 외 " +
+  //             (checkList.length - 1) +
+  //             "건", // 상품명
+  //           // amount: sumPayment, // 가격
+  //           amount: "100",
+  //           buyer_email: result.value.o_email,
+  //           buyer_name: result.value.o_name, // 구매자 이름
+  //           buyer_tel: result.value.o_hp, // 구매자 연락처
+  //           buyer_addr:
+  //             "(" +
+  //             result.value.addrcode +
+  //             ")" +
+  //             result.value.o_addr +
+  //             ", " +
+  //             result.value.o_addrdetail, // 구매자 주소지
+  //           // buyer_postcode: "01181", // 구매자 우편번호
+  //           // m_redirect_url: localStorage.url+"/c"
+  //         },
+  //         (rsp) => {
+  //           // callback
+  //           // console.log("rsp:" + JSON.stringify(rsp));
+  //           if (rsp.success) {
+  //             // // 결제 성공 시, 출력 창
+  //             // let msg = "결제가 완료되었습니다.\n";
+  //             // msg += "고유ID : " + rsp.imp_uid + "\n";
+  //             // msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+  //             // msg += "결제 선택 : " + rsp.pg + "\n";
+  //             // msg += "결제 방식 : " + rsp.pay_method + "\n";
+  //             // msg += "결제 금액 : " + rsp.paid_amount + "\n";
+  //             // // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+  //             // msg += "상품명 : " + rsp.name + "\n";
+  //             // msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+  //             // msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+  //             // msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+  //             // msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+
+  //             // alert("결제 성공:" + msg);
+  //             Swal.fire({
+  //               position: "center",
+  //               icon: "success",
+  //               title: "결제가 완료되었습니다",
+  //               showConfirmButton: false,
+  //               timer: 1500,
+  //             });
+
+  //             for (let i = 0; i < checkList.length; i++) {
+  //               let tradeInsertUrl = localStorage.url + "/trade/insert";
+
+  //               axios
+  //                 .post(tradeInsertUrl, {
+  //                   u_num,
+  //                   p_num: checkList[i].p_num,
+  //                   merchant_uid: rsp.merchant_uid,
+  //                   t_name: rsp.buyer_name,
+  //                   t_hp: rsp.buyer_tel,
+  //                   t_email: rsp.buyer_email,
+  //                   t_addr: rsp.buyer_addr,
+  //                   count: checkList[i].amount,
+  //                   lastprice: sumPayment,
+  //                   p_size: checkList[i].p_size,
+  //                   state: "결제완료",
+  //                 })
+  //                 .then((res) => {
+  //                   let deleteUrl =
+  //                     localStorage.url +
+  //                     "/cart/delete?c_num=" +
+  //                     checkList[i].c_num;
+
+  //                   axios.get(deleteUrl).then((res) => {
+  //                     window.location.reload();
+  //                   });
+  //                 })
+  //                 .catch((error) => {
+  //                   console.log("실패" + error);
+  //                 });
+  //             }
+  //           } else {
+  //             // 결제 실패 시 로직,
+  //             alert("실패 :" + rsp.error_msg);
+  //           }
+  //         }
+  //       );
+  //       //--------------------------------------------------------------------
+  //     } else {
+  //       Swal.fire({
+  //         position: "center",
+  //         icon: "error",
+  //         title: "결제가 취소되었습니다",
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //       });
+  //     }
+  //   });
+  // }
 
   //초기 실행
   useEffect(() => {
@@ -447,7 +473,7 @@ function MypageBasket(props) {
                     name="check-item"
                     key={citem.c_num}
                     className="form-check-input"
-                    style={{ marginTop: "46px" }}
+                    style={{ marginTop: "30px" }}
                     onClick={totalPay}
                     onChange={(e) => singleCheck(e.target.checked, citem)}
                     checked={checkList.includes(citem) ? true : false}
@@ -557,7 +583,7 @@ function MypageBasket(props) {
                     결제하기
                   </button>
                 ) : (
-                  <button className="btn btn-success" onClick={requestBtn}>
+                  <button className="btn btn-success" onClick={handleClickOpen}>
                     결제하기
                   </button>
                 )}
@@ -585,20 +611,117 @@ function MypageBasket(props) {
           )}
         </tbody>
       </table>
-      {/* <button onClick={showModal}>모달 띄우기</button>
-      {modalOpen && <ModalBasic setModalOpen={setModalOpen} />} */}
-      {/* <DaumPostcodeEmbed
-        style={postCodeStyle}
-        onComplete={onCompletePost}
-      ></DaumPostcodeEmbed> */}
-      {false && <AddressApi onCompletePost={onCompletePost} />}
-      {/* <div id="popupDom">
-        {isPopupOpen && (
-          <PopupDom>
-            <PopupPostCode onClose={closePostCode} />
-          </PopupDom>
-        )}
-      </div> */}
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" style={{ textAlign: "center" }}>
+            결제 정보 입력
+          </DialogTitle>
+          <DialogContent>
+            <form>
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="t_name"
+                name="t_name"
+                label="배송받을 이름"
+                inputRef={t_nameref}
+                type="text"
+                fullWidth
+                defaultValue={u_data.u_name}
+                onChange={handleInput}
+              />
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="t_hp"
+                name="t_hp"
+                inputRef={t_hpref}
+                label="배송받을 연락처"
+                type="text"
+                fullWidth
+                defaultValue={u_data.hp}
+                onChange={handleInput}
+              />
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="t_addr"
+                name="t_addr"
+                inputRef={t_addrref}
+                label="배송받을 주소"
+                type="text"
+                style={{ width: "80%" }}
+                defaultValue={u_data.addr}
+                onChange={handleInput}
+                value={addressData.address}
+              />
+              <Button
+                variant="contained"
+                style={{ width: "110px", marginTop: "10px" }}
+                onClick={handleComplete}
+              >
+                주소찾기
+              </Button>
+              {popup && (
+                <AddressApi
+                  postData={addressData}
+                  setPostData={setAddressData}
+                  style={{
+                    background: "rgba(0,0,0,0.25)",
+                    position: "fixed",
+                    left: "0",
+                    top: "0",
+                    height: "100%",
+                    width: "100%",
+                    zIndex: "999",
+                  }}
+                ></AddressApi>
+              )}
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="t_addrdetail"
+                name="t_addrdetail"
+                inputRef={t_addrdetailref}
+                label="상세 주소"
+                type="text"
+                fullWidth
+                onChange={handleInput}
+              />
+
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="t_email"
+                name="t_email"
+                inputRef={t_emailref}
+                label="구매자 email"
+                type="email"
+                fullWidth
+                defaultValue={u_data.email}
+                onChange={handleInput}
+              />
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={requestBtn} color="primary">
+              Subscribe
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 }

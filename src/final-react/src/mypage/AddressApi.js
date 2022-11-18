@@ -3,35 +3,33 @@ import DaumPostcode from "react-daum-postcode";
 
 function AddressApi(props) {
   //주소 state
-  // const [modalState, setModalState] = useState(false);
-  const [inputAddressValue, setInputAddressValue] = useState("");
-  const [inputZipCodeValue, setInputZipCodeValue] = useState("");
+  const complete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
 
-  const postCodeStyle = {
-    width: "500px",
-    height: "700px",
-  }; // 스타일 정의 code
-
-  const onCompletePost = (data) => {
-    setInputAddressValue(data.address);
-    setInputZipCodeValue(data.zonecode);
-    // window.close();
-    console.log("data:" + JSON.stringify(data));
-
-    if (inputAddressValue !== null && inputZipCodeValue !== null) {
-      // window.close();
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-  }; //
+    console.log(data);
+    console.log(fullAddress);
+    console.log(data.zonecode);
 
-  console.log("11:" + inputAddressValue);
-  console.log("22:" + inputZipCodeValue);
+    props.setPostData({
+      ...props.postData,
+      address: fullAddress,
+    });
+  };
 
   return (
     <div>
-      <DaumPostcode
-        style={postCodeStyle}
-        onComplete={onCompletePost}
-      ></DaumPostcode>
+      <DaumPostcode className="postmodal" autoClose onComplete={complete} />
     </div>
   );
 }

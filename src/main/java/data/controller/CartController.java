@@ -1,6 +1,7 @@
 package data.controller;
 
 import data.dto.CartDto;
+import data.dto.TradeDto;
 import data.dto.UserDto;
 import data.mapper.CartMapper;
 import data.mapper.UserMapper;
@@ -106,5 +107,12 @@ public class CartController {
     @GetMapping("/delete")
     public void deleteCart(int c_num) {
         cartMapper.deleteCart(c_num);
+    }
+
+    @PostMapping("/insertTrade")
+    public void insertTrade(@RequestBody TradeDto dto)
+    {
+        cartMapper.insertTrade(dto);
+
     }
 }
