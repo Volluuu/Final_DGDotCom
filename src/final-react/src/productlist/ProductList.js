@@ -74,6 +74,12 @@ const ProductCard = styled(Link)`
   }
 `
 
+const paging = {
+    page: 1,
+    getPageList: null,
+    isLoading: false
+};
+
 function ProductList(props) {
     const useBig = makeStyles((theme) => ({
         root       : {
@@ -114,24 +120,18 @@ function ProductList(props) {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
-    const [productlist, setProductlist] = useState();
+    const [productlist, setProductlist] = useState([]);
     const categories = searchParams.getAll('categories');
     const brands = searchParams.getAll('brands');
     const genders = searchParams.getAll('genders');
     const sizes = searchParams.getAll('sizes');
     const prices = searchParams.getAll('prices');
-    let currentPage = searchParams.get('currentPage') || 1;
-    const [isConnection, setIsConnection] = useState(false);
-
-    // const { currentPage } = useParams();
-    // console.log("proCP:" + currentPage);
 
     const productUrl = localStorage.url + "/product/";
-    console.log("proUrl:" + productUrl);
+    // console.log("proUrl:" + productUrl);
 
     const makeSearchParms = (parms) => {
         const _params = {
-            currentPage: parms?.currentPage || 1,
             categories,
             brands,
             genders,
@@ -140,27 +140,29 @@ function ProductList(props) {
             priceOrderBy: parms?.priceOrderBy || priceOrderBy,
             keyword
         }
-        if (!parms?.currentPage) delete _params.currentPage;
+        if (parms?.page) _params.currentPage = paging.page;
+        if (_params.priceOrderBy !== 'desc' && _params.priceOrderBy !== 'asc') delete _params.priceOrderBy
+        if (!_params.keyword) delete _params.keyword;
         return createSearchParams(_params);
     }
 
-    const getPageList = (params) => {
-        console.log(0, productlist)
-
+    const getPageList = () => {
+        if (paging.isLoading) return;
+        paging.isLoading = true;
         axios.get(localStorage.url + "/product/list", {
-            params: makeSearchParms(params)
+            params: makeSearchParms({
+                page: paging.page
+            })
         }).then((res) => {
             console.log("axios 성공");
-            if (Number(currentPage) === 1) {
-                console.log(1, currentPage)
+            if (paging.page === 1) {
                 setProductlist(res.data.list);
             } else {
-                console.log(2, productlist)
-                console.log(3, res.data.list)
-                setProductlist([].concat(productlist || [], res.data.list));
+                setProductlist([].concat(productlist, res.data.list));
             }
+            paging.page++;
         }).finally(() => {
-            setIsConnection(false);
+            paging.isLoading = false;
         });
     };
 
@@ -245,8 +247,9 @@ function ProductList(props) {
     };
 
     useEffect(() => {
+        paging.page = 1;
         console.log("list 호출");
-        setKeyword(searchParams.get('keyword') || undefined);
+        setKeyword(searchParams.get('keyword') || '');
         getPageList();
     }, [location.search]);
 
@@ -263,7 +266,7 @@ function ProductList(props) {
 
     //select
     const classes = useStyles3();
-    const [priceOrderBy, setPriceOrderBy] = React.useState(searchParams.get('priceOrderBy') || undefined);
+    const [priceOrderBy, setPriceOrderBy] = React.useState(searchParams.get('priceOrderBy') || '');
     const [open, setOpen] = React.useState(false);
 
     const handleChange = (event) => {
@@ -276,7 +279,7 @@ function ProductList(props) {
         });
     };
 
-    const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || undefined);
+    const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || '');
 
     const handleClose = () => {
         setOpen(false);
@@ -298,16 +301,12 @@ function ProductList(props) {
     //     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
     // };
 
+    paging.getPageList = getPageList;
     useEffect(() => {
         const infiniteScroll = (event) => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                if (isConnection) return;
-                setIsConnection(true);
-                currentPage = Number(currentPage) + 1
+            if ((window.innerHeight + window.scrollY + 8) >= document.getElementById('root').offsetHeight) {
                 console.log('스크롤 마지막');
-                getPageList({
-                    currentPage
-                });
+                paging.getPageList();
             }
         };
         window.addEventListener('scroll', infiniteScroll);
@@ -318,7 +317,7 @@ function ProductList(props) {
     return (
         <div>
             <h3 style={{textAlign:'center'}} >SHOP</h3><br/>
-            <form style={{textAlign:'center', width:'950px', height:'70px',
+            <form style={{textAlign:'center', width:'1100px', height:'70px',
                 marginLeft:'400px',marginTop:'50px'}}>
                 <TextField id="standard-basic" placeholder="검색어 입력"
                            value={keyword}
@@ -334,7 +333,7 @@ function ProductList(props) {
                 />
             </form>
 
-            <div style={{marginLeft:'40px',width:'1590px',height:'150px'}}>
+            <div style={{marginLeft:'40px',width:'1700px',height:'150px'}}>
 
                 <Swiper
                     style={{
@@ -361,7 +360,7 @@ function ProductList(props) {
 
             </div>
 
-            <div style={{marginLeft:'1490px',width:'150px'}}>
+            <div style={{marginLeft:'1580px',width:'150px'}}>
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-controlled-open-select-label">정렬기준</InputLabel>
                     <Select
@@ -381,7 +380,7 @@ function ProductList(props) {
                 </FormControl>
             </div>
 
-            <div style={{marginLeft:'330px',width:'600px'}}>
+            <div style={{marginLeft:'420px',width:'600px'}}>
                 <Paper component="ul" className={chipclasses.root}  elevation={0}>
                     {categories.map((category, index) => {
                         let icon;
@@ -395,6 +394,54 @@ function ProductList(props) {
                                     label={category}
                                     // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
                                     onDelete={() => selectCategory(category)}
+                                    className={chipclasses.chip}
+                                />
+                            </li>
+                        );
+                    })}
+                    {brands.map((brand, index) => {
+                        return (
+                            <li key={index}>
+                                <Chip
+                                    label={brand}
+                                    // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    onDelete={() => selectBrand(brand)}
+                                    className={chipclasses.chip}
+                                />
+                            </li>
+                        );
+                    })}
+                    {genders.map((gender, index) => {
+                        return (
+                            <li key={index}>
+                                <Chip
+                                    label={gender === 'M' ? '남자' : gender === 'F' ? '여자' : '공용'}
+                                    // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    onDelete={() => selectGender(gender)}
+                                    className={chipclasses.chip}
+                                />
+                            </li>
+                        );
+                    })}
+                    {sizes.map((size, index) => {
+                        return (
+                            <li key={index}>
+                                <Chip
+                                    label={size}
+                                    // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    onDelete={() => selectSize(size)}
+                                    className={chipclasses.chip}
+                                />
+                            </li>
+                        );
+                    })}
+                    {prices.map((price, index) => {
+                        return (
+                            <li key={index}>
+                                <Chip
+                                    label={price === '-100000' ? '10만원 이하' : price === '100000-300000' ? '10만원 - 30만원 이하' : price === '300000-500000' ? '30만원 - 50만원 이하' : '50만원 이상'}
+                                    // onDelete={data.label === 'React' ? undefined : handleDelete5(data)}
+                                    onDelete={() => selectPrice(price)}
                                     className={chipclasses.chip}
                                 />
                             </li>
@@ -414,8 +461,8 @@ function ProductList(props) {
                         <Typography>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('자켓')}} checked={checkCategory('자켓')} />} label="자켓"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('후드')}} checked={checkCategory('후드')} />} label="후드"/><br/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스웨트 셔츠')}} checked={checkCategory('스웨트 셔츠')} />} label="스웨트 셔츠"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('니트 웨어')}} checked={checkCategory('니트 웨어')} />} label="니트 웨어"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스웨트 셔츠')}} checked={checkCategory('스웨트 셔츠')} />} label="스웨트 셔츠"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('니트 웨어')}} checked={checkCategory('니트 웨어')} />} label="니트 웨어"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('긴팔 티셔츠')}} checked={checkCategory('긴팔 티셔츠')} />} label="긴팔 티셔츠"/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('반팔 티셔츠')}} checked={checkCategory('반팔 티셔츠')} />} label="반팔 티셔츠"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('셔츠')}} checked={checkCategory('셔츠')} />} label="셔츠"/><br/>
@@ -433,8 +480,8 @@ function ProductList(props) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스니커즈')}} checked={checkCategory('스니커즈')} />} label="스니커즈"/>
-                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('로퍼/플랫')}} checked={checkCategory('로퍼/플랫')} />} label="로퍼/플랫"/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('스니커즈')}} checked={checkCategory('스니커즈')} />} label="스니커즈"/><br/>
+                            <FormControlLabel control={<Checkbox onClick={() => {selectCategory('로퍼/플랫')}} checked={checkCategory('로퍼/플랫')} />} label="로퍼/플랫"/><br/>
                             <FormControlLabel control={<Checkbox onClick={() => {selectCategory('샌들/슬리퍼')}} checked={checkCategory('샌들/슬리퍼')} />} label="샌들/슬리퍼"/><br/><br/>
                         </Typography>
                     </AccordionDetails>
@@ -539,7 +586,7 @@ function ProductList(props) {
             </div>
 
 
-            <div style={{marginLeft:'320px',marginTop:'36px', width: '1350px'}}>
+            <div style={{marginLeft:'400px',marginTop:'36px', width: '1350px'}}>
 
                 {productlist &&
                     productlist.map((pl, i) => (
@@ -578,7 +625,7 @@ function ProductList(props) {
                         //                     {pl.discount === 0 ? <></> : <span>{pl.discount}%</span>}
                         //                 </div>
                         //             </Link>
-                        <ProductCard to={`/product/detail/${pl.p_num}`}>
+                        <ProductCard to={`/product/detail/${pl.p_num}`} key={i}>
                             <Card className={big.root}>
                                 <CardMedia
                                     className={big.media}
