@@ -9,8 +9,8 @@
         select count(*)
         from user
     </select>
-    <!--회원정보-->
 
+    <!--회원정보-->
     <select id="AdminGetAllUser" resultType="UserDto">
         select *
         from user
@@ -117,7 +117,45 @@
         from product
                  left join inven on product.p_num = inven.p_num where inven.i_num=#{i_num}
     </select>
+    <!--=================================상품관리 시작=============================================-->
+<!--    배송전 목록의 수-->
+    <select id="TotalBeforeDelivery" resultType="int">
+        select count(*)
+        from trade where state='배송 전'
+    </select>
 
+<!--    배송관리 배송전 페이징 -->
+    <select id="BeforeDeliveryPaging" parameterType="Map" resultType="TradeDto">
+        select *
+        from trade
+        where state='배송 전' limit #{startnum}, #{perpage}
+    </select>
+
+    <!--    배송중 목록의 수-->
+    <select id="TotalDelivering" resultType="int">
+        select count(*)
+        from trade where state='배송 중'
+    </select>
+
+    <!--    배송관리 배송중 페이징 -->
+    <select id="DeliveringPaging" parameterType="Map" resultType="TradeDto">
+        select *
+        from trade
+        where state='배송 중' limit #{startnum}, #{perpage}
+    </select>
+
+    <!--    배송완료 목록의 수-->
+    <select id="TotalDeliveryComplete" resultType="int">
+        select count(*)
+        from trade where state='배송 완료'
+    </select>
+
+    <!--    배송완료 배송전 페이징 -->
+    <select id="DeliveryCompletePaging" parameterType="Map" resultType="TradeDto">
+        select *
+        from trade
+        where state='배송 완료' limit #{startnum}, #{perpage}
+    </select>
     <!--=================================배너시작=============================================-->
     <!--배너리스트-->
     <select id="getBannerList" resultType="AdminDto">

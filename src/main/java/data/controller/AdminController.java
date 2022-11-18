@@ -1,9 +1,6 @@
 package data.controller;
 
-import data.dto.AdminDto;
-import data.dto.JoinDto;
-import data.dto.ProductDto;
-import data.dto.UserDto;
+import data.dto.*;
 import data.mapper.AdminMapper;
 import data.util.FileUtil;
 import org.apache.ibatis.annotations.Update;
@@ -245,6 +242,177 @@ public class AdminController {
     {
        return adminMapper.selectProduct(p_num);
     }
+    /*------------------------- 상품 끝 ---------------------------*/
+
+
+    /*------------------------- 배송관리 시작 ---------------------------*/
+    //배송전 페이징
+    @GetMapping("/BeforeDeliveryPaging")
+    public Map<String,Object> BeforeDeliveryPaging(@RequestParam(defaultValue = "1") int currentPage)
+    {
+        int stotalCount;//총갯수
+        int perPage = 6;//한페이지당 출력할 글 갯수
+        int perBlock = 10; //출력할 페이지 갯수
+        int startNum; //db에서 가져올 시작번호
+        int startPage;//출력할 시작페이지
+        int endPage;//출력할 끝페이지
+        int totalPage; //총 페이지수
+        int no;//출력할 시작번호
+
+        //총갯수
+        stotalCount = adminMapper.TotalBeforeDelivery();
+        //총 페이지수
+        totalPage = stotalCount / perPage + (stotalCount % perPage == 0 ? 0 : 1);
+        //시작페이지
+        startPage = (currentPage - 1) / perBlock * perBlock + 1;
+
+        //끝페이지
+        endPage = startPage + perBlock - 1;
+        if (endPage > totalPage)
+            endPage = totalPage;
+
+        //시작번호
+        startNum = (currentPage - 1) * perPage;
+        //각페이지당 출력할 번호
+        no = stotalCount - (currentPage - 1) * perPage;
+        //데이터 가져오기
+        Map<String, Integer> map = new HashMap<>();
+        map.put("startnum", startNum);
+        map.put("perpage", perPage);
+
+        List<TradeDto> tlist = adminMapper.BeforeDeliveryPaging(map);
+
+        //출력할 페이지번호들을 Vector에 담아서 보내기
+        Vector<Integer> parr = new Vector<>();
+        for (int i = startPage; i <= endPage; i++) {
+            parr.add(i);
+        }
+
+        //리액트로 필요한 변수들을 Map에 담아서 보낸다
+        Map<String, Object> smap = new HashMap<>();
+        smap.put("stotalCount",stotalCount);
+        smap.put("tlist",tlist);
+        smap.put("parr",parr);
+        smap.put("startPage",startPage);
+        smap.put("endPage",endPage);
+        smap.put("no",no);
+        smap.put("totalPage",totalPage);
+
+        return smap;
+    }
+    //배송중 페이징
+    @GetMapping("/DeliveringPaging")
+    public Map<String,Object> DeliveringPaging(@RequestParam(defaultValue = "1") int currentPage)
+    {
+        int stotalCount;//총갯수
+        int perPage = 6;//한페이지당 출력할 글 갯수
+        int perBlock = 10; //출력할 페이지 갯수
+        int startNum; //db에서 가져올 시작번호
+        int startPage;//출력할 시작페이지
+        int endPage;//출력할 끝페이지
+        int totalPage; //총 페이지수
+        int no;//출력할 시작번호
+
+        //총갯수
+        stotalCount = adminMapper.TotalDelivering();
+        //총 페이지수
+        totalPage = stotalCount / perPage + (stotalCount % perPage == 0 ? 0 : 1);
+        //시작페이지
+        startPage = (currentPage - 1) / perBlock * perBlock + 1;
+
+        //끝페이지
+        endPage = startPage + perBlock - 1;
+        if (endPage > totalPage)
+            endPage = totalPage;
+
+        //시작번호
+        startNum = (currentPage - 1) * perPage;
+        //각페이지당 출력할 번호
+        no = stotalCount - (currentPage - 1) * perPage;
+        //데이터 가져오기
+        Map<String, Integer> map = new HashMap<>();
+        map.put("startnum", startNum);
+        map.put("perpage", perPage);
+
+        List<TradeDto> tlist = adminMapper.DeliveringPaging(map);
+
+        //출력할 페이지번호들을 Vector에 담아서 보내기
+        Vector<Integer> parr = new Vector<>();
+        for (int i = startPage; i <= endPage; i++) {
+            parr.add(i);
+        }
+
+        //리액트로 필요한 변수들을 Map에 담아서 보낸다
+        Map<String, Object> smap = new HashMap<>();
+        smap.put("stotalCount",stotalCount);
+        smap.put("tlist",tlist);
+        smap.put("parr",parr);
+        smap.put("startPage",startPage);
+        smap.put("endPage",endPage);
+        smap.put("no",no);
+        smap.put("totalPage",totalPage);
+
+        return smap;
+    }
+
+    //배송완료 페이징
+    @GetMapping("/DeliveryCompletePaging")
+    public Map<String,Object> DeliveryCompletePaging(@RequestParam(defaultValue = "1") int currentPage)
+    {
+        int stotalCount;//총갯수
+        int perPage = 6;//한페이지당 출력할 글 갯수
+        int perBlock = 10; //출력할 페이지 갯수
+        int startNum; //db에서 가져올 시작번호
+        int startPage;//출력할 시작페이지
+        int endPage;//출력할 끝페이지
+        int totalPage; //총 페이지수
+        int no;//출력할 시작번호
+
+        //총갯수
+        stotalCount = adminMapper.TotalDeliveryComplete();
+        //총 페이지수
+        totalPage = stotalCount / perPage + (stotalCount % perPage == 0 ? 0 : 1);
+        //시작페이지
+        startPage = (currentPage - 1) / perBlock * perBlock + 1;
+
+        //끝페이지
+        endPage = startPage + perBlock - 1;
+        if (endPage > totalPage)
+            endPage = totalPage;
+
+        //시작번호
+        startNum = (currentPage - 1) * perPage;
+        //각페이지당 출력할 번호
+        no = stotalCount - (currentPage - 1) * perPage;
+        //데이터 가져오기
+        Map<String, Integer> map = new HashMap<>();
+        map.put("startnum", startNum);
+        map.put("perpage", perPage);
+
+        List<TradeDto> tlist = adminMapper.DeliveryCompletePaging(map);
+
+        //출력할 페이지번호들을 Vector에 담아서 보내기
+        Vector<Integer> parr = new Vector<>();
+        for (int i = startPage; i <= endPage; i++) {
+            parr.add(i);
+        }
+
+        //리액트로 필요한 변수들을 Map에 담아서 보낸다
+        Map<String, Object> smap = new HashMap<>();
+        smap.put("stotalCount",stotalCount);
+        smap.put("tlist",tlist);
+        smap.put("parr",parr);
+        smap.put("startPage",startPage);
+        smap.put("endPage",endPage);
+        smap.put("no",no);
+        smap.put("totalPage",totalPage);
+
+        return smap;
+    }
+
+
+    /*------------------------- 배송관리 끝 ---------------------------*/
+
 
     /*------------------------- 배너 시작 ---------------------------*/
 

@@ -2,13 +2,15 @@ import React from 'react';
 import DashBoard from "./DashBoard";
 import UserInfo from "./UserInfo";
 import AdProduct from "./AdProduct";
-import Shipping from "./Shipping";
 import Cs from "./Cs";
 import Banner from "./Banner";
 import {useParams} from "react-router-dom";
 import logo from "../admin/logo192.png";
 import InsertForm from "./insertForm";
 import PupdateForm from "./PupdateForm";
+import BeforeDelivery from "./BeforeDelivery";
+import Delivering from "./Delivering";
+import DeliveryComplete from "./DeliveryComplete";
 
 function AdminMenu(props) {
     const {path}=useParams();
@@ -47,31 +49,45 @@ function AdminMenu(props) {
                         </a>
                     </li>
 
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" href="/admin/adproduct" data-target="#collapseUtilities"
-                           aria-expanded="true" aria-controls="collapseUtilities">
+                    <li className="nav-item active">
+                        <a className="nav-link" href="/admin/adproduct" data-target="#collapseTwo"
+                           aria-expanded="true" aria-controls="collapseTwo">
                             {/*상품관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>상품관리</span>
                         </a>
                     </li>
 
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" href="/admin/shipping" data-target="#collapseUtilities"
-                           aria-expanded="true" aria-controls="collapseUtilities">
+                    <li className="nav-item active">
+                        <a className="nav-link collapsed" href="/admin/delivery"
+                           data-target="#collapseTwo"
+                           aria-expanded="true" aria-controls="collapseTwo">
                             {/*배송관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>배송관리</span>
                         </a>
+                        <div id='collapseTwo' className='collapse show' aria-labelledby='headingTwo'
+                         style={{}}>
+                            <div className='py-2 collapse-inner rounded'>
+                                <a className='collapse-item' href='/admin/beforedelivery'
+                                style={{color:'rightgray'}}>-배송전</a>
+                                <a className='collapse-item' href='/admin/delivering'
+                                   style={{color:'rightgray'}}>-배송중</a>
+                                <a className='collapse-item' href='/admin/deliverycomplete'
+                                   style={{color:'rightgray'}}>-배송완료</a>
+
+                            </div>
+
+                        </div>
                     </li>
 
-                    <li className="nav-item">
-                        <a className="nav-link collapsed" href="/admin/banner" data-target="#collapseUtilities"
-                           aria-expanded="true" aria-controls="collapseUtilities">
+                    <li className="nav-item active">
+                        <a className="nav-link collapsed" href="/admin/banner" data-target="#collapseTwo"
+                           aria-expanded="true" aria-controls="collapseTwo">
                             {/*배너관리 아이콘 넣기~!~!!~!!~~!*/}
                             <span>배너관리</span>
                         </a>
                     </li>
 
-                    <li className="nav-item">
+                    <li className="nav-item active">
                         <a className="nav-link collapsed" href="/admin/cs" data-target="#collapseUtilities"
                            aria-expanded="true" aria-controls="collapseUtilities">
                             {/*고객센터 아이콘 넣기~!~!!~!!~~!*/}
@@ -126,9 +142,18 @@ function AdminMenu(props) {
                             <PupdateForm/>
                         }
                         {
-                            path==="shipping" &&
-                            <Shipping/>
+                            path==="beforedelivery" &&
+                            <BeforeDelivery/>
                         }
+                        {
+                            path==="delivering" &&
+                            <Delivering/>
+                        }
+                        {
+                            path==="deliverycomplete" &&
+                            <DeliveryComplete/>
+                        }
+
                         {
                             path==="cs" &&
                             <Cs/>
