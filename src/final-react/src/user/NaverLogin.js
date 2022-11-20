@@ -1,20 +1,21 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {REDIRECT_URI, REST_API_KEY} from "./kakaoLoginData";
+import {NAVER_REDIRECT_URI, CLIENT_ID} from "./naverLoginData";
 import Swal from "sweetalert2";
-import Menu from "../home/menu";
 import {useDaumPostcodePopup} from "react-daum-postcode";
 import {postcodeScriptUrl} from "react-daum-postcode/lib/loadPostcode";
+import Menu from "../home/menu";
 import Home from "../home/Home";
 import Footer from "../home/Footer";
 
-function KakaoLogin(props) {
+function NaverLogin(props) {
     const location = useLocation();
     const navi = useNavigate();
-    const KAKAO_CODE = location.search.split("=")[1];
+    const NAVER_CODE = location.search.split("=")[1];
+    const NAVER_STATE = location.search.split("=")[2];
 
-    const [firstKakao, setFirstKakao] = useState(false); // 카카오 첫 로그인이면 true
+    const [firstNaver, setFirstNaver] = useState(false); // 카카오 첫 로그인이면 true
     const [email, setEmail] = useState();
     const passRef = useRef('');
     const [passError, setPassError] = useState(false); // true면 에러가 있는거, false면 에러가 없는 거
@@ -27,25 +28,17 @@ function KakaoLogin(props) {
     const addrRef = useRef('');
     const extraAddressRef = useRef('');
 
-    const getKakaoToken = () => {
-        axios({
-            method: "POST",
-            url: "https://kauth.kakao.com/oauth/token",
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            data: {
-                "grant_type": "authorization_code",
-                "client_id": `${REST_API_KEY}`,
-                "redirect_uri": `${REDIRECT_URI}`,
-                "code": `${KAKAO_CODE}`,
-            }
-        })
+    const getNaverToken = () => {
+        let getNaverTokenUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${NAVER_REDIRECT_URI}&state=test`;
+        axios.get(getNaverTokenUrl)
             .then(res => {
-                getKakaoUserInfo(res.data.access_token);
+                console.dir(res.data);
+                // getNaverUserInfo(res.data.access_token);
             })
     }
 
-    const getKakaoUserInfo = (accessToken) => {
-        let getInfoUrl = "https://kapi.kakao.com/v2/user/me";
+    const getNaverUserInfo = (accessToken) => {
+        let getInfoUrl = "https://kapi.naver.com/v2/user/me";
         axios({
             method: 'POST',
             url: getInfoUrl,
@@ -55,27 +48,27 @@ function KakaoLogin(props) {
             },
         }).then(res => {
             console.dir(res.data);
-            kakaoEmailCheck(res.data.kakao_account.email, res.data);
+            naverEmailCheck(res.data.naver_account.email, res.data);
         })
     }
 
-    const kakaoEmailCheck = (email, kakaoData) => {
+    const naverEmailCheck = (email, naverData) => {
         let emailCheckUrl = process.env.REACT_APP_URL + "/user/emailcheck?email=" + email;
         axios.get(emailCheckUrl)
             .then(res => {
                 console.log(res.data);
                 if (res.data > 0) {
-                    setFirstKakao(false);
-                    kakaoLogin(email);
+                    setFirstNaver(false);
+                    naverLogin(email);
                 } else {
-                    setFirstKakao(true);
+                    setFirstNaver(true);
                     setEmail(email);
                     // emailRef.current.value = email;
-                    setName(kakaoData.kakao_account.profile.nickname);
-                    // nameRef.current.value = kakaoData.kakao_account.profile.nickname;
-                    if (kakaoData.kakao_account.gender === "male") {
+                    setName(naverData.naver_account.profile.nickname);
+                    // nameRef.current.value = naverData.naver_account.profile.nickname;
+                    if (naverData.naver_account.gender === "male") {
                         setGender("M");
-                    } else if (kakaoData.kakao_account.gender === "female") {
+                    } else if (naverData.naver_account.gender === "female") {
                         setGender("N");
                     } else {
                         setGender("N");
@@ -90,7 +83,7 @@ function KakaoLogin(props) {
     }
 
     // 최초 카카오 회원가입을 한 경우 바로 로그인
-    const kakaoLogin = (email) => {
+    const naverLogin = (email) => {
         let signinUrl = process.env.REACT_APP_URL + "/social/login";
 
         axios.post(signinUrl, {
@@ -123,7 +116,7 @@ function KakaoLogin(props) {
         if (!location.search) {
             return;
         }
-        getKakaoToken();
+        getNaverToken();
     }, []);
 
 
@@ -237,7 +230,7 @@ function KakaoLogin(props) {
     return (
         <React.Fragment>
             <Menu/>
-            {firstKakao ?
+            {firstNaver ?
                 <div className="container join" data-v-6ca47fe2="" data-v-3007c576="">
                     <div className="content lg" data-v-6ca47fe2="">
                         <div className="join_area" data-v-6ca47fe2="">
@@ -392,4 +385,4 @@ function KakaoLogin(props) {
     );
 }
 
-export default KakaoLogin;
+export default NaverLogin;
