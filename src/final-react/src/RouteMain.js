@@ -12,6 +12,8 @@ import Footer from "./home/Footer";
 import AddressApi from "./mypage/AddressApi";
 import AuthTimer from "./user/AuthTimer";
 import KakaoLogin from "./user/KakaoLogin";
+import FindEmail from "./user/FindEmail";
+import FindPass from "./user/FindPass";
 
 function RouteMain(props) {
     return (
@@ -55,6 +57,22 @@ function RouteMain(props) {
                             </React.Fragment>
                         }
                     />
+                    <Route
+                        path={"find_email"}
+                        element={
+                            <React.Fragment>
+                                <Menu/>
+                                <FindEmail/>
+                            </React.Fragment>
+                        }/>
+                    <Route
+                        path={"find_password"}
+                        element={
+                            <React.Fragment>
+                                <Menu/>
+                                <FindPass/>
+                            </React.Fragment>
+                        }/>
                 </Route>
 
                 {/* 상품 관련 (리스트, 상세페이지)*/}

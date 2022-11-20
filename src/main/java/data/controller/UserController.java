@@ -78,6 +78,7 @@ public class UserController {
 //        System.out.println(authentication);
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+//        System.out.println(tokenDto.toString());
 
         // 4. RefreshToken 저장
         RefreshTokenDto RTDto = new RefreshTokenDto();
@@ -183,8 +184,8 @@ public class UserController {
     //회원 탈퇴
     @DeleteMapping("/withdrawal")
     public void deleteUser(int u_num) {
-        System.out.println(u_num);
-//        userMapper.deleteUser(u_num);
+        System.out.println(u_num + "번 회원 탈퇴");
+        userMapper.deleteUser(u_num);
     }
 
     // 아이디 찾기
