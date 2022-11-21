@@ -6,22 +6,22 @@ import DetailInfo from "./DetailInfo";
 
 function ProductDetail(props) {
   const { p_num } = useParams();
-  console.log("p_num:" + p_num);
+  // console.log("p_num:" + p_num);
   const [productdata, setProductdata] = useState({});
 
   const productUrl = localStorage.url + "/product/";
 
   const productDetail = (p_num) => {
     let url = localStorage.url + "/product/detail?p_num=" + p_num;
-    console.log("url:" + url);
+    // console.log("url:" + url);
 
     axios.get(url).then((res) => {
-      console.log("axios detail 성공");
+      // console.log("axios detail 성공");
       setProductdata(res.data);
     });
   };
 
-  console.log("detail:" + JSON.stringify(productdata));
+  // console.log("detail:" + JSON.stringify(productdata));
   useEffect(() => {
     productDetail(p_num);
   }, []);

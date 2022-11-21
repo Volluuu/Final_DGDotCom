@@ -1,10 +1,8 @@
 import {
   Button,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
 } from "@material-ui/core";
@@ -190,6 +188,113 @@ function MypageBasket(props) {
       t_addr: t_addrref.current.value + "," + t_addrdetailref.current.value,
       t_email: t_emailref.current.value,
     });
+
+    let t_name = t_nameref.current.value;
+    let t_hp = t_hpref.current.value;
+    let t_addr = t_addrref.current.value;
+    let t_addrdetail = t_addrdetailref.current.value;
+    let t_email = t_emailref.current.value;
+
+    if (
+      t_name === "" ||
+      t_hp === "" ||
+      t_addr === "" ||
+      t_addrdetail === "" ||
+      t_email === ""
+    ) {
+      Swal.showValidationMessage(
+        `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+      );
+      return false;
+    }
+
+    let p_nameArr = new Array();
+    for (let i = 0; i < checkList.length; i++) {
+      p_nameArr += checkList[i].p_name;
+      console.log("aa:" + p_nameArr.length);
+      console.log("aa:" + checkList.length);
+    }
+
+    const IMP = window.IMP; // 생략 가능
+    IMP.init("imp81470772"); // 가맹점 식별 코드
+
+    // IMP.request_pay(param, callback) 결제창 호출
+    IMP.request_pay(
+      {
+        // param
+        // pg: "html5_inicis.INIpayTest", // PG 모듈
+        pg: "kakaopay.TC0ONETIME", // PG 모듈
+        pay_method: "card", // 지불 수단
+        merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+        name:
+          checkList.length !== 0
+            ? p_nameArr.slice(0, 12) +
+              " ... 외 " +
+              (checkList.length - 1) +
+              "건"
+            : p_nameArr.slice(0, 12), // 상품명
+        // amount: sumPayment, // 가격
+        amount: "100",
+        buyer_email: t_emailref.current.value,
+        buyer_name: t_nameref.current.value, // 구매자 이름
+        buyer_tel: t_nameref.current.value, // 구매자 연락처
+        buyer_addr:
+          t_addrref.current.value + ", " + t_addrdetailref.current.value, // 구매자 주소지
+        // buyer_postcode: "01181", // 구매자 우편번호
+        // m_redirect_url: localStorage.url+"/c"
+      },
+      (rsp) => {
+        // callback
+        console.log("rsp:" + JSON.stringify(rsp));
+        if (rsp.success) {
+          for (let i = 0; i < checkList.length; i++) {
+            let tradeInsertUrl = localStorage.url + "/trade/insert";
+
+            axios
+              .post(tradeInsertUrl, {
+                u_num,
+                p_num: checkList[i].p_num,
+                merchant_uid: rsp.merchant_uid,
+                t_name: rsp.buyer_name,
+                t_hp: rsp.buyer_tel,
+                t_email: rsp.buyer_email,
+                t_addr: rsp.buyer_addr,
+                count: checkList[i].amount,
+                lastprice: sumPayment,
+                p_size: checkList[i].p_size,
+                state: "결제완료",
+              })
+              .then((res) => {
+                if (res.success) {
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "결제가 완료되었습니다",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then((res) => {
+                    let deleteUrl =
+                      localStorage.url +
+                      "/cart/delete?c_num=" +
+                      checkList[i].c_num;
+
+                    axios.get(deleteUrl).then((res) => {
+                      // window.location.reload();
+                    });
+                  });
+                }
+              })
+              .catch((error) => {
+                console.log("실패" + error);
+              });
+          }
+        } else {
+          // 결제 실패 시 로직,
+          alert("실패 :" + rsp.error_msg);
+        }
+      }
+    );
+    //--------------------------------------------------------------------
   };
   console.log("data:" + JSON.stringify(perchasedata));
   //결제 버튼 클릭 시, Swal 이벤트
@@ -713,11 +818,11 @@ function MypageBasket(props) {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
+            <Button variant="contained" onClick={requestBtn} color="primary">
+              결제하기
             </Button>
-            <Button onClick={requestBtn} color="primary">
-              Subscribe
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
             </Button>
           </DialogActions>
         </Dialog>
