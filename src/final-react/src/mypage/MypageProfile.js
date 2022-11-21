@@ -60,6 +60,10 @@ function MypageProfile(props) {
             .then(res => {
                 setUserDto(res.data);
             }).catch(error => {
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("u_num");
+            sessionStorage.removeItem("loginok");
             if (error.response.status === 401) {
                 Swal.fire({
                     icon: "error",

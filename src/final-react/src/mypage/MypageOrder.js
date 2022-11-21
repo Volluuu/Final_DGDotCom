@@ -38,6 +38,10 @@ function MypageOrder(props) {
                 setTradeData(res.data);
                 console.dir(res.data);
             }).catch(error => {
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("u_num");
+            sessionStorage.removeItem("loginok");
             if (error.response.status === 401) {
                 Swal.fire({
                     icon: "error",
@@ -63,6 +67,23 @@ function MypageOrder(props) {
             headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         })
             .then(res => setProductDto(res.data))
+            .catch(error => {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
+                if (error.response.status === 401) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "로그인 해주세요.",
+                    }).then(result => navi("/user/login"))
+                } else if (error.response.status === 403) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "권한이 없습니다.",
+                    }).then(result => navi("/"))
+                }
+            })
     }
 
     // 리뷰 작성 액션
@@ -88,7 +109,23 @@ function MypageOrder(props) {
                 alert("소중한 리뷰 감사합니다.")
                 // 작성 후 리로드
                 window.location.reload();
-            })
+            }).catch(error => {
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("u_num");
+            sessionStorage.removeItem("loginok");
+            if (error.response.status === 401) {
+                Swal.fire({
+                    icon: "error",
+                    title: "로그인 해주세요.",
+                }).then(result => navi("/user/login"))
+            } else if (error.response.status === 403) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "권한이 없습니다.",
+                }).then(result => navi("/"))
+            }
+        })
     }
 
     // 리뷰 수정 버튼 눌렀을 때 값 넣기
@@ -107,6 +144,22 @@ function MypageOrder(props) {
                     starStates[i] = i <= (res.data.star - 1) ? true : false;
                 }
                 setUpdateStar(starStates);
+            }).catch(error => {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
+                if (error.response.status === 401) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "로그인 해주세요.",
+                    }).then(result => navi("/user/login"))
+                } else if (error.response.status === 403) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "권한이 없습니다.",
+                    }).then(result => navi("/"))
+                }
             })
     }
 
@@ -128,7 +181,23 @@ function MypageOrder(props) {
                 alert("리뷰 수정이 완료되었습니다.");
                 // 수정 후 리로드
                 window.location.reload();
-            })
+            }).catch(error => {
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("u_num");
+            sessionStorage.removeItem("loginok");
+            if (error.response.status === 401) {
+                Swal.fire({
+                    icon: "error",
+                    title: "로그인 해주세요.",
+                }).then(result => navi("/user/login"))
+            } else if (error.response.status === 403) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "권한이 없습니다.",
+                }).then(result => navi("/"))
+            }
+        })
     }
 
     // 리뷰 [작성] 할 때 별점 선택

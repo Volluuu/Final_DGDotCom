@@ -61,21 +61,22 @@ public class SocialController {
         long now = (new Date()).getTime();
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+//        System.out.println(accessTokenExpiresIn);
         String accessToken = Jwts.builder()
                 .setSubject(dto.getEmail())                 // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
                 .compact();
-        System.out.println(accessToken);
-        System.out.println(accessToken.toString());
+//        System.out.println(accessToken);
+//        System.out.println(accessToken.toString());
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-        System.out.println(refreshToken);
-        System.out.println(refreshToken.toString());
+//        System.out.println(refreshToken);
+//        System.out.println(refreshToken.toString());
         tokenDto.setGrantType(BEARER_TYPE);
         tokenDto.setAccessToken(accessToken);
         tokenDto.setAccessTokenExpiresIn(accessTokenExpiresIn.getTime());
