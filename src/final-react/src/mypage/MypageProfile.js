@@ -39,6 +39,7 @@ function MypageProfile(props) {
     const [hpErrorMsg, setHpErrorMsg] = useState("유효하지 않는 번호 입니다. (\"-\"를 포함하여 입력해주세요)");
     const [hpModifyBtn, setHpModifyBtn] = useState(true);
 
+    const fullAddrRef = useRef();
     const addrRef = useRef('');
     const extraAddressRef = useRef('');
     const [addrModify, setAddrModify] = useState(false);
@@ -59,6 +60,10 @@ function MypageProfile(props) {
             .then(res => {
                 setUserDto(res.data);
             }).catch(error => {
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
+            sessionStorage.removeItem("u_num");
+            sessionStorage.removeItem("loginok");
             if (error.response.status === 401) {
                 Swal.fire({
                     icon: "error",
@@ -275,7 +280,7 @@ function MypageProfile(props) {
         let addrChangeUrl = process.env.REACT_APP_URL + "/user/addrchange";
         axios.put(addrChangeUrl, {
             u_num,
-            addr: (addrRef.current.value === "" ? userDto.addr : addrRef.current.value).concat(" " + extraAddressRef.current.value),
+            addr: (addrRef.current.value === "" ? userDto.addr.split(",")[0] : addrRef.current.value).concat(", " + extraAddressRef.current.value),
         }).then(res => {
             addrRef.current.value = "";
             extraAddressRef.current.value = "";
@@ -291,17 +296,20 @@ function MypageProfile(props) {
         let withDrawalUrl = process.env.REACT_APP_URL + "/user/withdrawal?u_num=" + u_num;
         axios.delete(withDrawalUrl)
             .then(res => {
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                sessionStorage.removeItem("u_num");
+                sessionStorage.removeItem("loginok");
+            })
+            .then(res => {
                 Swal.fire({
                     icon: "info",
-                    title: "탈퇴 되었습니다.",
-                }).then(res => {
-                    localStorage.removeItem("refreshToken");
-                    localStorage.removeItem("accessToken");
-                    sessionStorage.removeItem("u_num");
-                    sessionStorage.removeItem("loginok");
-                    navi("/");
+                    text: "탈퇴 되었습니다."
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
                 })
-
             })
 
     }
@@ -353,12 +361,12 @@ function MypageProfile(props) {
                                     userDto.email.split("@")[1] // @ 뒤 주소 출력
                                 }
                             </p>
-                            <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
-                                    className="btn btn_modify outlinegrey small"
-                                    onClick={() => {
-                                        setEmailModify(!emailModify);
-                                    }}> 변경
-                            </button>
+                            {/*<button data-v-3d1bcc82="" data-v-587be1b3="" type="button"*/}
+                            {/*        className="btn btn_modify outlinegrey small"*/}
+                            {/*        onClick={() => {*/}
+                            {/*            setEmailModify(!emailModify);*/}
+                            {/*        }}> 변경*/}
+                            {/*</button>*/}
                         </div>
                         <div data-v-587be1b3="" className="modify" style={{display: !emailModify ? "none" : ""}}>
                             <div data-v-6c561060="" data-v-587be1b3=""
@@ -501,7 +509,7 @@ function MypageProfile(props) {
                     <div data-v-587be1b3="" className="profile_group">
                         <h4 data-v-587be1b3="" className="group_title">개인 정보</h4>
                         <div data-v-587be1b3="" className="unit" style={{display: nameModify ? "none" : ""}}>
-                            <h5 data-v-587be1b3="" className="title">이름</h5>
+                            <h5 data-v-587be1b3="" className="title">닉네임</h5>
                             <p data-v-587be1b3="" className="desc">{userDto.u_name}</p>
                             <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
                                     className="btn btn_modify outlinegrey small"
@@ -641,7 +649,9 @@ function MypageProfile(props) {
                                     새로운 주소
                                 </h6>
                                 <div data-v-6c561060="" className="input_item">
-                                    <input type="text" placeholder={userDto.addr} autoComplete="off" ref={addrRef}
+                                    <input type="text" placeholder={userDto.addr && userDto.addr.split(",")[0]}
+                                           autoComplete="off"
+                                           ref={addrRef}
                                            className="input_txt" data-v-6c561060=""
                                            style={{
                                                color: "#bdbdbd",
@@ -659,7 +669,9 @@ function MypageProfile(props) {
                                             onClick={handleClick}> 주소 찾기
                                     </button>
                                     <br/>
-                                    <input type="text" placeholder="상세 주소" autoComplete="off"
+                                    <input type="text"
+                                           placeholder={userDto.addr && userDto.addr.split(",")[1].substring(1)}
+                                           autoComplete="off"
                                            style={{marginTop: "10px"}}
                                            className="input_txt" data-v-6c561060="" ref={extraAddressRef}
                                            onChange={() => {

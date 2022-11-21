@@ -103,8 +103,6 @@ function SignupForm(props) {
         let hpCheckUrl = process.env.REACT_APP_URL + "/user/hpcheck?hp=" + hp;
         axios.get(hpCheckUrl)
             .then(res => {
-                console.log("핸드폰 중복 체크");
-                console.dir(res.data);
                 if (res.data > 0) {
                     setHpErrorMsg("이미 가입한 번호입니다.");
                     setHpError(true);
@@ -214,7 +212,7 @@ function SignupForm(props) {
             u_name: nameRef.current.value,
             pass: passRef.current.value,
             hp: hpRef.current.value,
-            addr: addrRef.current.value.concat(" " + extraAddressRef.current.value),
+            addr: addrRef.current.value.concat(", " + extraAddressRef.current.value),
             gender
         }, {headers: {"Content-Type": "application/json"}})
             .then(res => {
@@ -244,7 +242,7 @@ function SignupForm(props) {
                              className={emailError ? "input_box has_error" : "input_box"}>
                             <h3 className="input_title ess" data-v-6c561060="" data-v-6ca47fe2="">이메일 주소</h3>
                             <div className="input_item" data-v-6c561060="">
-                                <input type="text" placeholder="예) ostschloss@gmail.com" autoComplete="off"
+                                <input type="text" placeholder="예) dglee95@gmail.com" autoComplete="off"
                                        ref={emailRef}
                                        className="input_txt" data-v-6c561060="" disabled={emailInput ? true : false}
                                        style={{

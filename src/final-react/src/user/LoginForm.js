@@ -4,6 +4,7 @@ import "./UserCss.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {REST_API_KEY, REDIRECT_URI} from './kakaoLoginData';
+import NaverLogin from "./NaverLogin";
 
 function LoginForm(props) {
     const [email, setEmail] = useState('');
@@ -48,6 +49,11 @@ function LoginForm(props) {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     const kakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
+    }
+
+    // 네이버 로그인
+    const naverLogin = () => {
+        window.location.href = "/naverLogin";
     }
 
     const onLoginBtnState = () => {
@@ -133,10 +139,15 @@ function LoginForm(props) {
                         <Link to="/user/find_password" className="look_link" data-v-b02d33c2=""> 비밀번호 찾기 </Link>
                     </li>
                 </ul>
-                <div className="social_login" data-v-b02d33c2="">
-                    <button type="button" onClick={kakaoLogin}>
+                <div className="social_login" data-v-b02d33c2="" style={{textAlign: "center"}}>
+                    <button type="button" onClick={kakaoLogin} style={{display: "inline-block"}}>
                         <img src={require("./social/kakao_login_medium_wide.png")} alt="카카오"
-                             style={{width: "400px", height: "52px"}}/>
+                             style={{width: "300px", height: "50px"}}/>
+                    </button>
+                    <button type="button" onClick={naverLogin} disabled={true}
+                            style={{display: "inline-block", marginTop: "10px", cursor: "wait"}}>
+                        <img src={require("./social/naver_login.png")} alt="네이버"
+                             style={{width: "300px", height: "50px"}}/>
                     </button>
                     <button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""
                             data-v-b02d33c2=""

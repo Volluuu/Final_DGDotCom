@@ -51,6 +51,7 @@ function FindPass(props) {
     }
 
     return (
+        /* eslint-disable */
         <div data-v-3007c576="" className="container help">
             <div className="content lg">
                 <div className="help_area">
@@ -58,7 +59,7 @@ function FindPass(props) {
                         <div>
                             <h2 className="help_title">비밀번호 찾기</h2>
                             <div className="help_notice">
-                                <p className="notice_txt"> 가입 시 등록하신 휴대폰 번호와 이메일을 입력하시면,<br/>휴대폰으로 임시 비밀번호를 전송해 드립니다.
+                                <p className="notice_txt"> 가입 시 등록하신 휴대폰 번호와 이메일을 입력하시면,<br/>이메일로 임시 비밀번호를 전송해 드립니다.
                                 </p>
                             </div>
                             <div data-v-6c561060=""
