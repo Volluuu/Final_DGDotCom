@@ -134,6 +134,7 @@ function DetailInfo(props) {
 
   //결제
   const requestBtn = (e) => {
+    setOpen(false);
     let t_name = t_nameref.current.value;
     let t_hp = t_hpref.current.value;
     let t_addr = t_addrref.current.value;
@@ -298,7 +299,7 @@ function DetailInfo(props) {
           }).then((result) => {
             console.log("result:" + JSON.stringify(result));
             if (result.isConfirmed) {
-              navi("/mypage/cart");
+              navi("/mypage/cart/1");
             }
             if (result.isDismissed) {
               setAmount(1);

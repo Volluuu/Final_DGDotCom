@@ -6,9 +6,10 @@ import {
   DialogTitle,
   TextField,
 } from "@material-ui/core";
+import { DeleteForeverRounded } from "@material-ui/icons";
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 // ES6 Modules or TypeScript
 import Swal from "sweetalert2";
 // import ModalBasic from "./ModalBasic";
@@ -39,7 +40,12 @@ function MypageBasket(props) {
 
   //u_num에 해당하는 cart data 불러오기
   const cartdata = () => {
-    const cartListUrl = localStorage.url + "/cart/list?u_num=" + u_num;
+    const cartListUrl =
+      localStorage.url +
+      "/cart/list?u_num=" +
+      u_num +
+      "&currentPage=" +
+      (currentPage === undefined ? "1" : currentPage);
 
     axios.get(cartListUrl).then((res) => {
       // console.log("cart data 호출 성공");
@@ -110,6 +116,10 @@ function MypageBasket(props) {
     alert(checkList.length + "개가 삭제되었습니다");
   };
 
+  //수정
+  const updateCart = (e) => {
+    alert();
+  };
   //총 결제 금액 계산
   const totalPay = () => {
     let total = 0;
@@ -181,6 +191,7 @@ function MypageBasket(props) {
 
   //결제 이벤트
   const requestBtn = (e) => {
+    setOpen(false);
     setPerchasedata({
       ...checkList,
       t_name: t_nameref.current.value,
@@ -211,8 +222,8 @@ function MypageBasket(props) {
     let p_nameArr = new Array();
     for (let i = 0; i < checkList.length; i++) {
       p_nameArr += checkList[i].p_name;
-      console.log("aa:" + p_nameArr.length);
-      console.log("aa:" + checkList.length);
+      // console.log("aa:" + p_nameArr.length);
+      // console.log("aa:" + checkList.length);
     }
 
     const IMP = window.IMP; // 생략 가능
@@ -245,6 +256,7 @@ function MypageBasket(props) {
       },
       (rsp) => {
         // callback
+
         console.log("rsp:" + JSON.stringify(rsp));
         if (rsp.success) {
           for (let i = 0; i < checkList.length; i++) {
@@ -296,7 +308,7 @@ function MypageBasket(props) {
     );
     //--------------------------------------------------------------------
   };
-  console.log("data:" + JSON.stringify(perchasedata));
+  console.log("data:" + JSON.stringify(cartlist));
   //결제 버튼 클릭 시, Swal 이벤트
   // function requestBtn() {
   //   // let b = sel();
@@ -476,6 +488,13 @@ function MypageBasket(props) {
   //   });
   // }
 
+  //페이지네이션
+  const { currentPage } = useParams("");
+  //페이징
+  useEffect(() => {
+    cartdata();
+  }, [currentPage]);
+
   //초기 실행
   useEffect(() => {
     cartdata();
@@ -562,7 +581,7 @@ function MypageBasket(props) {
             <th style={{ width: "8%" }}>사이즈</th>
             <th style={{ width: "10%" }}>판매가</th>
             <th style={{ width: "8%" }}>할인율</th>
-            <th style={{ width: "5%" }}>수량</th>
+            <th style={{ width: "7%" }}>수량</th>
             <th style={{ width: "10%" }}>주문금액</th>
             <th style={{ width: "12%" }}>주문관리</th>
           </tr>
@@ -614,7 +633,29 @@ function MypageBasket(props) {
                   원
                 </td>
                 <td>{citem.discount}</td>
-                <td>{citem.amount}</td>
+                <td>
+                  <div className="input-group">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary btn-sm"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="text"
+                      name="amount"
+                      value={citem.amount}
+                      className="form-control"
+                      style={{ textAlign: "center" }}
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary btn-sm"
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
                 <td style={{ textAlign: "right" }}>
                   {citem.discount === 0
                     ? (citem.price * citem.amount)
@@ -628,23 +669,68 @@ function MypageBasket(props) {
                 <td>
                   <button
                     type="button"
-                    className="btn btn-secondary"
-                    value={citem.c_num}
-                  >
-                    수정
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-outline-secondary"
                     value={citem.c_num}
                     onClick={deleteCart}
+                    style={{ border: "none" }}
                   >
-                    삭제
+                    <DeleteForeverRounded />
                   </button>
                 </td>
               </tr>
             ))}
+          <tr>
+            <td colSpan={9} style={{ textAlign: "center" }}>
+              <br />
+              <div style={{ width: "100%", fontSize: "20px" }}>
+                <ul
+                  style={{
+                    display: "flex",
+                    width: "20%",
+                    margin: "0 auto",
+                    textAlign: "center",
+                  }}
+                >
+                  {cartlist && cartlist.startPage > 1 ? (
+                    <Link to={`/mypage/cart/${cartlist.startPage - 1}`}>
+                      <li>&lt;</li>
+                    </Link>
+                  ) : (
+                    <></>
+                  )}
+
+                  {cartlist &&
+                    cartlist.carr.map((p, i) => (
+                      <Link
+                        key={i}
+                        style={{
+                          color: p === Number(currentPage) ? "blue" : "black",
+                          textShadow:
+                            p === Number(currentPage)
+                              ? "5px 5px 5px gray"
+                              : "none",
+                          fontWeight: "bold",
+                          boxSizing: "border-box",
+                          width: "30px",
+                          height: "30px",
+                        }}
+                        to={`/mypage/cart/${p}`}
+                      >
+                        <li>{p}</li>
+                      </Link>
+                    ))}
+                  {cartlist && cartlist.endPage < cartlist.totalPage ? (
+                    <Link to={`/mypage/cart/${cartlist.endPage + 1}`}>
+                      <li>&gt;</li>
+                    </Link>
+                  ) : (
+                    <></>
+                  )}
+                </ul>
+                <br />
+              </div>
+            </td>
+          </tr>
           {cartlist && cartlist.list.length !== 0 ? (
             <tr>
               <td colSpan={2}>

@@ -26,7 +26,7 @@ public interface CartMapper {
 //    삭제
     public void deleteCart(int c_num);
 //    수정
-//    public updateCart(CartDto dto);
+    public void updateCart(CartDto dto);
     // 결제
     public void insertTrade(TradeDto dto);
 }
