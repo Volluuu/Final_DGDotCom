@@ -1,12 +1,21 @@
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@material-ui/core";
+import {
   AddCircleOutlineRounded,
   Close,
   RemoveCircleOutline,
 } from "@material-ui/icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import AddressApi from "../mypage/AddressApi";
 
 function DetailInfo(props) {
   // DetailDto
@@ -17,30 +26,29 @@ function DetailInfo(props) {
 
   //로그인한 u_num
   const u_num = sessionStorage.u_num;
-  console.log("u_num:" + Number(u_num));
+  // console.log("u_num:" + Number(u_num));
 
   //amount(수량)
   const [amount, setAmount] = useState(1);
-  const [cnt, setCnt] = useState(0);
 
   //수량 증가
   const addamount = () => {
     if (amount < 5) {
-      setAmount(amount + 1);
+      setAmount(Number(amount) + 1);
     }
     setItemlist({ ...itemlist, amount });
   };
   //수량 감소
   const subamount = () => {
     if (amount > 1) {
-      setAmount(amount - 1);
+      setAmount(Number(amount) - 1);
     }
     setItemlist({ ...itemlist, amount });
   };
 
   //데이터를 담을 배열
   const [itemlist, setItemlist] = useState({});
-  console.log("1. itemlist:" + JSON.stringify(itemlist));
+  // console.log("1. itemlist:" + JSON.stringify(itemlist));
 
   //데이터 담는 함수
   const additemlist = (e) => {
@@ -49,7 +57,17 @@ function DetailInfo(props) {
       p_size: e.target.value,
       amount: amount,
     });
+    console.log("addlist:" + JSON.stringify(itemlist));
   };
+
+  // //여러 데이터 추가 시,
+  // const [addlist, setAddlist] = useState([{ ...itemlist }]);
+  // //배열 추가 이벤트
+  // const additem = (itemlist) => {
+  //   for (let i = 0; i < addlist.length; i++){
+
+  //   } setAddlist(...addlist, itemlist);
+  // };
 
   //유저정보
   const [u_data, setU_data] = useState("");
@@ -63,179 +81,184 @@ function DetailInfo(props) {
     });
   };
 
-  //결제
-  function requestBtn() {
-    // let b = sel();
+  //결제 정보 입력 dialog
+  const [open, setOpen] = useState(false);
 
+  const handleClickOpen = (e) => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setAddressData("");
+    setOpen(false);
+    setPopup(false);
     Swal.fire({
-      title: "결제 정보 입력",
-      html: `<h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 이름</h6><br/>
-          <input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" value=${u_data.u_name} style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 연락처 </h6><br/>
-          <input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-포함)" maxLength="13" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" value=${u_data.hp} style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 주소</h6><br/>
-        <div class="input-group">
-          <input type="address" id="addrcode" class="swal2-input" placeholder="우편번호" style="width:40%; margin-left:45px" >
-          <button type='button' class="btn btn-secondary" style="width:30%; height:50px; margin-top:20px" onclick='window.open("AddressApi", "", "width=500,height=700")' >주소찾기</button>
-        </div>
-         <input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" style="width:80%"  >
-         <input type="address" id="o_addrdetail" class="swal2-input" placeholder="상세 주소 입력" style="width:80%">
-        <h6 style="float:left;margin-left:50px;margin-top:30px">구매 이메일</h6><br/>
-          <input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력" value=${u_data.email} style="width:80%">`,
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
+      position: "center",
+      icon: "error",
+      title: "결제가 취소되었습니다",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+
+  //주소 이벤트
+  const [addressData, setAddressData] = useState({
+    addr: u_data.address,
+  });
+
+  //주소 API 오픈
+  const [popup, setPopup] = useState(false);
+
+  const handleInput = (e) => {
+    setAddressData({
+      ...u_data,
+      ...addressData,
+      email: e.target.value,
+      u_name: e.target.value,
+      addr: e.target.value,
+      hp: e.target.value,
+      t_addrdetail: e.target.value,
+    });
+  };
+
+  const handleComplete = (data) => {
+    setPopup(!popup);
+  };
+
+  //ref
+  const t_nameref = useRef("");
+  const t_hpref = useRef("");
+  const t_addrref = useRef("");
+  const t_addrdetailref = useRef("");
+  const t_emailref = useRef("");
+
+  //결제
+  const requestBtn = (e) => {
+    let t_name = t_nameref.current.value;
+    let t_hp = t_hpref.current.value;
+    let t_addr = t_addrref.current.value;
+    let t_addrdetail = t_addrdetailref.current.value;
+    let t_email = t_emailref.current.value;
+
+    if (
+      t_name === "" ||
+      t_hp === "" ||
+      t_addr === "" ||
+      t_addrdetail === "" ||
+      t_email === ""
+    ) {
+      Swal.showValidationMessage(
+        `잘못된 정보입니다. 다시 확인 후 입력해주세요`
+      );
+      return false;
+    }
+
+    const IMP = window.IMP; // 생략 가능
+    IMP.init("imp81470772"); // 가맹점 식별 코드
+
+    // IMP.request_pay(param, callback) 결제창 호출
+    IMP.request_pay(
+      {
+        // param
+        // pg: "html5_inicis.INIpayTest", // PG 모듈
+        pg: "kakaopay.TC0ONETIME", // PG 모듈
+        pay_method: "card", // 지불 수단
+        merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
+        name: itemlist.p_name,
+        // amount: sumPayment, // 가격
+        amount: "100",
+        // amount: itemlist.price * amount,
+        buyer_email: t_emailref.current.value,
+        buyer_name: t_nameref.current.value, // 구매자 이름
+        buyer_tel: t_nameref.current.value, // 구매자 연락처
+        buyer_addr:
+          t_addrref.current.value + ", " + t_addrdetailref.current.value, // 구매자 주소지
+        // buyer_postcode: "01181", // 구매자 우편번호
+        // m_redirect_url: localStorage.url+"/c"
       },
-      confirmButtonText: "결제하기",
-      focusConfirm: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showCancelButton: true,
-      preConfirm: () => {
-        // const o_name = Swal.getPopup().querySelector("#o_name").value;
-        const o_name = document.getElementById("o_name").value;
-        const o_hp = document.getElementById("o_hp").value;
-        const addrcode = document.getElementById("addrcode").value;
-        const o_addr = document.getElementById("o_addr").value;
-        const o_addrdetail = document.getElementById("o_addrdetail").value;
-        const o_email = document.getElementById("o_email").value;
-        if (
-          o_name === "" ||
-          o_addr === "" ||
-          o_hp === "" ||
-          o_email === "" ||
-          addrcode === "" ||
-          o_addrdetail === ""
-        ) {
-          Swal.showValidationMessage(
-            `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-          );
-          return false;
-        }
+      (rsp) => {
+        // callback
+        // console.log("rsp:" + JSON.stringify(rsp));
+        if (rsp.success) {
+          // // 결제 성공 시, 출력 창
+          let msg = "결제가 완료되었습니다.\n";
+          msg += "고유ID : " + rsp.imp_uid + "\n";
+          msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+          msg += "결제 선택 : " + rsp.pg + "\n";
+          msg += "결제 방식 : " + rsp.pay_method + "\n";
+          msg += "결제 금액 : " + rsp.paid_amount + "\n";
+          // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+          msg += "상품명 : " + rsp.name + "\n";
+          msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+          msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+          msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+          msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
 
-        return {
-          o_name,
-          o_hp,
-          o_addr,
-          addrcode,
-          o_addrdetail,
-          o_email,
-        };
-      },
-    }).then((result) => {
-      // console.dir(result);
-      if (result.isConfirmed) {
-        //---------------------------------------------------------------
+          alert("결제 성공:" + msg);
+          // Swal.fire({
+          //   position: "center",
+          //   icon: "success",
+          //   title: "결제가 완료되었습니다",
+          //   showConfirmButton: false,
+          //   timer: 1500,
+          // });
 
-        const IMP = window.IMP; // 생략 가능
-        IMP.init("imp81470772"); // 가맹점 식별 코드
+          let tradeInsertUrl = localStorage.url + "/cart/insertTrade";
 
-        // IMP.request_pay(param, callback) 결제창 호출
-        IMP.request_pay(
-          {
-            // param
-            // pg: "html5_inicis.INIpayTest", // PG 모듈
-            pg: "kakaopay.TC0ONETIME", // PG 모듈
-            pay_method: "card", // 지불 수단
-            merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-            name: itemlist.p_name,
-            // amount: sumPayment, // 가격
-            amount: "100",
-            // amount: itemlist.price * amount,
-            buyer_email: result.value.o_email,
-            buyer_name: result.value.o_name, // 구매자 이름
-            buyer_tel: result.value.o_hp, // 구매자 연락처
-            buyer_addr:
-              "(" +
-              result.value.addrcode +
-              ")" +
-              result.value.o_addr +
-              ", " +
-              result.value.o_addrdetail, // 구매자 주소지
-            // buyer_postcode: "01181", // 구매자 우편번호
-            // m_redirect_url: localStorage.url+"/c"
-          },
-          (rsp) => {
-            // callback
-            // console.log("rsp:" + JSON.stringify(rsp));
-            if (rsp.success) {
-              // // 결제 성공 시, 출력 창
-              let msg = "결제가 완료되었습니다.\n";
-              msg += "고유ID : " + rsp.imp_uid + "\n";
-              msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-              msg += "결제 선택 : " + rsp.pg + "\n";
-              msg += "결제 방식 : " + rsp.pay_method + "\n";
-              msg += "결제 금액 : " + rsp.paid_amount + "\n";
-              // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-              msg += "상품명 : " + rsp.name + "\n";
-              msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-              msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-              msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-              msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
-
-              alert("결제 성공:" + msg);
-              // Swal.fire({
-              //   position: "center",
-              //   icon: "success",
-              //   title: "결제가 완료되었습니다",
-              //   showConfirmButton: false,
-              //   timer: 1500,
-              // });
-
-              let tradeInsertUrl = localStorage.url + "/cart/insertTrade";
-
-              axios
-                .post(tradeInsertUrl, {
-                  u_num,
-                  p_num: itemlist.p_num,
-                  merchant_uid: rsp.merchant_uid,
-                  t_name: rsp.buyer_name,
-                  t_hp: rsp.buyer_tel,
-                  t_email: rsp.buyer_email,
-                  t_addr: rsp.buyer_addr,
-                  count: itemlist.amount,
-                  lastprice: itemlist.price * itemlist.amount,
-                  p_size: itemlist.p_size,
-                  state: "결제완료",
-                })
-                .then((res) => {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "결제가 완료되었습니다",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  navi("/mypage/all");
-                })
-                .catch((error) => {
-                  console.log("실패" + error);
-                });
-            } else {
-              // 결제 실패 시 로직,
+          axios
+            .post(tradeInsertUrl, {
+              u_num,
+              p_num: itemlist.p_num,
+              merchant_uid: rsp.merchant_uid,
+              t_name: rsp.buyer_name,
+              t_hp: rsp.buyer_tel,
+              t_email: rsp.buyer_email,
+              t_addr: rsp.buyer_addr,
+              count: itemlist.amount,
+              lastprice: itemlist.price * itemlist.amount,
+              p_size: itemlist.p_size,
+              state: "결제완료",
+            })
+            .then((res) => {
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: rsp.error_msg,
+                title: "결제가 완료되었습니다",
                 showConfirmButton: false,
                 timer: 1500,
               });
-            }
-          }
-        );
-        //--------------------------------------------------------------------
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "결제가 취소되었습니다",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+              setItemlist("");
+              setAmount(1);
+              navi("/mypage/all");
+            })
+            .catch((error) => {
+              console.log("실패" + error);
+            });
+        } else {
+          // 결제 실패 시 로직,
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: rsp.error_msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       }
-    });
-  }
+    );
+    //--------------------------------------------------------------------
+  };
 
+  //구매 불가 이벤트
+  const noRequestPay = () => {
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "옵션을 선택해주세요.",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  };
   useEffect(() => {
     setItemlist({
       ...row,
@@ -244,6 +267,11 @@ function DetailInfo(props) {
     });
   }, [amount]);
 
+  useEffect(() => {
+    userdata();
+  }, []);
+
+  console.log("addlist2:" + JSON.stringify(itemlist));
   // console.log("amount:" + amount);
   //장바구니 이벤트
   const addcart = (e) => {
@@ -268,12 +296,15 @@ function DetailInfo(props) {
             cancelButtonColor: "#d33",
             confirmButtonText: "장바구니로 이동",
           }).then((result) => {
+            console.log("result:" + JSON.stringify(result));
             if (result.isConfirmed) {
               navi("/mypage/cart");
             }
+            if (result.isDismissed) {
+              setAmount(1);
+              setItemlist({});
+            }
           });
-          setItemlist([]);
-          setAmount(1);
           // navi("/product/list");
         });
     } else {
@@ -298,13 +329,17 @@ function DetailInfo(props) {
           <select
             className="form-select"
             p_num={row.p_num}
-            onClick={additemlist}
+            name="p_size"
             style={{ width: "300px", cursor: "pointer" }}
+            onChange={additemlist}
+            defaultValue={"no" || ""}
           >
-            <option disabled selected>
+            <option name="p_size" value="no">
               선택
             </option>
-            <option value="Free">Free</option>
+            <option name="p_size" value="Free">
+              Free
+            </option>
           </select>
         );
       case "자켓":
@@ -322,16 +357,26 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onClick={additemlist}
             style={{ width: "300px", cursor: "pointer" }}
+            onChange={additemlist}
+            name="p_size"
+            defaultValue={"no" || ""}
           >
-            <option disabled selected>
+            <option name="p_size" defaultValue="no">
               선택
             </option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
+            <option name="p_size" value="S">
+              S
+            </option>
+            <option name="p_size" value="M">
+              M
+            </option>
+            <option name="p_size" value="L">
+              L
+            </option>
+            <option name="p_size" value="XL">
+              XL
+            </option>
           </select>
         );
 
@@ -343,31 +388,43 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            onClick={additemlist}
             style={{ width: "300px", cursor: "pointer" }}
+            onChange={additemlist}
+            defaultValue={"no" || ""}
           >
-            <option disabled selected>
+            <option name="p_size" defaultValue="no">
               선택
             </option>
-            <option value="230">230mm</option>
-            <option value="240">240mm</option>
-            <option value="250">250mm</option>
-            <option value="260">260mm</option>
-            <option value="270">270mm</option>
-            <option value="280">280mm</option>
+            <option name="p_size" value="230">
+              230mm
+            </option>
+            <option name="p_size" value="240">
+              240mm
+            </option>
+            <option name="p_size" value="250">
+              250mm
+            </option>
+            <option name="p_size" value="260">
+              260mm
+            </option>
+            <option name="p_size" value="270">
+              270mm
+            </option>
+            <option name="p_size" value="280">
+              280mm
+            </option>
           </select>
         );
       default:
         return (
           <select
             className="form-select sizeselect"
-            onClick={additemlist}
             style={{ width: "300px", cursor: "pointer" }}
+            onChange={additemlist}
+            defaultValue={"no" || ""}
           >
-            <option disabled selected>
-              선택
-            </option>
-            <option disabled>재고 없음</option>
+            <option defaultValue="no">선택</option>
+            <option value="zero">재고 없음</option>
           </select>
         );
     }
@@ -408,41 +465,52 @@ function DetailInfo(props) {
         />
       </div>
       <br />
-      {itemlist && itemlist.p_name === null ? (
-        <></>
-      ) : (
+      {itemlist && itemlist.p_size ? (
         <div
           style={{
-            boxShadow: "5px 5px 10px gray",
+            border: "1px solid gray",
+            backgroundColor: "lightgray",
             width: "50%",
             float: "right",
+            padding: "20px",
           }}
         >
           <Close style={{ float: "right", cursor: "pointer" }}></Close>
-          <p>{itemlist.p_name}</p>
-          <p>{itemlist.amount}</p>
-          <h5>
-            총 결제 금액 : {itemlist.amount && itemlist.amount} /
-            {Number(row.price * amount)
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            원
-          </h5>
+          <div style={{ width: "80%" }}>
+            <p>{itemlist.p_name}</p>
+            <p>사이즈 : {itemlist.p_size}</p>
+            <p>수량 : {itemlist.amount}</p>
+
+            <h5>
+              총 결제 금액 :
+              {Number(row.price * amount)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              원
+            </h5>
+          </div>
         </div>
+      ) : (
+        <></>
       )}
-      <br />
-      <br />
-      <br />
-      <br />
-      <div></div>
       <div style={{ textAlign: "center" }}>
-        <button
-          type="button"
-          className="btn btn-outline-danger btn-lg purchasebtn"
-          onClick={requestBtn}
-        >
-          구매
-        </button>
+        {itemlist && itemlist.p_size ? (
+          <button
+            type="button"
+            className="btn btn-outline-danger btn-lg purchasebtn"
+            onClick={handleClickOpen}
+          >
+            구매
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-outline-secondary btn-lg"
+            onClick={noRequestPay}
+          >
+            구매
+          </button>
+        )}
         &nbsp;&nbsp;
         <button
           type="button"
@@ -461,6 +529,120 @@ function DetailInfo(props) {
         </button>
       </div>
       <br />
+      {itemlist && (
+        <div>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title" style={{ textAlign: "center" }}>
+              결제 정보 입력
+            </DialogTitle>
+            <DialogContent>
+              <form>
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="t_name"
+                  name="t_name"
+                  label="배송받을 이름"
+                  inputRef={t_nameref}
+                  type="text"
+                  fullWidth
+                  defaultValue={u_data.u_name}
+                />
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="t_hp"
+                  name="t_hp"
+                  inputRef={t_hpref}
+                  label="배송받을 연락처"
+                  type="text"
+                  fullWidth
+                  defaultValue={u_data.hp}
+                  onChange={handleInput}
+                />
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="t_addr"
+                  name="t_addr"
+                  inputRef={t_addrref}
+                  label="배송받을 주소"
+                  type="text"
+                  style={{ width: "80%" }}
+                  defaultValue={u_data.addr}
+                  onChange={handleInput}
+                  value={addressData.address}
+                />
+                <Button
+                  variant="contained"
+                  style={{ width: "110px", marginTop: "10px" }}
+                  onClick={handleComplete}
+                >
+                  주소찾기
+                </Button>
+                {popup && (
+                  <AddressApi
+                    postData={addressData}
+                    setPostData={setAddressData}
+                    style={{
+                      background: "rgba(0,0,0,0.25)",
+                      position: "fixed",
+                      left: "0",
+                      top: "0",
+                      height: "100%",
+                      width: "100%",
+                      zIndex: "999",
+                    }}
+                  ></AddressApi>
+                )}
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="t_addrdetail"
+                  name="t_addrdetail"
+                  inputRef={t_addrdetailref}
+                  label="상세 주소"
+                  type="text"
+                  fullWidth
+                />
+
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="t_email"
+                  name="t_email"
+                  inputRef={t_emailref}
+                  label="구매자 email"
+                  type="email"
+                  fullWidth
+                  defaultValue={u_data.email}
+                />
+              </form>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                onClick={requestBtn}
+                color="secoundary"
+              >
+                결제하기
+              </Button>
+              <Button variant="outlined" onClick={handleClose} color="danger">
+                취소
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 }
