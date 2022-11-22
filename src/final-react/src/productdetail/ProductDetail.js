@@ -29,7 +29,7 @@ function ProductDetail(props) {
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
       <br />
-      <h1>상품 상세 폼</h1>
+      <h1>상품 상세 정보</h1>
       <br />
       <br />
       <div style={{ float: "left", width: "50%" }}>

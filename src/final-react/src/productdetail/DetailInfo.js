@@ -13,7 +13,7 @@ import {
 } from "@material-ui/icons";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AddressApi from "../mypage/AddressApi";
 
@@ -50,6 +50,26 @@ function DetailInfo(props) {
   const [itemlist, setItemlist] = useState({});
   // console.log("1. itemlist:" + JSON.stringify(itemlist));
 
+  //비교 데이터
+  const [cartlist, setCartlist] = useState(""); //cart table 데이터
+  const { currentPage } = useParams("");
+  //u_num에 해당하는 cart data 불러오기
+  const cartdata = () => {
+    const cartListUrl = localStorage.url + "/cart/alllist?u_num=" + u_num;
+
+    axios.get(cartListUrl).then((res) => {
+      // console.log("cart data 호출 성공");
+      setCartlist(res.data);
+      // console.dir("data:" + JSON.stringify(cartlist));
+    });
+  };
+
+  // console.log("cartlist:" + JSON.stringify(cartlist));
+  //페이징
+  useEffect(() => {
+    cartdata();
+  }, [currentPage]);
+
   //데이터 담는 함수
   const additemlist = (e) => {
     setItemlist({
@@ -57,7 +77,7 @@ function DetailInfo(props) {
       p_size: e.target.value,
       amount: amount,
     });
-    console.log("addlist:" + JSON.stringify(itemlist));
+    // console.log("addlist:" + JSON.stringify(itemlist));
   };
 
   // //여러 데이터 추가 시,
@@ -134,6 +154,7 @@ function DetailInfo(props) {
 
   //결제
   const requestBtn = (e) => {
+    setOpen(false);
     let t_name = t_nameref.current.value;
     let t_hp = t_hpref.current.value;
     let t_addr = t_addrref.current.value;
@@ -271,12 +292,39 @@ function DetailInfo(props) {
     userdata();
   }, []);
 
-  console.log("addlist2:" + JSON.stringify(itemlist));
+  // console.log("addlist2:" + JSON.stringify(itemlist));
   // console.log("amount:" + amount);
+
+  //품목 삭제 이벤트
+  const closeEvent = () => {
+    setItemlist("");
+    document.getElementById("p_size").value = "no";
+  };
+
   //장바구니 이벤트
   const addcart = (e) => {
-    let insertUrl = localStorage.url + "/cart/insert";
+    // console.log("cartlist:" + cartlist);
+    // console.log("length:" + cartlist.length);
+    // console.log("itemlist:" + JSON.stringify(itemlist));
+    //중복 비교
+    for (let i = 0; i < cartlist.length; i++) {
+      if (
+        itemlist.p_name === cartlist[i].p_name &&
+        itemlist.p_size === cartlist[i].p_size
+      ) {
+        // console.log("비교1:" + 1);
+        Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: "동일한 상품이 존재합니다",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return;
+      }
+    }
 
+    let insertUrl = localStorage.url + "/cart/insert";
     if (itemlist.p_size != null) {
       axios
         .post(insertUrl, {
@@ -296,9 +344,9 @@ function DetailInfo(props) {
             cancelButtonColor: "#d33",
             confirmButtonText: "장바구니로 이동",
           }).then((result) => {
-            console.log("result:" + JSON.stringify(result));
+            // console.log("result:" + JSON.stringify(result));
             if (result.isConfirmed) {
-              navi("/mypage/cart");
+              navi("/mypage/cart/1");
             }
             if (result.isDismissed) {
               setAmount(1);
@@ -308,10 +356,53 @@ function DetailInfo(props) {
           // navi("/product/list");
         });
     } else {
-      alert("사이즈를 선택해주세요");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "옵션을 선택해주세요.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       return;
     }
   };
+
+  // let insertUrl = localStorage.url + "/cart/insert";
+
+  // if (itemlist.p_size != null) {
+  //   axios
+  //     .post(insertUrl, {
+  //       u_num,
+  //       p_num: itemlist.p_num,
+  //       p_size: itemlist.p_size,
+  //       amount,
+  //     })
+  //     .then((res) => {
+  //       // alert("장바구니 추가");
+  //       Swal.fire({
+  //         title: "장바구니에 추가되었습니다",
+  //         text: "장바구니로 이동하시겠습니까?",
+  //         icon: "success",
+  //         showCancelButton: true,
+  //         confirmButtonColor: "#3085d6",
+  //         cancelButtonColor: "#d33",
+  //         confirmButtonText: "장바구니로 이동",
+  //       }).then((result) => {
+  //         console.log("result:" + JSON.stringify(result));
+  //         if (result.isConfirmed) {
+  //           navi("/mypage/cart/1");
+  //         }
+  //         if (result.isDismissed) {
+  //           setAmount(1);
+  //           setItemlist({});
+  //         }
+  //       });
+  //       // navi("/product/list");
+  //     });
+  // } else {
+  //   alert("사이즈를 선택해주세요");
+  //   return;
+  // }
 
   // select 양식 함수
   function selectform() {
@@ -330,11 +421,12 @@ function DetailInfo(props) {
             className="form-select"
             p_num={row.p_num}
             name="p_size"
-            style={{ width: "300px", cursor: "pointer" }}
+            style={{ width: "150px", cursor: "pointer" }}
             onChange={additemlist}
+            id="p_size"
             defaultValue={"no" || ""}
           >
-            <option name="p_size" value="no">
+            <option name="p_size" value="no" disabled>
               선택
             </option>
             <option name="p_size" value="Free">
@@ -357,12 +449,13 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "300px", cursor: "pointer" }}
+            style={{ width: "150px", cursor: "pointer" }}
             onChange={additemlist}
             name="p_size"
+            id="p_size"
             defaultValue={"no" || ""}
           >
-            <option name="p_size" defaultValue="no">
+            <option name="p_size" value="no" disabled>
               선택
             </option>
             <option name="p_size" value="S">
@@ -388,11 +481,12 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "300px", cursor: "pointer" }}
+            style={{ width: "150px", cursor: "pointer" }}
             onChange={additemlist}
+            id="p_size"
             defaultValue={"no" || ""}
           >
-            <option name="p_size" defaultValue="no">
+            <option name="p_size" value="no" disabled>
               선택
             </option>
             <option name="p_size" value="230">
@@ -419,11 +513,14 @@ function DetailInfo(props) {
         return (
           <select
             className="form-select sizeselect"
-            style={{ width: "300px", cursor: "pointer" }}
+            style={{ width: "150px", cursor: "pointer" }}
             onChange={additemlist}
+            id="p_size"
             defaultValue={"no" || ""}
           >
-            <option defaultValue="no">선택</option>
+            <option value="no" disabled>
+              선택
+            </option>
             <option value="zero">재고 없음</option>
           </select>
         );
@@ -475,7 +572,10 @@ function DetailInfo(props) {
             padding: "20px",
           }}
         >
-          <Close style={{ float: "right", cursor: "pointer" }}></Close>
+          <Close
+            style={{ float: "right", cursor: "pointer" }}
+            onClick={closeEvent}
+          ></Close>
           <div style={{ width: "80%" }}>
             <p>{itemlist.p_name}</p>
             <p>사이즈 : {itemlist.p_size}</p>
@@ -512,13 +612,23 @@ function DetailInfo(props) {
           </button>
         )}
         &nbsp;&nbsp;
-        <button
-          type="button"
-          className="btn btn-outline-success btn-lg cartbtn"
-          onClick={addcart}
-        >
-          장바구니
-        </button>
+        {itemlist && itemlist.p_size ? (
+          <button
+            type="button"
+            className="btn btn-outline-success btn-lg cartbtn"
+            onClick={addcart}
+          >
+            장바구니
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-outline-secondary btn-lg"
+            onClick={noRequestPay}
+          >
+            장바구니
+          </button>
+        )}
         &nbsp;&nbsp;
         <button
           type="button"

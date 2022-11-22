@@ -6,6 +6,7 @@ import MypageCart from "./MypageCart";
 import MypageProfile from "./MypageProfile";
 import MypageForm from "./MypageForm";
 import "./MypageCss.css";
+import MypageOrderDetail from "./MypageOrderDetail";
 
 function MypageRoute(props) {
   const { path } = useParams();
@@ -19,6 +20,7 @@ function MypageRoute(props) {
       {path === "order" && <MypageOrder />}
       {path === "cart" && <MypageCart />}
       {path === "profile" && <MypageProfile />}
+      {path === "orderdetail" && <MypageOrderDetail />}
     </div>
   );
 }

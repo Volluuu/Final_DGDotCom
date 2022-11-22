@@ -15,6 +15,7 @@ public class JoinDto {
     private int i_num;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
     private Timestamp day;
+    private  String merchant_uid;
     private int lastprice;
     private int count;
     private String invoice;
