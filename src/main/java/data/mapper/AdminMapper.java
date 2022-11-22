@@ -2,6 +2,7 @@ package data.mapper;
 
 import data.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public interface AdminMapper {
 
     public int TotalProduct();
 
-   public List<ProductDto> GetAllProduct();
+    public List<ProductDto> GetAllProduct();
 
     /* 상품정보를 불러오기위한 메서드 */
     public List<JoinDto> ProductPaging(Map<String,Integer> map);
@@ -51,12 +52,19 @@ public interface AdminMapper {
     /* -------------------배송관리시작------------------- */
 
 
-     /* 총 배송관리 수를 구하기위한 메서드 */
+    /* 총 배송관리 수를 구하기위한 메서드 */
     public int TotalBeforeDelivery();
 
     /* 배송관리 페이징 메서드 */
     public List<TradeDto> BeforeDeliveryPaging(Map<String,Integer> map);
 
+    /* 배송 전 상태에서 invoice넣기 */
+    public void InsertInvoice(TradeDto dto);
+
+    /* 배송 전 상태에서 invoice수정*/
+    public void UpdateInvoice(TradeDto dto);
+
+    /* 배송 중 총 갯수*/
     public int TotalDelivering();
 
     /* 배송관리 페이징 메서드 */
