@@ -4,7 +4,8 @@ import "./UserCss.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {REST_API_KEY, REDIRECT_URI} from './kakaoLoginData';
-import NaverLogin from "./NaverLogin";
+
+
 
 function LoginForm(props) {
     const [email, setEmail] = useState('');
@@ -49,11 +50,6 @@ function LoginForm(props) {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     const kakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
-    }
-
-    // 네이버 로그인
-    const naverLogin = () => {
-        window.location.href = "/naverLogin";
     }
 
     const onLoginBtnState = () => {
@@ -144,22 +140,17 @@ function LoginForm(props) {
                         <img src={require("./social/kakao_login_medium_wide.png")} alt="카카오"
                              style={{width: "300px", height: "50px"}}/>
                     </button>
-                    <button type="button" onClick={naverLogin} disabled={true}
-                            style={{display: "inline-block", marginTop: "10px", cursor: "wait"}}>
-                        <img src={require("./social/naver_login.png")} alt="네이버"
-                             style={{width: "300px", height: "50px"}}/>
-                    </button>
-                    <button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""
-                            data-v-b02d33c2=""
-                        // disabled={true}
-                            style={{lineHeight: "50%", marginTop: "10px"}}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"
-                             data-v-b02d33c2="">
-                            <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-apple"
-                                 data-v-b02d33c2=""></use>
-                        </svg>
-                        Apple로 로그인
-                    </button>
+                    {/*<button type="button" className="btn btn_login_apple full outline" data-v-3d1bcc82=""*/}
+                    {/*        data-v-b02d33c2=""*/}
+                    {/*    // disabled={true}*/}
+                    {/*        style={{lineHeight: "50%", marginTop: "10px"}}>*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" className="logo-social icon sprite-icons"*/}
+                    {/*         data-v-b02d33c2="">*/}
+                    {/*        <use href="/_nuxt/a9c19cb959b9bb0e43f56db79ee357b4.svg#i-logo-apple"*/}
+                    {/*             data-v-b02d33c2=""></use>*/}
+                    {/*    </svg>*/}
+                    {/*    Apple로 로그인*/}
+                    {/*</button>*/}
                 </div>
             </div>
         </div>
