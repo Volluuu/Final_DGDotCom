@@ -2,6 +2,7 @@ package data.mapper;
 
 import data.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface AdminMapper {
 
     /* 회원정보 페이징을위한 메서드 */
     public List<UserDto> AdminUserPaging(Map<String,Integer> map);
-    
+
     /* 회원정보를 삭제하기위한 메서드 */
     public String DeleteUser(int u_num);
 
@@ -57,9 +58,13 @@ public interface AdminMapper {
     /* 배송관리 페이징 메서드 */
     public List<TradeDto> BeforeDeliveryPaging(Map<String,Integer> map);
 
-    /* 배송전 상태에서 invoice넣기 */
+    /* 배송 전 상태에서 invoice넣기 */
+    public void InsertInvoice(TradeDto dto);
+
+    /* 배송 전 상태에서 invoice수정*/
     public void UpdateInvoice(TradeDto dto);
 
+    /* 배송 중 총 갯수*/
     public int TotalDelivering();
 
     /* 배송관리 페이징 메서드 */

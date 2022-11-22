@@ -131,9 +131,14 @@
         where state='배송 전' limit #{startnum}, #{perpage}
     </select>
 
-<!--    배송전 invoice 넣기 -->
-    <update id="UpdateInvoice" parameterType="TradeDto">
+<!--    배송 전 invoice 넣기 -->
+    <update id="InsertInvoice" parameterType="TradeDto">
         update trade set invoice = #{invoice}, state = '배송 중' where t_num = #{t_num}
+    </update>
+
+<!--    배송 중 invoice 수정 -->
+    <update id="UpdateInvoice" parameterType="TradeDto">
+        update trade set invoice = #{invoice} where t_num = #{t_num}
     </update>
 
     <!--    배송중 목록의 수-->

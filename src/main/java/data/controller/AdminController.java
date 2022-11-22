@@ -247,10 +247,16 @@ public class AdminController {
 
     /*------------------------- 배송관리 시작 ---------------------------*/
     //Invoice 넣기
+    @PutMapping("/insertinvoice")
+    public void InsertInvoice(@RequestBody TradeDto dto)
+    {
+        System.out.println(dto);
+        adminMapper.InsertInvoice(dto);
+    }
+
     @PutMapping("/updateinvoice")
     public void UpdateInvoice(@RequestBody TradeDto dto)
     {
-        System.out.println(dto);
         adminMapper.UpdateInvoice(dto);
     }
 
