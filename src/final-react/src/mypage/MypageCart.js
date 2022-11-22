@@ -102,7 +102,6 @@ function MypageBasket(props) {
 
   //선택 삭제
   const selectDeleteCart = () => {
-    let num = "";
     for (let i = 0; i < checkList.length; i++) {
       let c_num = checkList[i].c_num;
       // console.log(num);
@@ -117,8 +116,63 @@ function MypageBasket(props) {
   };
 
   //수정
-  const updateCart = (e) => {
-    alert();
+  const [amount, setAmount] = useState(""); //수정에 필요한 수량 state
+
+  //수량 추가
+  const addAmount = (c_num, amount, u_num) => {
+    console.log("c_num:" + c_num);
+    console.log("amount:" + amount);
+    console.log("u_num:" + u_num);
+    if (amount < 5) {
+      amount = amount + 1;
+      console.log("amount:" + amount);
+      let updateUrl = localStorage.url + "/cart/update";
+      axios.post(updateUrl, { amount, c_num, u_num }).then((res) => {
+        // console.log("호출 성공");
+        window.location.reload();
+        alert("수량이 변경되었습니다");
+      });
+    } else if (amount >= 5) {
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: `최대 수량을 초과하였습니다.
+        (최대 5개 구매가능)`,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  };
+  //수량 변경
+  const subAmount = (c_num, u_num, amount) => {
+    if (amount > 1) {
+      amount = amount - 1;
+      let updateUrl = localStorage.url + "/cart/update";
+      axios.post(updateUrl, { c_num, u_num, amount }).then((res) => {
+        // console.log("호출 성공");
+        window.location.reload();
+        alert("수량이 변경되었습니다");
+      });
+      // updateCart();
+    } else if (amount <= 1) {
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "최소 1개 이상 선택바랍니다",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  };
+  // console.log("amount:" + JSON.stringify(amount));
+
+  const updateCart = () => {
+    let updateUrl = localStorage.url + "/cart/update";
+    axios
+      .post(updateUrl, { c_num: cartlist.c_num, u_num, amount })
+      .then((res) => {
+        console.log("호출 성공");
+      });
   };
   //총 결제 금액 계산
   const totalPay = () => {
@@ -257,7 +311,7 @@ function MypageBasket(props) {
       (rsp) => {
         // callback
 
-        console.log("rsp:" + JSON.stringify(rsp));
+        // console.log("rsp:" + JSON.stringify(rsp));
         if (rsp.success) {
           for (let i = 0; i < checkList.length; i++) {
             let tradeInsertUrl = localStorage.url + "/trade/insert";
@@ -308,7 +362,7 @@ function MypageBasket(props) {
     );
     //--------------------------------------------------------------------
   };
-  console.log("data:" + JSON.stringify(cartlist));
+  // console.log("data:" + JSON.stringify(cartlist));
   //결제 버튼 클릭 시, Swal 이벤트
   // function requestBtn() {
   //   // let b = sel();
@@ -490,10 +544,16 @@ function MypageBasket(props) {
 
   //페이지네이션
   const { currentPage } = useParams("");
+
   //페이징
   useEffect(() => {
     cartdata();
   }, [currentPage]);
+
+  //수량 변경
+  useEffect(() => {
+    cartdata();
+  }, [amount]);
 
   //초기 실행
   useEffect(() => {
@@ -637,20 +697,32 @@ function MypageBasket(props) {
                   <div className="input-group">
                     <button
                       type="button"
-                      class="btn btn-outline-secondary btn-sm"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() =>
+                        subAmount(citem.c_num, citem.u_num, citem.amount)
+                      }
+                      style={{ fontSize: "15px", fontWeight: "bold" }}
                     >
                       -
                     </button>
+
                     <input
                       type="text"
                       name="amount"
+                      id="amount"
                       value={citem.amount}
                       className="form-control"
                       style={{ textAlign: "center" }}
+                      onChange={updateCart}
                     />
+
                     <button
                       type="button"
-                      class="btn btn-outline-secondary btn-sm"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() =>
+                        addAmount(citem.c_num, citem.amount, citem.u_num)
+                      }
+                      style={{ fontSize: "15px", fontWeight: "bold" }}
                     >
                       +
                     </button>
@@ -672,9 +744,8 @@ function MypageBasket(props) {
                     className="btn btn-outline-secondary"
                     value={citem.c_num}
                     onClick={deleteCart}
-                    style={{ border: "none" }}
                   >
-                    <DeleteForeverRounded />
+                    삭제
                   </button>
                 </td>
               </tr>

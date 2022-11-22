@@ -43,7 +43,7 @@ public class CartController {
         int totalCount = cartMapper.getCartCount();
 
 //        System.out.println("tot:"+totalCount);
-        int perPage = 5;//한 페이지당 보여질 글의 갯수
+        int perPage = 10;//한 페이지당 보여질 글의 갯수
         int perBlock = 5;//한 블럭당 보여질 페이지의 갯수
         int startNum;//db에서 가져올 글의 시작번호(mysql은 첫글이 0번,오라클은 1번)
         int startPage;//각블럭당 보여질 시작페이지
@@ -117,8 +117,14 @@ public class CartController {
     }
 
     @PostMapping("/update")
-    public void updateCart(@RequestParam CartDto dto)
+    public void updateCart(@RequestBody CartDto dto)
     {
         cartMapper.updateCart(dto);
+    }
+
+    @GetMapping("/alllist")
+    public List<CartDto> getCartList(int u_num) {
+
+     return cartMapper.getAlldata(u_num);
     }
 }

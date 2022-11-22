@@ -29,4 +29,7 @@ public interface CartMapper {
     public void updateCart(CartDto dto);
     // 결제
     public void insertTrade(TradeDto dto);
+    //모든 데이터
+    public List<CartDto> getAlldata (int u_num);
+
 }
