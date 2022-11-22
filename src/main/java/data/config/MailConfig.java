@@ -14,9 +14,9 @@ public class MailConfig {
     public JavaMailSender JavaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-        javaMailSender.setHost("smtp.naver.com"); // 메인 도메인 서버 주소 (smtp 서버 ㅜㅈ소)
-        javaMailSender.setUsername("bitcamp701"); // 네이버 아이디
-        javaMailSender.setPassword("!bitcamp"); // 네이버 비밀번호
+        javaMailSender.setHost("smtp.gmail.com"); // 메인 도메인 서버 주소 (smtp 서버 주소)
+        javaMailSender.setUsername("bitcamp701"); // 지메일 아이디
+        javaMailSender.setPassword("sujcqpxgplwxfdci"); // 지메일 비밀번호
 
         javaMailSender.setPort(465); // 메일 인증 서버 포트
 
@@ -29,8 +29,8 @@ public class MailConfig {
         properties.setProperty("mail.transport.protocol", "smtp"); // 프로토콜 설정
         properties.setProperty("mail.smtp.auth", "true"); // smtp 인증
         properties.setProperty("mail.smtp.starttls.enable", "true"); // smtp starttls 사용
-        properties.setProperty("mail.debug", "false"); // true 디버그 사용 , false 사용 안함
-        properties.setProperty("mail.smtp.ssl.trust", "smtp.naver.com"); // ssl 인증 서버는 smtp.naver.com
+        properties.setProperty("mail.debug", "true"); // true 디버그 사용 , false 사용 안함
+        properties.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com"); // ssl 인증 서버는 smtp.gmail.com
         properties.setProperty("mail.smtp.ssl.enable", "true"); // ssl 사용
 
         /*

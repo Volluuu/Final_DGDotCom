@@ -519,11 +519,11 @@ function MypageProfile(props) {
                             </button>
                         </div>
                         <div data-v-587be1b3="" className="modify name" style={{display: !nameModify ? "none" : ""}}>
-                            <h5 data-v-587be1b3="" className="title">이름</h5>
+                            <h5 data-v-587be1b3="" className="title">닉네임</h5>
                             <div data-v-6c561060="" data-v-587be1b3=""
                                  className={nameError ? "input_box has_error" : "input_box"}>
                                 <h6 data-v-587be1b3="" data-v-6c561060="" className="input_title">
-                                    새로운 이름
+                                    새로운 닉네임
                                 </h6>
                                 <div data-v-6c561060="" className="input_item">
                                     <input data-v-6c561060="" type="text" placeholder={userDto.u_name}

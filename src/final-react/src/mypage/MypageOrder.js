@@ -133,9 +133,11 @@ function MypageOrder(props) {
         { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }
       )
       .then((res) => {
-        alert("소중한 리뷰 감사합니다.");
-        // 작성 후 리로드
-        window.location.reload();
+        Swal.fire({
+          icon:"info",
+          title:"소중한 리뷰 감사합니다.",
+          text:"적립금 1000P 지급되었습니다."
+        }).then(res=>window.location.reload());
       })
       .catch((error) => {
         localStorage.removeItem("refreshToken");
@@ -562,7 +564,7 @@ function MypageOrder(props) {
                         tradeData.rlist[idx] === null ? (
                           <button
                             type={"button"}
-                            style={{ float: "left" }}
+                            style={{ textAlign:"center" }}
                             className={"btn btn-primary btn-sm"}
                             onClick={() => {
                               setReviewModal("");
@@ -576,7 +578,7 @@ function MypageOrder(props) {
                           tradeData.rlist[idx] !== null ? (
                           <button
                             type={"button"}
-                            style={{ float: "left" }}
+                            style={{ textAlign:"center" }}
                             className={"btn btn-success btn-sm"}
                             onClick={() => {
                               setUpdateReviewModal("");
@@ -594,7 +596,7 @@ function MypageOrder(props) {
                           <button
                             type={"button"}
                             style={{
-                              float: "left",
+                              textAlign:"center",
                               cursor: "wait",
                             }}
                             className={"btn btn-light btn-sm"}
@@ -827,7 +829,7 @@ function MypageOrder(props) {
                     data-v-1f7c6d3f=""
                     className="usable_item"
                   >
-                    후기 작성 시 1,000P를 지급합니다. (아직 ㅎ)
+                    후기 작성 시 1,000P를 지급합니다.
                   </li>
                 </ul>
               </div>
