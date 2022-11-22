@@ -1,5 +1,13 @@
+
+@font-face {
+  font-family: 'AppleSDGothicNeoM';
+  src: url('../public/Apple_산돌고딕_Neo/AppleSDGothicNeoM.ttf') format('woff2'),
+  url('../public/Apple_산돌고딕_Neo/AppleSDGothicNeoM.ttf') format('woff'),
+  url('../public/Apple_산돌고딕_Neo/AppleSDGothicNeoM.ttf') format('truetype');
+}
+
 * {
-  font-family: "Anton";
+  font-family: "AppleSDGothicNeoM";
 }
 
 ul.menu {

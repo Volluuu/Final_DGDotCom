@@ -39,4 +39,8 @@
         insert into trade (t_num,u_num,p_num,merchant_uid,t_name,t_hp,t_email,t_addr,count,lastprice,p_size,state,day)
         values(null,#{u_num},#{p_num},#{merchant_uid},#{t_name},#{t_hp},#{t_email},#{t_addr},#{count},#{lastprice},#{p_size},#{state},now())
     </insert>
+
+    <select id="getAlldata" parameterType="int" resultType="CartDto">
+        select * from cart C join product P where C.p_num=P.p_num and u_num=#{u_num} order by c_num desc
+    </select>
 </mapper>

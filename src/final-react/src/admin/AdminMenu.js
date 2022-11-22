@@ -58,7 +58,7 @@ function AdminMenu(props) {
                     </li>
 
                     <li className="nav-item active">
-                        <a className="nav-link collapsed" href="/admin/delivery"
+                        <a className="nav-link collapsed" href="/admin/beforedelivery"
                            data-target="#collapseTwo"
                            aria-expanded="true" aria-controls="collapseTwo">
                             {/*배송관리 아이콘 넣기~!~!!~!!~~!*/}

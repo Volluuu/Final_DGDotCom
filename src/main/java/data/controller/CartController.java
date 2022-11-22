@@ -115,4 +115,16 @@ public class CartController {
         cartMapper.insertTrade(dto);
 
     }
+
+    @PostMapping("/update")
+    public void updateCart(@RequestBody CartDto dto)
+    {
+        cartMapper.updateCart(dto);
+    }
+
+    @GetMapping("/alllist")
+    public List<CartDto> getCartList(int u_num) {
+
+     return cartMapper.getAlldata(u_num);
+    }
 }

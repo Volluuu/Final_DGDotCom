@@ -44,7 +44,7 @@ function AdProduct(props) {
             const idArray = [];
             // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
             // 전체 체크 박스 체크
-            data.list.forEach((el) => idArray.push(el.p_num));
+            data.list.forEach((el) => idArray.push(el.i_num));
             console.log();
             setCheckItems(idArray);
         }
@@ -117,9 +117,9 @@ function AdProduct(props) {
                         {data.list && data.list.map((r, idx) => <tr key={idx} className='tr-hj' align='center'>
                             <td className='td-hj'><Checkbox
                                 type={"checkbox"}
-                                onChange={(e) => handleSingleCheck(e.target.checked, r.p_num)}
+                                onChange={(e) => handleSingleCheck(e.target.checked, r.i_num)}
                                 // checkItems에 data.id가 있으면 체크 아니면 체크 해제
-                                checked={checkItems.includes(r.p_num) ? true : false}
+                                checked={checkItems.includes(r.i_num) ? true : false}
                             /></td>
                             <td className='td-hj'>{data.no - idx}</td>
                             <td className='td-hj'><img style={{width: '70px', borderRadius: '15px'}}
