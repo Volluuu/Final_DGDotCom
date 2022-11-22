@@ -3,20 +3,21 @@ import styled from "styled-components";
 
 const StyleComponent = (props) => {
     const {elt} = props;
+    const imgSrc = elt.photo;
     return (
         <WrapperDiv>
-            <SocialImg src={`${elt.photo}`}/>
+            <SocialImg src={imgSrc}/>
             <CardDetail>
-                <div className="user_name">${elt.u_num}</div>
+                <div className="user_name">{elt.u_num}</div>
                 <div className="text_box">
-                    content : ${elt.content} <br/>
-                    tag : ${elt.tag} <br/>
-                    likes : ${elt.likes} <br/>
-                    comment : ${elt.comment} <br/>
-                    writeday : ${elt.writeday} <br/>
+                    content : {elt.content} <br/>
+                    tag : {elt.tag} <br/>
+                    likes : {elt.likes} <br/>
+                    comment : {elt.comment} <br/>
+                    writeday : {elt.writeday} <br/>
                 </div>
                 <ul className="product_list">
-                    <li>${elt.p_list}</li>
+                    <li>{elt.p_list}</li>
                 </ul>
             </CardDetail>
         </WrapperDiv>

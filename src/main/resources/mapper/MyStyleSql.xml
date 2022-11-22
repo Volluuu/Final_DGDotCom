@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.MyStyleMapper">
 
-    <select id="getAllStyle" resultType="StyleDto">
-        select * from mystyle
+    <select id="getAllStyleOrderByNew" resultType="StyleDto">
+        select * from mystyle order by style_num
     </select>
+    <select id="getAllStyleOrderByPop" resultType="StyleDto">
+        select * from mystyle order by likes desc
+    </select>
+
+<!--    **********************************댓글 관련 SQL ****************************************-->
+    <select id="getAllComment" resultType="CommentDto">
+        select * from comment where u_num = 5 and style_num = 5 and root="yes"
+    </select>
+    <select id="getReply" parameterType="int" resultType="CommentDto">
+        select * from comment where u_num = 5 and style_num = 5 and parent=#{parent}
+    </select>
+
 </mapper>

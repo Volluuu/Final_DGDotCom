@@ -134,6 +134,9 @@ function Menu(props) {
     return (
         <>
             <Menubar>
+                <Category to={"/mystyle"} className={"up underline"}>
+                    스타일
+                </Category>
                 <Category to={"/product/list"} className={"up underline"}>
                     상품 리스트
                 </Category>
