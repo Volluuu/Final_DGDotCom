@@ -57,9 +57,6 @@ function PupdateForm(props) {
             .then(res => {
                 navi(`/admin/adproduct`)
             })
-        // axios.post(updateUrl, fooddata)
-        //     .then(res => {
-        //         navi(`/food/detail/${num}`);
     }
 
     useEffect(() => {

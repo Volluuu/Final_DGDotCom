@@ -17,7 +17,7 @@ public interface AdminMapper {
 
     /* 회원정보 페이징을위한 메서드 */
     public List<UserDto> AdminUserPaging(Map<String,Integer> map);
-
+    
     /* 회원정보를 삭제하기위한 메서드 */
     public String DeleteUser(int u_num);
 
@@ -25,7 +25,7 @@ public interface AdminMapper {
 
     public int TotalProduct();
 
-   public List<ProductDto> GetAllProduct();
+    public List<ProductDto> GetAllProduct();
 
     /* 상품정보를 불러오기위한 메서드 */
     public List<JoinDto> ProductPaging(Map<String,Integer> map);
@@ -51,11 +51,14 @@ public interface AdminMapper {
     /* -------------------배송관리시작------------------- */
 
 
-     /* 총 배송관리 수를 구하기위한 메서드 */
+    /* 총 배송관리 수를 구하기위한 메서드 */
     public int TotalBeforeDelivery();
 
     /* 배송관리 페이징 메서드 */
     public List<TradeDto> BeforeDeliveryPaging(Map<String,Integer> map);
+
+    /* 배송전 상태에서 invoice넣기 */
+    public void UpdateInvoice(TradeDto dto);
 
     public int TotalDelivering();
 

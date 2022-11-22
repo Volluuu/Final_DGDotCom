@@ -246,6 +246,14 @@ public class AdminController {
 
 
     /*------------------------- 배송관리 시작 ---------------------------*/
+    //Invoice 넣기
+    @PutMapping("/updateinvoice")
+    public void UpdateInvoice(@RequestBody TradeDto dto)
+    {
+        System.out.println(dto);
+        adminMapper.UpdateInvoice(dto);
+    }
+
     //배송전 페이징
     @GetMapping("/BeforeDeliveryPaging")
     public Map<String,Object> BeforeDeliveryPaging(@RequestParam(defaultValue = "1") int currentPage)
