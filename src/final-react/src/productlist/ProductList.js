@@ -40,6 +40,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import styled from "styled-components";
 
+// 이미지들
+// import slide1 from '../images/01.png';
+import slide1 from "./images/no1.jpg";
+import slide2 from "./images/no2.jpg";
+import slide3 from "./images/no3.jpg";
+import slide4 from "./images/no4.jpg";
+
 const useStyles3 = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -126,6 +133,7 @@ function ProductList(props) {
     const genders = searchParams.getAll('genders');
     const sizes = searchParams.getAll('sizes');
     const prices = searchParams.getAll('prices');
+    const _keyword = searchParams.get('keyword') || '';
 
     const productUrl = localStorage.url + "/product/";
     // console.log("proUrl:" + productUrl);
@@ -138,8 +146,9 @@ function ProductList(props) {
             sizes,
             prices,
             priceOrderBy: parms?.priceOrderBy || priceOrderBy,
-            keyword
+            keyword: _keyword
         }
+        console.log(parms)
         if (parms?.page) _params.currentPage = paging.page;
         if (_params.priceOrderBy !== 'desc' && _params.priceOrderBy !== 'asc') delete _params.priceOrderBy
         if (!_params.keyword) delete _params.keyword;
@@ -249,7 +258,7 @@ function ProductList(props) {
     useEffect(() => {
         paging.page = 1;
         console.log("list 호출");
-        setKeyword(searchParams.get('keyword') || '');
+        setKeyword(_keyword);
         getPageList();
     }, [location.search]);
 
@@ -279,7 +288,7 @@ function ProductList(props) {
         });
     };
 
-    const [keyword, setKeyword] = React.useState(searchParams.get('keyword') || '');
+    const [keyword, setKeyword] = React.useState(_keyword);
 
     const handleClose = () => {
         setOpen(false);
@@ -314,11 +323,22 @@ function ProductList(props) {
             window.removeEventListener('scroll', infiniteScroll);
         };
     }, [])
+
+
     return (
         <div>
             <h3 style={{textAlign:'center'}} >SHOP</h3><br/>
+            {keyword && (
             <form style={{textAlign:'center', width:'1100px', height:'70px',
-                marginLeft:'400px',marginTop:'50px'}}>
+                marginLeft:'400px',marginTop:'50px'}}
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    navigate({
+                        pathname: '',
+                        search: `?keyword=${keyword}`
+                    });
+                }}
+            >
                 <TextField id="standard-basic" placeholder="검색어 입력"
                            value={keyword}
                            style={{width:'300px'}}
@@ -332,16 +352,18 @@ function ProductList(props) {
                            }}
                 />
             </form>
+            )}
 
-            <div style={{marginLeft:'40px',width:'1700px',height:'150px'}}>
+            <div style={{marginLeft:'6%',width:'88%',height:'10%'}}>
 
                 <Swiper
                     style={{
-                        "--swiper-navigation-color": "#222",
-                        "--swiper-pagination-color": "orange",
-                        width:'1580px',
-                        height:'140px',
-                        color:'orange'
+                        "--swiper-navigation-color": "white",
+                        "--swiper-pagination-color": "#b3b3b3",
+                        width:'100%',
+                        height:'100%',
+                        color:'#b3b3b3',
+                        marginLeft:'0px'
                     }}
                     navigation={true}
                     pagination={{clickable: true}}
@@ -352,15 +374,14 @@ function ProductList(props) {
                         disableOnInteraction: false,
                     }}
                     modules={[Navigation, Pagination, Autoplay]} className="mySwiper">
-                    <SwiperSlide>Slide 1</SwiperSlide>
-                    <SwiperSlide>Slide 2</SwiperSlide>
-                    <SwiperSlide>Slide 3</SwiperSlide>
-                    <SwiperSlide>Slide 4</SwiperSlide>
+                    <SwiperSlide><img src={slide1} /></SwiperSlide>
+                    <SwiperSlide><img src={slide2} /></SwiperSlide>
+                    <SwiperSlide><img src={slide3} /></SwiperSlide>
+                    <SwiperSlide><img src={slide4} /></SwiperSlide>
                 </Swiper>
-
             </div>
 
-            <div style={{marginLeft:'1580px',width:'150px'}}>
+            <div style={{marginLeft:'87%',width:'10%'}}>
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-controlled-open-select-label">정렬기준</InputLabel>
                     <Select
@@ -380,7 +401,7 @@ function ProductList(props) {
                 </FormControl>
             </div>
 
-            <div style={{marginLeft:'420px',width:'600px'}}>
+            <div style={{marginLeft:'25%',width:'20%'}}>
                 <Paper component="ul" className={chipclasses.root}  elevation={0}>
                     {categories.map((category, index) => {
                         let icon;
@@ -450,8 +471,8 @@ function ProductList(props) {
                 </Paper>
             </div>
 
-            <div style={{width:'15%', height:'700px',float:'left',
-                marginLeft:'40px'}}>
+            <div style={{width:'15%', height:'40%x',float:'left',
+                marginLeft:'6%'}}>
                 <b>CATEGORY</b><br/><br/>
                 <Accordion>
                     <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
@@ -586,7 +607,7 @@ function ProductList(props) {
             </div>
 
 
-            <div style={{marginLeft:'400px',marginTop:'36px', width: '1350px'}}>
+            <div style={{marginLeft:'25%',marginTop:'3px', width: '80%'}}>
 
                 {productlist &&
                     productlist.map((pl, i) => (

@@ -50,6 +50,13 @@
         <if test="priceOrderBy != null and priceOrderBy == 'asc'">
             order by price asc
         </if>
+        <if test="keyword != null and keyword != ''">
+            and (
+                category like concat('%', #{keyword}, '%') or
+                brand like concat('%', #{keyword}, '%') or
+                p_name like concat('%', #{keyword}, '%')
+            )
+        </if>
         limit #{startNum},#{perPage}
     </select>
     <!-- p_num으로 데이터 얻어오기-->
