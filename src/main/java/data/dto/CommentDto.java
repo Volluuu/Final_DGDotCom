@@ -10,4 +10,6 @@ public class CommentDto {
 	private int u_num;
 	private int style_num;
 	private String content;
+	private String root;
+	private int parent;
 }

@@ -15,6 +15,7 @@ import KakaoLogin from "./user/KakaoLogin";
 import FindEmail from "./user/FindEmail";
 import FindPass from "./user/FindPass";
 import NaverLogin from "./user/NaverLogin";
+import MyStyle from "./style/MyStyle";
 
 function RouteMain(props) {
     return (
@@ -145,8 +146,16 @@ function RouteMain(props) {
                     </Route>
                     <Route path={"AddressApi"} element={<AddressApi/>}></Route>
                 </Route>
-
-
+                {/*스타일 관련 라우터*/}
+                <Route path={"/mystyle"} element={<><Menu/><MyStyle/></>}>
+                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
+                </Route>
+                <Route path={"/mystylepop"} element={<><Menu/><MyStyle/></>}>
+                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
+                </Route>
+                <Route path={"/mystylenew"} element={<><Menu/><MyStyle/></>}>
+                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
+                </Route>
                 {/* 잘못된 주소*/}
                 <Route
                     path={"*"}
