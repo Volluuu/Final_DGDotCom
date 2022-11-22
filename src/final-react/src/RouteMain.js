@@ -14,8 +14,8 @@ import AuthTimer from "./user/AuthTimer";
 import KakaoLogin from "./user/KakaoLogin";
 import FindEmail from "./user/FindEmail";
 import FindPass from "./user/FindPass";
-import NaverLogin from "./user/NaverLogin";
 import MyStyle from "./style/MyStyle";
+
 
 function RouteMain(props) {
     return (
@@ -39,8 +39,6 @@ function RouteMain(props) {
                 />
                 {/* 카카오 로그인 */}
                 <Route path={"/kakaoLogin"} element={<KakaoLogin/>}/>
-                {/* 네이버 로그인 */}
-                <Route path={"/naverLogin"} element={<NaverLogin/>}/>
                 {/* 로그인 및 회원가입 */}
                 <Route path={"/user"}>
                     <Route
