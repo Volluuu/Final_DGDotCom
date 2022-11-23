@@ -20,8 +20,18 @@ public class TradeDto {
     private int count;
     private int lastprice;
     private String p_size;
+    private int amount;
     private String invoice;
     private String state;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
     private Timestamp day;
+    //상품정보
+    private String category;
+    private String photo;
+    private String brand;
+    private String gender;
+    private String p_name;
+    private int price;
+    private int discount;
+    private int readcount;
 }

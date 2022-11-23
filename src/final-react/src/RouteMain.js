@@ -1,6 +1,6 @@
 import React from "react";
 import Menu from "./home/menu";
-import {Route, Routes, useLocation} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./home/Home";
 import LoginForm from "./user/LoginForm";
 import SignupForm from "./user/SignupForm";
@@ -16,156 +16,205 @@ import FindEmail from "./user/FindEmail";
 import FindPass from "./user/FindPass";
 import MyStyle from "./style/MyStyle";
 
-
 function RouteMain(props) {
-    return (
-        <div>
-            {sessionStorage.loginok === "yes" ? <AuthTimer/> : ""}
+  return (
+    <div>
+      {sessionStorage.loginok === "yes" ? <AuthTimer /> : ""}
 
-            {/*<Menu />*/}
-            {/* <br style={{ clear: "both" }} />
+      {/*<Menu />*/}
+      {/* <br style={{ clear: "both" }} />
       <br />*/}
-            <Routes>
-                {/* 홈 */}
-                <Route
-                    path={"/"}
-                    element={
-                        <React.Fragment>
-                            <Menu/>
-                            <Home/>
-                            <Footer/>
-                        </React.Fragment>
-                    }
-                />
-                {/* 카카오 로그인 */}
-                <Route path={"/kakaoLogin"} element={<KakaoLogin/>}/>
-                {/* 로그인 및 회원가입 */}
-                <Route path={"/user"}>
-                    <Route
-                        path={"login"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <LoginForm/>
-                            </React.Fragment>
-                        }
-                    />
-                    <Route
-                        path={"signup"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <SignupForm/>
-                            </React.Fragment>
-                        }
-                    />
-                    <Route
-                        path={"find_email"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <FindEmail/>
-                            </React.Fragment>
-                        }/>
-                    <Route
-                        path={"find_password"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <FindPass/>
-                            </React.Fragment>
-                        }/>
-                </Route>
+      <Routes>
+        {/* 홈 */}
+        <Route
+          path={"/"}
+          element={
+            <React.Fragment>
+              <Menu />
+              <Home />
+              <Footer />
+            </React.Fragment>
+          }
+        />
+        {/* 카카오 로그인 */}
+        <Route path={"/kakaoLogin"} element={<KakaoLogin />} />
+        {/* 로그인 및 회원가입 */}
+        <Route path={"/user"}>
+          <Route
+            path={"login"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <LoginForm />
+              </React.Fragment>
+            }
+          />
+          <Route
+            path={"signup"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <SignupForm />
+              </React.Fragment>
+            }
+          />
+          <Route
+            path={"find_email"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <FindEmail />
+              </React.Fragment>
+            }
+          />
+          <Route
+            path={"find_password"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <FindPass />
+              </React.Fragment>
+            }
+          />
+        </Route>
 
-                {/* 상품 관련 (리스트, 상세페이지)*/}
-                <Route path={"/product"}>
-                    {/* <Route path={"list/:currentPage"} element={ */}
-                    <Route
-                        path={"list"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <ProductList/>
-                            </React.Fragment>
-                        }
-                    />
-                    <Route
-                        path={"detail/:p_num"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <ProductDetail/>
-                            </React.Fragment>
-                        }
-                    />
-                </Route>
+        {/* 상품 관련 (리스트, 상세페이지)*/}
+        <Route path={"/product"}>
+          {/* <Route path={"list/:currentPage"} element={ */}
+          <Route
+            path={"list"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <ProductList />
+              </React.Fragment>
+            }
+          />
+          <Route
+            path={"detail/:p_num"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <ProductDetail />
+              </React.Fragment>
+            }
+          />
+        </Route>
 
-                {/* 관리자 페이지 */}
-                <Route path={"/admin"}>
-                    <Route
-                        path={":path"}
-                        element={
-                            <React.Fragment>
-                                <AdminRoute/>
-                            </React.Fragment>
-                        }
-                    >
-                        <Route
-                            path={":currentPage"}
-                            element={
-                                <React.Fragment>
-                                    <AdminRoute/>
-                                </React.Fragment>
-                            }
-                        />
-                    </Route>
-                </Route>
+        {/* 관리자 페이지 */}
+        <Route path={"/admin"}>
+          <Route
+            path={":path"}
+            element={
+              <React.Fragment>
+                <AdminRoute />
+              </React.Fragment>
+            }
+          >
+            <Route
+              path={":currentPage"}
+              element={
+                <React.Fragment>
+                  <AdminRoute />
+                </React.Fragment>
+              }
+            />
+          </Route>
+        </Route>
 
-                {/* 마이 페이지 이중 라우터 */}
-                <Route path={"/mypage"}>
-                    <Route
-                        path={":path"}
-                        element={
-                            <React.Fragment>
-                                <Menu/>
-                                <MypageRoute/>
-                            </React.Fragment>
-                        }
-                    >
-                        <Route
-                            path={":currentPage"}
-                            element={
-                                <React.Fragment>
-                                    <Menu/>
-                                    <MypageRoute/>
-                                </React.Fragment>
-                            }
-                        />
-                    </Route>
-                    <Route path={"AddressApi"} element={<AddressApi/>}></Route>
-                </Route>
-                {/*스타일 관련 라우터*/}
-                <Route path={"/mystyle"} element={<><Menu/><MyStyle/></>}>
-                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
-                </Route>
-                <Route path={"/mystylepop"} element={<><Menu/><MyStyle/></>}>
-                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
-                </Route>
-                <Route path={"/mystylenew"} element={<><Menu/><MyStyle/></>}>
-                    <Route path={":newest"} element={<><Menu/><MyStyle/></>}/>
-                </Route>
-                {/* 잘못된 주소*/}
-                <Route
-                    path={"*"}
-                    element={
-                        <div>
-                            <img alt={""} src={"404.png"} style={{width: "800px"}}/>
-                        </div>
-                    }
-                />
-            </Routes>
-        </div>
-    );
+        {/* 마이 페이지 이중 라우터 */}
+        <Route path={"/mypage"}>
+          <Route
+            path={":path"}
+            element={
+              <React.Fragment>
+                <Menu />
+                <MypageRoute />
+              </React.Fragment>
+            }
+          >
+            <Route
+              path={":currentPage"}
+              element={
+                <React.Fragment>
+                  <Menu />
+                  <MypageRoute />
+                </React.Fragment>
+              }
+            />
+          </Route>
+          <Route path={"AddressApi"} element={<AddressApi />}></Route>
+        </Route>
+        {/*스타일 관련 라우터*/}
+        <Route
+          path={"/mystyle"}
+          element={
+            <>
+              <Menu />
+              <MyStyle />
+            </>
+          }
+        >
+          <Route
+            path={":newest"}
+            element={
+              <>
+                <Menu />
+                <MyStyle />
+              </>
+            }
+          />
+        </Route>
+        <Route
+          path={"/mystylepop"}
+          element={
+            <>
+              <Menu />
+              <MyStyle />
+            </>
+          }
+        >
+          <Route
+            path={":newest"}
+            element={
+              <>
+                <Menu />
+                <MyStyle />
+              </>
+            }
+          />
+        </Route>
+        <Route
+          path={"/mystylenew"}
+          element={
+            <>
+              <Menu />
+              <MyStyle />
+            </>
+          }
+        >
+          <Route
+            path={":newest"}
+            element={
+              <>
+                <Menu />
+                <MyStyle />
+              </>
+            }
+          />
+        </Route>
+        {/* 잘못된 주소*/}
+        <Route
+          path={"*"}
+          element={
+            <div>
+              <img alt={""} src={"404.png"} style={{ width: "800px" }} />
+            </div>
+          }
+        />
+      </Routes>
+    </div>
+  );
 }
 
 export default RouteMain;
