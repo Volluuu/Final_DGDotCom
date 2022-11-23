@@ -85,10 +85,7 @@
     <!--상품 업데이트-->
     <update id="UpdateProduct" parameterType="JoinDto">
         update product set category=#{category}, brand=#{brand},price=#{price},
-                           gender=#{gender}, p_name=#{p_name}
-        <if test="photo != null">
-            ,photo=#{photo}
-        </if>
+                           gender=#{gender}, p_name=#{p_name},photo=#{photo}
         where p_num = #{p_num}
     </update>
 <!--    인벤 업데이트-->
@@ -153,6 +150,11 @@
         from trade
         where state='배송 중' limit #{startnum}, #{perpage}
     </select>
+
+    <!--    배송중에서 배송완료로 업데이트-->
+    <update id="CompleteDelivery" parameterType="tradeDto">
+        update trade set state = '배송 완료' where t_num = #{t_num}
+    </update>
 
     <!--    배송완료 목록의 수-->
     <select id="TotalDeliveryComplete" resultType="int">

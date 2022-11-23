@@ -69,13 +69,13 @@ function BeforeDelivery(props) {
                                 <td className='td-hj'>{r.p_size}</td>
                                 <td className='td-hj'>
                                     <input type={'text'}
-                                                             style={{border: '1px solid lightgray', width: '100%'}}/>
+                                           style={{border: '1px solid lightgray', width: '100%'}}/>
                                     <button type='button'
                                             className='ui'
                                             onClick={() => {
                                                 insertInvoice(r.t_num);
                                             }}
-                                    >추가하기
+                                    ><strong>추가하기</strong>
                                     </button>
                                 </td>
                                 <td className='td-hj'>{r.state}</td>

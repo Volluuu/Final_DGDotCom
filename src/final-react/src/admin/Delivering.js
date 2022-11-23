@@ -3,14 +3,16 @@ import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 
 
+
 function Delivering(props) {
     const {currentPage} = useParams();
     const [data, setData] = useState('');
+    const [invoice, setInvoice] = useState('');
 
     const DeliveringPaging = () => {
         let url = localStorage.url + "/admin/DeliveringPaging?currentPage=" + (currentPage === undefined ? '1' : currentPage);
         axios.get(url)
-            .then(res=> {
+            .then(res => {
                 setData(res.data);
             })
     }
@@ -19,12 +21,28 @@ function Delivering(props) {
         let inin = document.querySelector(".ii").previousElementSibling.value;
 
         let url = localStorage.url + '/admin/updateinvoice';
-        axios.put(url, {invoice:inin, t_num:e})
+        axios.put(url, {invoice: inin, t_num: e})
             .then(res => {
                 alert('송장번호가 수정되었습니다');
                 window.location.reload();
             })
     }
+
+        const completeInvoice = (e) => {
+            let good = document.querySelector(".good").value;
+            console.log(good);
+            let url = localStorage.url + '/admin/completedelivery';
+            console.dir(data);
+            if(window.confirm("배송완료 처리하겠습니까?")) {
+                alert('배송완료로 처리했습니다')
+                axios.post(url, {state: good, t_num: e})
+                    .then(res => {
+                        window.location.reload();
+                    })
+            }else{
+                alert('취소합니다');
+            }
+        }
 
     //currentPage 값이 변경될때마다 함수 다시 호출
     useEffect(() => {
@@ -49,6 +67,7 @@ function Delivering(props) {
                         <th className='th-hj'>송장번호</th>
                         <th className='th-hj'>상태</th>
                         <th className='th-hj'>주문일</th>
+                        <th className='th-hj'>배송</th>
                     </tr>
                     </thead>
 
@@ -66,18 +85,27 @@ function Delivering(props) {
                                 <td className='td-hj'>{r.p_size}</td>
                                 <td className='td-hj'><input type={'text'}
                                                              defaultValue={r.invoice}
-                                                             style={{border: '1px solid lightgray', width: '100%'}}
-                                                            />
+                                                             style={{border: '1px solid lightgray', width: '100%'}}/>
+
                                     <button type='button'
                                             className='ii'
                                             onClick={() => {
                                                 updateInvoice(r.t_num);
                                             }}
-                                    >수정하기
+                                    ><strong>수정하기</strong>
                                     </button>
                                 </td>
                                 <td className='td-hj'>{r.state}</td>
                                 <td className='td-hj'>{r.day}</td>
+                                <td className='td-hj'>
+                                    <button
+                                        type='button'
+                                        className='good hj-btn-m hj-btn-green'
+                                       onClick={() => {
+                                           completeInvoice(r.t_num);
+                                       }}>배송완료
+                                    </button>
+                                </td>
                             </tr>
                         )
                     }
