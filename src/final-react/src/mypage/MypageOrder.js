@@ -121,17 +121,24 @@ function MypageOrder(props) {
     const reviewInsert = () => {
         let score = star.filter(Boolean).length;
         if (score === 0) {
-            alert("별점을 선택하세요");
+            Swal.fire({
+                icon: "info",
+                text: "별점을 선택하세요."
+            })
             setStar([false, false, false, false, false]);
             textRef.current.value = "";
             return;
         }
         if (textRef.current.value === "") {
-            alert("내용을 입력하세요");
+            Swal.fire({
+                icon: "info",
+                text: "내용을 입력하세요."
+            })
             setStar([false, false, false, false, false]);
             textRef.current.value = "";
             return;
         }
+        setReviewModal("none");
         let reviewInsertUrl = process.env.REACT_APP_URL + "/mypage/reviewinsert";
         axios
             .post(
@@ -230,7 +237,10 @@ function MypageOrder(props) {
     const reviewUpdate = () => {
         let score = updateStar.filter(Boolean).length;
         if (updateRef.current.value === "") {
-            alert("내용을 입력하세요");
+            Swal.fire({
+                icon: "info",
+                text: "내용을 입력하세요."
+            })
             setUpdateStar([false, false, false, false, false]);
             updateRef.current.value = "";
             return;
@@ -244,7 +254,10 @@ function MypageOrder(props) {
                 headers: {Authorization: `Bearer ${localStorage.accessToken}`},
             })
             .then((res) => {
-                alert("리뷰 수정이 완료되었습니다.");
+                Swal.fire({
+                    icon: "success",
+                    text: "리뷰 수정이 완료되었습니다."
+                })
                 // 수정 후 리로드
                 window.location.reload();
             })
@@ -873,7 +886,6 @@ function MypageOrder(props) {
                                     onClick={() => {
                                         if (window.confirm("리뷰를 등록 하시겠습니까?")) {
                                             reviewInsert();
-                                            setReviewModal("none");
                                             textRef.current.value = "";
                                             setP_num("");
                                             setStar([false, false, false, false, false]);
