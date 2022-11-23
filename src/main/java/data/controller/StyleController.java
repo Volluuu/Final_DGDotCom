@@ -15,6 +15,7 @@ public class StyleController {
 
 	@Autowired
 	MyStyleMapper mapper;
+	//*****************************************************리스트 관련 Controller ****************************************
 
 	@GetMapping("/list/new")
 	public List<StyleDto> orderByNew() {
@@ -26,8 +27,11 @@ public class StyleController {
 	public List<StyleDto> orderByPop() {
 		return mapper.getAllStyleOrderByPop();
 	}
-
-
+	@GetMapping("/list/tags")
+	public List<StyleDto> selectByTag(@RequestParam String tag) {
+		String subTag = tag.substring(1);
+		return mapper.getStyleListSelectByTag(tag);
+	}
 	//*****************************************************댓글 관련 Controller ****************************************
 	@GetMapping("/comment/root")
 	public List<CommentDto> get() {return mapper.getAllComment();}

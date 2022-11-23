@@ -80,18 +80,18 @@ export default function TransitionsModal() {
         await axios.post(`http://localhost:9003/list/latest/update?num=${num}&word=${word}`);
     }
 
-    const deleteLatest = () => {
+    const deleteLatest = async () => {
         const num = sessionStorage.u_num;
-        axios.post(`http://localhost:9003/list/latest/delete?num=${num}`).then();
+        await axios.post(`http://localhost:9003/list/latest/delete?num=${num}`).then();
     }
-    const updateWord = () => {
-        const res = axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
+    const updateWord = async () => {
+        await axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
             setSearchList(res.data);
         })
     }
 
     useEffect(() => {
-        updateLatest().then(r=>{});
+        updateLatest().then();
         const debounce = setTimeout(() => {
             if (word) {
                 updateWord();

@@ -14,6 +14,11 @@ const MyStyle = () => {
         const res = await axios.get("http://localhost:9003/style/list/pop");
         setStyleList(res.data);
     }
+    const getStyleListSelectByTag = async (tag) => {
+        const subTag = tag.substr(1);
+        const res = await axios.get(`http://localhost:9003/style/list/tags?tag=${subTag}`);
+        setStyleList(res.data);
+    }
     //********************************************isActive 관련*****************************************************
     const [isActive, setIsActive] = useState({
         pop : true,
@@ -35,6 +40,14 @@ const MyStyle = () => {
         })
         getStyleListOrderByPop().then();
     }
+    const activeTag = e => {
+        setIsActive({
+            ...isActive,
+            pop : false,
+            new : false,
+        })
+        getStyleListSelectByTag(e.target.innerText).then();
+    }
     //********************************************isActive 관련*****************************************************
 
     useEffect(() => {
@@ -44,7 +57,6 @@ const MyStyle = () => {
     return (
         <>
             <div>
-
                 <StyledTabList>
                     <div>
                         <PopAndNew onClick={activePop} className={isActive.pop? "active":""}>인기</PopAndNew>
@@ -52,7 +64,14 @@ const MyStyle = () => {
                     </div>
                 </StyledTabList>
                 <KeywordBind>
-                    #캐트릿 #발렌시아가 #오뭐신 #유니온 #KREAM스타일 #마르지엘라 #데일리룩 #윈디챌린지
+                    <button onClick={activeTag}>#태그1</button>
+                    <button onClick={activeTag}>#발렌시아가</button>
+                    <button onClick={activeTag}>#오뭐신</button>
+                    <button onClick={activeTag}>#유니온</button>
+                    <button onClick={activeTag}>#KREAM스타일</button>
+                    <button onClick={activeTag}>#마르지엘라</button>
+                    <button onClick={activeTag}>#데일리룩</button>
+                    <button onClick={activeTag}>#윈디챌린지</button>
                 </KeywordBind>
                 <SocialFeed>
                     <ul>
@@ -100,6 +119,7 @@ const MyStyle = () => {
                         }
                     </ul>
                 </SocialFeed>
+
             </div>
         </>
     );
@@ -132,6 +152,14 @@ const KeywordBind = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
+  & > button {
+    display: inline-block;
+    padding: 8px 10px;
+    border: 1px solid #ebebeb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+  }
 `
 const SocialFeed = styled.div`
   display: flex;

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface MyStyleMapper {
+	public List<StyleDto> getStyleListSelectByTag(String tag);
 	public List<StyleDto> getAllStyleOrderByNew();
 
 	public List<StyleDto> getAllStyleOrderByPop();
