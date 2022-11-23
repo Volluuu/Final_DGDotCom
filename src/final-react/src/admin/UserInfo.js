@@ -4,6 +4,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Input} from "@mui/material";
 import Checkbox from "@material-ui/core/Checkbox";
+import './button.css';
 
 function UserInfo({path}) {
     const {currentPage} = useParams();
@@ -151,7 +152,10 @@ function UserInfo({path}) {
                             </Link> : ''
                     }
                     <div style={{float:'right'}}>
-                        <button className="btn-gradient red" onClick={()=>{deleteUser(checkItems);
+                        <button type='button'
+                                className="hj-btn hj-btn-red"
+                                style={{margin:'20px'}}
+                                onClick={()=>{deleteUser(checkItems);
                         }}>삭제</button>
                     </div>
                 </div>

@@ -64,6 +64,9 @@ public interface AdminMapper {
     /* 배송 전 상태에서 invoice수정*/
     public void UpdateInvoice(TradeDto dto);
 
+    /* 배송 중에서 배송완료로 업데이트,*/
+    public void CompleteDelivery(TradeDto dto);
+
     /* 배송 중 총 갯수*/
     public int TotalDelivering();
 

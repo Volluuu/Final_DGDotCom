@@ -79,21 +79,21 @@ function AdminMenu(props) {
                         </div>
                     </li>
 
-                    <li className="nav-item active">
-                        <a className="nav-link collapsed" href="/admin/banner" data-target="#collapseTwo"
-                           aria-expanded="true" aria-controls="collapseTwo">
-                            {/*배너관리 아이콘 넣기~!~!!~!!~~!*/}
-                            <span>배너관리</span>
-                        </a>
-                    </li>
+                    {/*<li className="nav-item active">*/}
+                    {/*    <a className="nav-link collapsed" href="/admin/banner" data-target="#collapseTwo"*/}
+                    {/*       aria-expanded="true" aria-controls="collapseTwo">*/}
+                    {/*        /!*배너관리 아이콘 넣기~!~!!~!!~~!*!/*/}
+                    {/*        <span>배너관리</span>*/}
+                    {/*    </a>*/}
+                    {/*</li>*/}
 
-                    <li className="nav-item active">
-                        <a className="nav-link collapsed" href="/admin/cs" data-target="#collapseUtilities"
-                           aria-expanded="true" aria-controls="collapseUtilities">
-                            {/*고객센터 아이콘 넣기~!~!!~!!~~!*/}
-                            <span>고객센터</span>
-                        </a>
-                    </li>
+                    {/*<li className="nav-item active">*/}
+                    {/*    <a className="nav-link collapsed" href="/admin/cs" data-target="#collapseUtilities"*/}
+                    {/*       aria-expanded="true" aria-controls="collapseUtilities">*/}
+                    {/*        /!*고객센터 아이콘 넣기~!~!!~!!~~!*!/*/}
+                    {/*        <span>고객센터</span>*/}
+                    {/*    </a>*/}
+                    {/*</li>*/}
 
                 </ul>
                 {/*사이드바 끝*/}

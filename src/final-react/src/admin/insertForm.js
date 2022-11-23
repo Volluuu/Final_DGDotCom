@@ -36,7 +36,7 @@ function InsertForm(props) {
     }
 
     //submit이벤트
-    const onSubmit =(e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
 
         let url = localStorage.url + "/admin/productInsert";

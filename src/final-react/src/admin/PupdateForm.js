@@ -4,14 +4,7 @@ import axios from "axios";
 import EditIcon from '@material-ui/icons/Edit';
 
 function PupdateForm(props) {
-    const [p_name, setP_name] = useState([]);
     const [photo, setPhoto] = useState([]);
-    const [category, setCategory] = useState([]);
-    const [brand, setBrand] = useState([]);
-    const [gender, setGender] = useState([]);
-    const [price, setPrice] = useState([]);
-    const [p_size, setP_size] = useState([]);
-    const [amount, setAmount] = useState([]);
     const {pnum} = useParams();
     const [data, setData] = useState([]);
     const navi = useNavigate();
@@ -21,6 +14,7 @@ function PupdateForm(props) {
 
     let url = localStorage.url + "/admin/select?p_num="+currentPage;
     console.log(currentPage);
+
     const photoUrl = localStorage.url + "/product/";
 
     const selectProductData = () => {
@@ -31,30 +25,34 @@ function PupdateForm(props) {
             })
     }
 
-    //파일 업로드
-    const onUploadChange = (e) => {
-        let uploadUrl = localStorage.url + "/admin/pimgupload2";
+    const uploadPhoto = (e) => {
+        let uploadUrl = localStorage.url + "/admin/pimgupload";
+
         const uploadFile = new FormData();
-        uploadFile.append("uploadFile", e.target.files[0]);
+        uploadFile.append("uploadFile",e.target.files[0]);
+
         axios({
-            method: 'post',
+            method: "post",
             url: uploadUrl,
             data: uploadFile,
             headers: {'Content-Type': 'multipart/form-data'}
-        }).then(res => {
+        }).then(res=>{
             setPhoto(res.data);
-
         })
     }
 
     //수정 버튼 이벤트
     const onSubmits = (e) => {
-        e.preventDefault();
-        let updateUrl = localStorage.url + "/admin/updateProduct"
+    e.preventDefault();
+        let updateUrl = localStorage.url + "/admin/updateProduct";
+
+        // setData(photo)
+        console.log('데이터')
         console.dir(data);
 
         axios.post(updateUrl, data)
             .then(res => {
+                setPhoto([]);
                 navi(`/admin/adproduct`)
             })
     }
@@ -230,8 +228,8 @@ function PupdateForm(props) {
                 <input
                     type="file"
                     placeholder="사진"
-
-                    onChange={onUploadChange}
+                    className='upimage'
+                    onChange={uploadPhoto}
                     style={{
                         display: 'block',
                         width: '100%',

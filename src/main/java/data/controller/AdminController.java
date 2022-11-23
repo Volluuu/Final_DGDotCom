@@ -164,7 +164,8 @@ public class AdminController {
 
     //사진 업로드
     @PostMapping("/pimgupload")
-    public String fileUpload(@RequestParam MultipartFile uploadFile, HttpServletRequest request) {
+    public String fileUpload(@RequestParam MultipartFile uploadFile, HttpServletRequest request)
+    {
         System.out.println("상품사진 업로드");
         //업로드할 폴더 구하기
         String path = request.getSession().getServletContext().getRealPath("/product");
@@ -185,26 +186,28 @@ public class AdminController {
     }
 
     //수정 사진 업로드
-    @PostMapping("/pimgupload2")
-    public List<String> fileUpload2(@RequestParam List<MultipartFile> uploadFile,
-                                    HttpServletRequest request)
-    {
-        newProductPhotoList.clear();
-        System.out.println(uploadFile.size() + "개 업로드");
-        //업로드할 폴더
-        String path = request.getSession().getServletContext().getRealPath("/product");
-        for (MultipartFile multi : uploadFile) {
-            System.out.println(multi.getOriginalFilename());
-            try {
-                multi.transferTo(new File(path + "/" + multi.getOriginalFilename()));
-                newProductPhotoList.add(multi.getOriginalFilename());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return newProductPhotoList;
-    }
+//    @PostMapping("/pimgupload2")
+//    public String fileUpload2(@RequestParam List<MultipartFile> uploadFile,
+//                                    HttpServletRequest request)
+//    {
+//        System.out.println("상품사진 업로드");
+//        //업로드할 폴더 구하기
+//        String path = request.getSession().getServletContext().getRealPath("/product");
+//        //기존 업로드 파일이 있을 경우 삭제 후 다시 업로드
+//        if (uploadFileName != null) {
+//            FileUtil.deletePhoto(path, uploadFileName);
+//        }
+//
+//        //이전 업로드한 사진을 지운 후 현재 사진 업로드하기
+//        uploadFileName = FileUtil.getChangeFileName(uploadFile.getOriginalFilename());
+//        try {
+//            uploadFile.transferTo(new File(path + "/" + uploadFileName));
+//            System.out.println("업로드 성공");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return uploadFileName;
+//    }
 
     @PostMapping("/productInsert")
             public void InsertProduct(@RequestBody JoinDto dto)
@@ -254,11 +257,20 @@ public class AdminController {
         adminMapper.InsertInvoice(dto);
     }
 
+    //invoice 업데이트
     @PutMapping("/updateinvoice")
     public void UpdateInvoice(@RequestBody TradeDto dto)
     {
         adminMapper.UpdateInvoice(dto);
     }
+
+    @PostMapping("/completedelivery")
+    public void CompleteDelivery(@RequestBody TradeDto dto)
+    {
+        adminMapper.CompleteDelivery(dto);
+    }
+
+
 
     //배송전 페이징
     @GetMapping("/BeforeDeliveryPaging")
