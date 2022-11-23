@@ -68,12 +68,18 @@ function MypageProfile(props) {
                 Swal.fire({
                     icon: "error",
                     title: "로그인 해주세요.",
-                }).then(result => navi("/user/login"))
+                }).then((result) => {
+                    navi("/user/login");
+                    window.location.reload();
+                });
             } else if (error.response.status === 403) {
                 Swal.fire({
                     icon: "warning",
                     title: "권한이 없습니다.",
-                }).then(result => navi("/"))
+                }).then((result) => {
+                    navi("/");
+                    window.location.reload();
+                });
             }
         });
     }
@@ -519,11 +525,11 @@ function MypageProfile(props) {
                             </button>
                         </div>
                         <div data-v-587be1b3="" className="modify name" style={{display: !nameModify ? "none" : ""}}>
-                            <h5 data-v-587be1b3="" className="title">이름</h5>
+                            <h5 data-v-587be1b3="" className="title">닉네임</h5>
                             <div data-v-6c561060="" data-v-587be1b3=""
                                  className={nameError ? "input_box has_error" : "input_box"}>
                                 <h6 data-v-587be1b3="" data-v-6c561060="" className="input_title">
-                                    새로운 이름
+                                    새로운 닉네임
                                 </h6>
                                 <div data-v-6c561060="" className="input_item">
                                     <input data-v-6c561060="" type="text" placeholder={userDto.u_name}
@@ -670,7 +676,7 @@ function MypageProfile(props) {
                                     </button>
                                     <br/>
                                     <input type="text"
-                                           placeholder={userDto.addr && userDto.addr.split(",")[1].substring(1)}
+                                           placeholder={userDto.addr && userDto.addr.includes(",") ? userDto.addr.split(",")[1].substring(1) : "상세 주소를 입력하세요."}
                                            autoComplete="off"
                                            style={{marginTop: "10px"}}
                                            className="input_txt" data-v-6c561060="" ref={extraAddressRef}

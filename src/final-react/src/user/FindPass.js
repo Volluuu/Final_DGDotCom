@@ -111,7 +111,7 @@ function FindPass(props) {
                                         disabled={emailSendBtn ? true : false}
                                         className="btn full solid"
                                         onClick={emailSend}>
-                                    문자 발송하기
+                                    이메일 발송하기
                                 </button>
                             </div>
                         </div>
