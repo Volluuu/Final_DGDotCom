@@ -328,7 +328,7 @@ function ProductList(props) {
     return (
         <div>
             <h3 style={{textAlign:'center'}} >SHOP</h3><br/>
-            {keyword && (
+            {_keyword && (
             <form style={{textAlign:'center', width:'1100px', height:'70px',
                 marginLeft:'400px',marginTop:'50px'}}
                 onSubmit={(event) => {
@@ -668,6 +668,9 @@ function ProductList(props) {
                             </Card>
                         </ProductCard>
                     ))}
+                {productlist.length === 0 && (
+                    <div style={{width:'80%',height:'100px',textAlign:'center',marginTop:'15%'}}><h3><b>검색하신 결과가 없습니다.</b></h3></div>
+                )}
             </div>
         </div>
     );
