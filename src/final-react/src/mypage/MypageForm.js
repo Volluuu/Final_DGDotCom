@@ -40,12 +40,18 @@ function MypageForm(props) {
                     Swal.fire({
                         icon: "error",
                         title: "로그인 해주세요.",
-                    }).then((result) => navi("/user/login"));
+                    }).then((result) => {
+                        navi("/user/login");
+                        window.location.reload();
+                    });
                 } else if (error.response.status === 403) {
                     Swal.fire({
                         icon: "warning",
                         title: "권한이 없습니다.",
-                    }).then((result) => navi("/"));
+                    }).then((result) => {
+                        navi("/");
+                        window.location.reload();
+                    });
                 }
             });
     };
