@@ -92,7 +92,7 @@ const BasicSearchShow = (props) => {
                     {
                         hot.filter((elt, idx) => idx < 5).map((elt, idx) =>
                             <li style={{marginBottom: "20px"}} key={idx}><HotLink key={idx}  onClick={handleClose}
-                             to={`/product/list/1?currentPage=1&keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 1}</b> {elt.word}
+                             to={`/product/list/?keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 1}</b> {elt.word}
                             </HotLink>
                             </li>)
                     }
@@ -101,7 +101,7 @@ const BasicSearchShow = (props) => {
                     {
                         hot.filter((elt, idx) => idx >= 5).map((elt, idx) =>
                             <li style={{marginBottom: "20px"}} key={idx}><HotLink key={idx}  onClick={handleClose}
-                            to={`/product/list/?currentPage=1&keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 6}</b> {elt.word}
+                            to={`/product/list/?keyword=${elt.word}`}><b style={{marginRight:"5px"}}>{idx + 6}</b> {elt.word}
                             </HotLink>
                             </li>)
                     }
@@ -110,17 +110,17 @@ const BasicSearchShow = (props) => {
             <Title_p>카테고리</Title_p>
 
             <EltDiv>
-                <CategoryElt to={`/product/list/?currentPage=1&keyword=후드`}  onClick={handleClose}>
+                <CategoryElt to={`/product/list/?keyword=후드`}  onClick={handleClose}>
                     <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020517860.PNG" alt=""/>
                     <p className={"CategoryEltInfo"}>상의</p>
                 </CategoryElt>
-                <CategoryElt to={`/product/list/?currentPage=1&keyword=바지`}  onClick={handleClose}>
+                <CategoryElt to={`/product/list/?keyword=바지`}  onClick={handleClose}>
                     <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020634615.PNG" alt=""/>
                     <p className={"CategoryEltInfo"}>하의</p>
-                </CategoryElt><CategoryElt to={`/product/list/?currentPage=1&keyword=패딩`} onClick={handleClose}>
+                </CategoryElt><CategoryElt to={`/product/list/?keyword=패딩`} onClick={handleClose}>
                 <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104001835856.PNG" alt=""/>
                 <p className={"CategoryEltInfo"}>아우터</p>
-            </CategoryElt><CategoryElt to={`/product/list/?currentPage=1&keyword=패션잡화`} onClick={handleClose}>
+            </CategoryElt><CategoryElt to={`/product/list/?keyword=패션잡화`} onClick={handleClose}>
                 <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104022610637.PNG" alt=""/>
                 <p className={"CategoryEltInfo"}>패션잡화</p>
             </CategoryElt>
@@ -129,7 +129,7 @@ const BasicSearchShow = (props) => {
             <Title_p>인기 브랜드</Title_p>
             <EltDiv >
                 {
-                    hot_brand.map((elt, idx) => <PopLink onClick={handleClose} key={idx} to={`product/list/?currentPage=1&brands=${elt.brand}`}>{elt.brand}</PopLink>)
+                    hot_brand.map((elt, idx) => <PopLink onClick={handleClose} key={idx} to={`/product/list/?brands=${elt.brand}`}>{elt.brand}</PopLink>)
                 }
             </EltDiv>
         </WrapperDiv>
