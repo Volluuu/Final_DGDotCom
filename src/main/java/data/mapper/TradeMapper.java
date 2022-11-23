@@ -22,7 +22,7 @@ public interface TradeMapper {
     //    오더 데이터
     public TradeDto getOrderData(int t_num);
     //    주문번호 데이터
-    public TradeDto getUidData(String merchant_uid);
+    public List<TradeDto> getUidData(Map<String,Object>map);
     //    삭제
     public void deleteorder(int t_num);
     //    주문내역 삭제

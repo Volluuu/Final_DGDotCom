@@ -3,15 +3,15 @@
 <mapper namespace="data.mapper.TradeMapper">
 <!--    유저정보 -->
     <select id="userOrder" parameterType="int" resultType="UserDto">
-
+            select * from user where u_num = #{u_num}
     </select>
 <!--    관리자 전체 주문 수량 확인-->
     <select id="getOrderCount" resultType="int">
-
+        select count(*) from trade
     </select>
 <!--    자신 데이터 총 수향-->
    <select id="getUserOrderCount" parameterType="int" resultType="int">
-
+       select count(*) from trade where u_num=#{u_num}
    </select>
 <!--    추가-->
     <insert id="insertOrder" parameterType="TradeDto">
@@ -20,15 +20,15 @@
     </insert>
 <!-- 내역 출력 -->
     <select id="getOrderList" parameterType="map" resultType="TradeDto">
-
+        select * from trade T join product P where T.p_num=P.p_num and u_num=#{u_num} order by t_num desc limit #{startNum},#{perPage}
     </select>
 <!-- PK 검색-->
    <select id="getOrderData" parameterType="int" resultType="TradeDto">
-
+       select * from trade where t_num=#{t_num}
    </select>
 <!-- 주문번호 검색-->
-    <select id="getUidData" parameterType="String" resultType="TradeDto">
-
+    <select id="getUidData" parameterType="Map" resultType="TradeDto">
+        select * from trade T join product P where T.p_num=P.p_num and merchant_uid=#{merchant_uid} and u_num=#{u_num} order by t_num
     </select>
 <!-- PK로 삭제 -->
     <delete id="deleteorder" parameterType="int">
