@@ -6,7 +6,6 @@ import {
   DialogTitle,
   TextField,
 } from "@material-ui/core";
-import { DeleteForeverRounded } from "@material-ui/icons";
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -202,7 +201,7 @@ function MypageBasket(props) {
   const handleClose = () => {
     setAddressData("");
     setOpen(false);
-    setPopup(!popup);
+    setPopup(false);
     Swal.fire({
       position: "center",
       icon: "error",
@@ -245,7 +244,6 @@ function MypageBasket(props) {
 
   //결제 이벤트
   const requestBtn = (e) => {
-    setOpen(false);
     setPerchasedata({
       ...checkList,
       t_name: t_nameref.current.value,
@@ -267,9 +265,7 @@ function MypageBasket(props) {
       t_addrdetail === "" ||
       t_email === ""
     ) {
-      Swal.showValidationMessage(
-        `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-      );
+      alert("정보가 누락되었습니다");
       return false;
     }
 
@@ -279,6 +275,7 @@ function MypageBasket(props) {
       // console.log("aa:" + p_nameArr.length);
       // console.log("aa:" + checkList.length);
     }
+    setOpen(false);
 
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp81470772"); // 가맹점 식별 코드
@@ -292,7 +289,7 @@ function MypageBasket(props) {
         pay_method: "card", // 지불 수단
         merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
         name:
-          checkList.length !== 0
+          checkList.length > 1
             ? p_nameArr.slice(0, 12) +
               " ... 외 " +
               (checkList.length - 1) +
@@ -302,7 +299,7 @@ function MypageBasket(props) {
         amount: "100",
         buyer_email: t_emailref.current.value,
         buyer_name: t_nameref.current.value, // 구매자 이름
-        buyer_tel: t_nameref.current.value, // 구매자 연락처
+        buyer_tel: t_hpref.current.value, // 구매자 연락처
         buyer_addr:
           t_addrref.current.value + ", " + t_addrdetailref.current.value, // 구매자 주소지
         // buyer_postcode: "01181", // 구매자 우편번호
@@ -310,50 +307,49 @@ function MypageBasket(props) {
       },
       (rsp) => {
         // callback
+        console.log("rsp:" + JSON.stringify(rsp));
 
-        // console.log("rsp:" + JSON.stringify(rsp));
         if (rsp.success) {
-          for (let i = 0; i < checkList.length; i++) {
-            let tradeInsertUrl = localStorage.url + "/trade/insert";
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "결제가 완료되었습니다",
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
-            axios
-              .post(tradeInsertUrl, {
-                u_num,
-                p_num: checkList[i].p_num,
-                merchant_uid: rsp.merchant_uid,
-                t_name: rsp.buyer_name,
-                t_hp: rsp.buyer_tel,
-                t_email: rsp.buyer_email,
-                t_addr: rsp.buyer_addr,
-                count: checkList[i].amount,
-                lastprice: sumPayment,
-                p_size: checkList[i].p_size,
-                state: "결제완료",
-              })
-              .then((res) => {
-                if (res.success) {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "결제가 완료되었습니다",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  }).then((res) => {
-                    let deleteUrl =
-                      localStorage.url +
-                      "/cart/delete?c_num=" +
-                      checkList[i].c_num;
+          setTimeout(() => {
+            for (let i = 0; i < checkList.length; i++) {
+              let tradeInsertUrl = localStorage.url + "/trade/insert";
 
-                    axios.get(deleteUrl).then((res) => {
-                      // window.location.reload();
-                    });
+              axios
+                .post(tradeInsertUrl, {
+                  u_num,
+                  p_num: checkList[i].p_num,
+                  merchant_uid: rsp.merchant_uid,
+                  t_name: rsp.buyer_name,
+                  t_hp: rsp.buyer_tel,
+                  t_email: rsp.buyer_email,
+                  t_addr: rsp.buyer_addr,
+                  count: checkList[i].amount,
+                  lastprice: sumPayment,
+                  p_size: checkList[i].p_size,
+                  state: "결제완료",
+                })
+                .then((res) => {
+                  let deleteUrl =
+                    localStorage.url +
+                    "/cart/delete?c_num=" +
+                    checkList[i].c_num;
+                  axios.get(deleteUrl).then((res) => {
+                    window.location.reload();
                   });
-                }
-              })
-              .catch((error) => {
-                console.log("실패" + error);
-              });
-          }
+                })
+                .catch((error) => {
+                  console.log("실패" + error);
+                });
+            }
+          }, 2000);
         } else {
           // 결제 실패 시 로직,
           alert("실패 :" + rsp.error_msg);
@@ -855,9 +851,8 @@ function MypageBasket(props) {
             <tr>
               <td colSpan={10} style={{ textAlign: "center" }}>
                 <br />
-                <br />
-                <br />
                 <p>장바구니가 비었습니다</p>
+                <br />
                 <br />
                 <Link
                   data-v-3d1bcc82=""
@@ -883,96 +878,94 @@ function MypageBasket(props) {
             결제 정보 입력
           </DialogTitle>
           <DialogContent>
-            <form>
-              <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="t_name"
-                name="t_name"
-                label="배송받을 이름"
-                inputRef={t_nameref}
-                type="text"
-                fullWidth
-                defaultValue={u_data.u_name}
-                onChange={handleInput}
-              />
-              <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="t_hp"
-                name="t_hp"
-                inputRef={t_hpref}
-                label="배송받을 연락처"
-                type="text"
-                fullWidth
-                defaultValue={u_data.hp}
-                onChange={handleInput}
-              />
-              <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="t_addr"
-                name="t_addr"
-                inputRef={t_addrref}
-                label="배송받을 주소"
-                type="text"
-                style={{ width: "80%" }}
-                defaultValue={u_data.addr}
-                onChange={handleInput}
-                value={addressData.address}
-              />
-              <Button
-                variant="contained"
-                style={{ width: "110px", marginTop: "10px" }}
-                onClick={handleComplete}
-              >
-                주소찾기
-              </Button>
-              {popup && (
-                <AddressApi
-                  postData={addressData}
-                  setPostData={setAddressData}
-                  style={{
-                    background: "rgba(0,0,0,0.25)",
-                    position: "fixed",
-                    left: "0",
-                    top: "0",
-                    height: "100%",
-                    width: "100%",
-                    zIndex: "999",
-                  }}
-                ></AddressApi>
-              )}
-              <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="t_addrdetail"
-                name="t_addrdetail"
-                inputRef={t_addrdetailref}
-                label="상세 주소"
-                type="text"
-                fullWidth
-                onChange={handleInput}
-              />
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="t_name"
+              name="t_name"
+              label="배송받을 이름"
+              inputRef={t_nameref}
+              type="text"
+              fullWidth
+              defaultValue={u_data.u_name}
+              onChange={handleInput}
+            />
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="t_hp"
+              name="t_hp"
+              inputRef={t_hpref}
+              label="배송받을 연락처"
+              type="text"
+              fullWidth
+              defaultValue={u_data.hp}
+              onChange={handleInput}
+            />
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="t_addr"
+              name="t_addr"
+              inputRef={t_addrref}
+              label="배송받을 주소"
+              type="text"
+              style={{ width: "80%" }}
+              defaultValue={u_data.addr}
+              onChange={handleInput}
+              value={addressData.address}
+            />
+            <Button
+              variant="contained"
+              style={{ width: "110px", marginTop: "10px" }}
+              onClick={handleComplete}
+            >
+              주소찾기
+            </Button>
+            {popup && (
+              <AddressApi
+                postData={addressData}
+                setPostData={setAddressData}
+                style={{
+                  background: "rgba(0,0,0,0.25)",
+                  position: "fixed",
+                  left: "0",
+                  top: "0",
+                  height: "100%",
+                  width: "100%",
+                  zIndex: "999",
+                }}
+              ></AddressApi>
+            )}
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="t_addrdetail"
+              name="t_addrdetail"
+              inputRef={t_addrdetailref}
+              label="상세 주소"
+              type="text"
+              fullWidth
+              onChange={handleInput}
+            />
 
-              <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="t_email"
-                name="t_email"
-                inputRef={t_emailref}
-                label="구매자 email"
-                type="email"
-                fullWidth
-                defaultValue={u_data.email}
-                onChange={handleInput}
-              />
-            </form>
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="t_email"
+              name="t_email"
+              inputRef={t_emailref}
+              label="구매자 email"
+              type="email"
+              fullWidth
+              defaultValue={u_data.email}
+              onChange={handleInput}
+            />
           </DialogContent>
           <DialogActions>
             <Button variant="contained" onClick={requestBtn} color="primary">
