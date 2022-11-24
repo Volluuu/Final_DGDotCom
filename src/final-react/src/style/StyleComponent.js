@@ -8,7 +8,7 @@ const StyleComponent = (props) => {
         <WrapperDiv>
             <SocialImg src={imgSrc}/>
             <CardDetail>
-                <div className="user_name">{elt.u_num}</div>
+                <div className="user_name">elt_num : {elt.u_num}</div>
                 <div className="text_box">
                     content : {elt.content} <br/>
                     tag : {elt.tag} <br/>
