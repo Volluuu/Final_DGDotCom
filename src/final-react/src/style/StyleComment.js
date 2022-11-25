@@ -14,7 +14,7 @@ const StyleComment = () => {
     }, []);
 
     return (
-        <div style={{border:"1px solid black", width:"600px"}}>
+        <div style={{border:"1px solid black", height:"628.98px", overflowY:"scroll"}}>
             {list.map((elt, idx)=><div>작성자 u_num : {elt.u_num}/ 작성 내용 : {elt.content} <br/><StyleReply parent={elt.comment_num}/></div>)}
         </div>
     );
