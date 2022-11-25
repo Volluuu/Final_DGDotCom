@@ -68,13 +68,12 @@ export default function MyStyleDetail(props) {
                 <DialogContent dividers>
                     <WrapperDiv>
                         <ImgDiv>
-                            <img src={elt.photo} alt=""/>
+                            <img src={`http://localhost:9003/mystyle/${elt.photo}`} alt=""/>
                         </ImgDiv>
 
                         <CommentDiv>
                             <UserInfo>
                                 {elt.content}
-                                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                             </UserInfo>
                             <CommentList>
                                 <StyleComment/>
@@ -97,7 +96,7 @@ const ImgDiv = styled.div`
   justify-content: center;
 
   & > img {
-    width: 80%;
+    height:  100%;
   }
 `
 const CommentDiv = styled.div`

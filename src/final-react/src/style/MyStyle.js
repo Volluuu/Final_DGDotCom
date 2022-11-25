@@ -85,9 +85,7 @@ const MyStyle = () => {
                             {
                                 styleList.filter((elt, idx) => idx === 0 || idx % 4 === 0).map((elt, idx) =>
                                     <li>
-                                        <MyStyleDetail elt={elt} key={elt.style_num}>
                                             <StyleComponent elt={elt} key={elt.style_num}/>
-                                        </MyStyleDetail>
                                     </li>
                                 )
                             }
@@ -96,9 +94,7 @@ const MyStyle = () => {
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 1).map((elt, idx) =>
                                     <li>
-                                        <MyStyleDetail elt={elt} key={elt.style_num}>
                                         <StyleComponent elt={elt} key={elt.style_num}/>
-                                        </MyStyleDetail>
                                     </li>
                                 )
                             }
@@ -107,9 +103,7 @@ const MyStyle = () => {
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 2).map((elt, idx) =>
                                     <li>
-                                        <MyStyleDetail elt={elt} key={elt.style_num}>
                                         <StyleComponent elt={elt} key={elt.style_num}/>
-                                        </MyStyleDetail>
                                     </li>
                                 )
                             }
@@ -118,9 +112,7 @@ const MyStyle = () => {
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 3).map((elt, idx) =>
                                     <li>
-                                        <MyStyleDetail elt={elt} key={elt.style_num}>
                                         <StyleComponent elt={elt} key={elt.style_num}/>
-                                        </MyStyleDetail>
                                     </li>
                                 )
                             }
@@ -141,7 +133,7 @@ const StyledTabList = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
-
+  margin-bottom: 20px;
   & > div {
     width: 200px;
     justify-content: space-between;
@@ -151,14 +143,14 @@ const StyledTabList = styled.div`
 const PopAndNew = styled.button`
   font-size: 18px;
   border: 1px solid white;
-  padding: 12px 14px;
+  padding: 16px 12px;
   line-height: 50%;
-
+  font-weight: 600;
   &.active {
     border-radius: 20px;
-    background-color: black;
+    background-color: #222222;
     color: white;
-    font-weight: 400;
+    font-weight: 600;
   }
 `
 const KeywordBind = styled.div`
@@ -189,6 +181,7 @@ const SocialFeed = styled.div`
 
   & > ul > li {
     margin-bottom: 5px;
+      margin-top: 20px;
   }
 
   @media (max-width: 1280px) {
