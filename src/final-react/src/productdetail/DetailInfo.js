@@ -35,6 +35,14 @@ function DetailInfo(props) {
   const addamount = () => {
     if (amount < 5) {
       setAmount(Number(amount) + 1);
+    } else if (amount > 4) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "최대 5개까지 구매 가능합니다",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
     setItemlist({ ...itemlist, amount });
   };
@@ -42,6 +50,14 @@ function DetailInfo(props) {
   const subamount = () => {
     if (amount > 1) {
       setAmount(Number(amount) - 1);
+    } else if (amount < 2) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "최소 1개 이상 구매해야합니다",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
     setItemlist({ ...itemlist, amount });
   };
@@ -313,58 +329,120 @@ function DetailInfo(props) {
         itemlist.p_size === cartlist[i].p_size
       ) {
         // console.log("비교1:" + 1);
+        // Swal.fire({
+        //   position: "center",
+        //   icon: "warning",
+        //   title: "동일한 상품이 존재합니다",
+        //   showConfirmButton: false,
+        //   timer: 1500,
+        // });
+        // return;
         Swal.fire({
-          position: "center",
-          icon: "warning",
           title: "동일한 상품이 존재합니다",
-          showConfirmButton: false,
-          timer: 1500,
+          text: "그래도 추가하시겠습니까?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "장바구니 추가",
+        }).then((result) => {
+          // console.log("result:" + JSON.stringify(result));
+          if (result.isConfirmed) {
+            // navi("/mypage/cart/1");
+            let insertUrl = localStorage.url + "/cart/insert";
+            if (itemlist.p_size != null) {
+              axios
+                .post(insertUrl, {
+                  u_num,
+                  p_num: itemlist.p_num,
+                  p_size: itemlist.p_size,
+                  amount,
+                })
+                .then((res) => {
+                  // alert("장바구니 추가");
+                  Swal.fire({
+                    title: "장바구니에 추가되었습니다",
+                    text: "장바구니로 이동하시겠습니까?",
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "장바구니로 이동",
+                  }).then((result) => {
+                    // console.log("result:" + JSON.stringify(result));
+                    if (result.isConfirmed) {
+                      navi("/mypage/cart/1");
+                    }
+                    if (result.isDismissed) {
+                      setAmount(1);
+                      setItemlist("");
+                    }
+                  });
+                  // navi("/product/list");
+                });
+            } else {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "옵션을 선택해주세요.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              return;
+            }
+          }
+          if (result.isDismissed) {
+            // setAmount(1);
+            // setItemlist({});
+            closeEvent();
+          }
         });
+        // navi("/product/list");
         return;
       }
     }
 
-    let insertUrl = localStorage.url + "/cart/insert";
-    if (itemlist.p_size != null) {
-      axios
-        .post(insertUrl, {
-          u_num,
-          p_num: itemlist.p_num,
-          p_size: itemlist.p_size,
-          amount,
-        })
-        .then((res) => {
-          // alert("장바구니 추가");
-          Swal.fire({
-            title: "장바구니에 추가되었습니다",
-            text: "장바구니로 이동하시겠습니까?",
-            icon: "success",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "장바구니로 이동",
-          }).then((result) => {
-            // console.log("result:" + JSON.stringify(result));
-            if (result.isConfirmed) {
-              navi("/mypage/cart/1");
-            }
-            if (result.isDismissed) {
-              setAmount(1);
-              setItemlist({});
-            }
-          });
-          // navi("/product/list");
-        });
-    } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "옵션을 선택해주세요.",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      return;
-    }
+    // let insertUrl = localStorage.url + "/cart/insert";
+    // if (itemlist.p_size != null) {
+    //   axios
+    //     .post(insertUrl, {
+    //       u_num,
+    //       p_num: itemlist.p_num,
+    //       p_size: itemlist.p_size,
+    //       amount,
+    //     })
+    //     .then((res) => {
+    //       // alert("장바구니 추가");
+    //       Swal.fire({
+    //         title: "장바구니에 추가되었습니다",
+    //         text: "장바구니로 이동하시겠습니까?",
+    //         icon: "success",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "장바구니로 이동",
+    //       }).then((result) => {
+    //         // console.log("result:" + JSON.stringify(result));
+    //         if (result.isConfirmed) {
+    //           navi("/mypage/cart/1");
+    //         }
+    //         if (result.isDismissed) {
+    //           setAmount(1);
+    //           setItemlist({});
+    //         }
+    //       });
+    //       // navi("/product/list");
+    //     });
+    // } else {
+    //   Swal.fire({
+    //     position: "center",
+    //     icon: "error",
+    //     title: "옵션을 선택해주세요.",
+    //     showConfirmButton: false,
+    //     timer: 1000,
+    //   });
+    //   return;
+    // }
   };
 
   // let insertUrl = localStorage.url + "/cart/insert";

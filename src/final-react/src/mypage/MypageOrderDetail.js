@@ -152,7 +152,7 @@ function MypageOrderDetail(props) {
                       <td>
                         {oitem.invoice === null
                           ? "상품 준비중"
-                          : `상품 발송<br/>` + oitem.invoice}
+                          : `상품 발송\n` + oitem.invoice}
                       </td>
                       <td>{oitem.state}</td>
                     </tr>
