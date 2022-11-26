@@ -101,6 +101,11 @@ function DetailImage(props) {
     imageZoomRef.current.style.backgroundImage = `url(${photo}`;
   }, [cursorCoordi]);
 
+  useEffect(() => {
+    imageZoomRef.current.style.backgroundImage = `url(${photo}`;
+    imageZoomRef.current.style.visibility = "hidden";
+  }, []);
+
   return (
     <div
       className="productContainer"
@@ -110,6 +115,7 @@ function DetailImage(props) {
         <div
           className="productImage"
           ref={productImageRef}
+          name="productImage"
           style={{
             width: "570px",
 
@@ -130,6 +136,7 @@ function DetailImage(props) {
         <div
           ref={imageZoomRef}
           className="imageZoom"
+          name="zoomImage"
           style={{
             position: "absolute",
             // width: "530px",
@@ -141,6 +148,7 @@ function DetailImage(props) {
             marginTop: "32px",
             top: "15%",
             display: "inline-block",
+            backgroundColor: "white",
           }}
         ></div>
         <div ref={boxRef}>
