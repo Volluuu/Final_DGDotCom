@@ -125,6 +125,7 @@ function AdProduct(props) {
         <div className='hjhj'>
             <div className="search">
                 <input type="text"
+                       style={{margin:'0 12px'}}
                        className='search-input'
                        placeholder="검색어 입력"
                        onChange={(e) => {
