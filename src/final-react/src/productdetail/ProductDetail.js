@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -24,46 +25,99 @@ function ProductDetail(props) {
 
   //리뷰정보 불러오기
   const reviewList = (p_num) => {
-    let reviewUrl = localStorage.url + "/trade/reviewlist?p_num=" + p_num;
-    axios
-      .get(reviewUrl, {
-        headers: { Authorization: `Bearer ${localStorage.accessToken}` },
-      })
-      .then((res) => {
-        // console.log("axios review 성공");
-        setReviewData(res.data);
-      });
+    let reviewUrl = localStorage.url + "/product/reviewlist?p_num=" + p_num;
+    axios.get(reviewUrl).then((res) =>
+      // console.log("axios review 성공");
+      setReviewData(res.data)
+    );
+  };
+  // console.log("bb:", reviewData);
+
+  //별점 평균 계산하기
+  const [starRate, setStarRate] = useState(0);
+  const avgReview = () => {
+    if (reviewData === "") {
+      return;
+    }
+    // console.log("aa:", reviewData);
+    let starArr = [];
+    for (let i = 0; i < reviewData.list.length; i++) {
+      starArr.push(reviewData.list[i].star);
+    }
+
+    if (starArr.length === 0) {
+      setStarRate(0);
+    } else {
+      const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
+      setStarRate(Math.round(average(starArr) * 10) / 10);
+      console.log("ss:", average(starArr));
+    }
   };
   // console.log("detail:" + JSON.stringify(productdata));
   useEffect(() => {
     productDetail(p_num);
     reviewList(p_num);
+    avgReview();
   }, []);
+  // console.log("review:", reviewData.list.length);
 
+  useEffect(() => {
+    avgReview();
+  }, [reviewData]);
   return (
-    <div style={{ width: "70%", margin: "0 auto", minWidth: "800px" }}>
+    <div
+      style={{
+        width: "70%",
+        margin: "0 auto",
+      }}
+    >
       <br />
       <h1>상품 상세 정보</h1>
       <br />
       <br />
+
       <div
         style={{
-          float: "left",
-          width: "50%",
-          minWidth: "50%",
-          cursor: "zoom-in",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
         }}
       >
-        <DetailImage row={productdata} />
+        <div
+          style={{
+            width: "40%",
+            minWidth: "600px",
+            textAlign: "center",
+            cursor: "zoom-in",
+            // border: "1px solid black",
+            position: "relative",
+          }}
+        >
+          <Card>
+            <DetailImage row={productdata} />
+          </Card>
+        </div>
+
+        <Card>
+          <div
+            style={{
+              width: "40%",
+              minWidth: "600px",
+              // border: "1px solid red",
+              position: "relative",
+            }}
+          >
+            <DetailInfo row={productdata} star={starRate} />
+          </div>
+        </Card>
       </div>
-      <div style={{ minWidth: "500px" }}>
-        <DetailInfo row={productdata} />
-      </div>
+      <br />
+      <br />
       <div
         style={{
-          position: "absolute",
-          width: "70%",
-          top: "85%",
+          width: "100%",
+          margin: "0 auto",
+          // border: "1px solid blue",
         }}
       >
         <DetailReview row={reviewData} />

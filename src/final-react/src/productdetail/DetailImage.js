@@ -109,9 +109,9 @@ function DetailImage(props) {
   return (
     <div
       className="productContainer"
-      style={{ paddingLeft: "10%", height: "1200px", display: "inline-block" }}
+      style={{ height: "550px", display: "inline-block" }}
     >
-      <div className="productHeader" style={{ width: "100%", height: "600px" }}>
+      <div className="productHeader" style={{ width: "100%", height: "550px" }}>
         <div
           className="productImage"
           ref={productImageRef}
@@ -145,10 +145,11 @@ function DetailImage(props) {
             // top: "22%",
             width: "600px",
             height: "600px",
-            marginTop: "32px",
-            top: "15%",
+            // marginTop: "32px",
+            // top: "15%",
             display: "inline-block",
             backgroundColor: "white",
+            zIndex: "1",
           }}
         ></div>
         <div ref={boxRef}>

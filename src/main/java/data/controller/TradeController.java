@@ -115,17 +115,5 @@ public class TradeController {
         return smap;
     }
 
-    @GetMapping("/reviewlist")
-    public Map<String,Object> reviewList(@RequestParam int p_num) {
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("p_num",p_num);
-
-        List<TradeDto> list = tradeMapper.getReviewData(map);
-
-        Map<String, Object> rmap = new HashMap<>();
-        rmap.put("list", list);
-
-        return rmap;
-    }
 }

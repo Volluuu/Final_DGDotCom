@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   Close,
   RemoveCircleOutline,
 } from "@material-ui/icons";
+import { Rating } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,7 +21,7 @@ import AddressApi from "../mypage/AddressApi";
 
 function DetailInfo(props) {
   // DetailDto
-  const { row } = props;
+  const { row, rev, star } = props;
 
   //이동 Hook
   const navi = useNavigate();
@@ -121,8 +123,15 @@ function DetailInfo(props) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (e) => {
+    if (u_data === "") {
+      alert("로그인 후, 이용가능합니다");
+      setOpen(false);
+      navi("../../../user/login");
+      return;
+    }
     setOpen(true);
   };
+  // console.log("dd:", u_data === "");
 
   const handleClose = () => {
     setAddressData("");
@@ -170,7 +179,8 @@ function DetailInfo(props) {
 
   //결제
   const requestBtn = (e) => {
-    setOpen(false);
+    // setOpen(false);
+
     let t_name = t_nameref.current.value;
     let t_hp = t_hpref.current.value;
     let t_addr = t_addrref.current.value;
@@ -184,12 +194,10 @@ function DetailInfo(props) {
       t_addrdetail === "" ||
       t_email === ""
     ) {
-      Swal.showValidationMessage(
-        `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-      );
-      return false;
+      alert("정보가 누락되었습니다");
+      return;
     }
-
+    setOpen(false);
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp81470772"); // 가맹점 식별 코드
 
@@ -595,7 +603,7 @@ function DetailInfo(props) {
   }
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h1>{row.category}</h1>
       <br />
       <h3>{row.brand}</h3>
@@ -608,6 +616,11 @@ function DetailInfo(props) {
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         원
       </h5>
+      <br />
+      <div>
+        <Rating name="half-rating" value={star} precision={0.1} readOnly />(
+        {star})
+      </div>
       <br />
       <div>
         <p>옵션 선택</p>
@@ -630,37 +643,47 @@ function DetailInfo(props) {
       </div>
       <br />
       {itemlist && itemlist.p_size ? (
-        <div
-          style={{
-            border: "1px solid gray",
-            backgroundColor: "lightgray",
-            width: "50%",
-            float: "right",
-            padding: "20px",
-          }}
-        >
-          <Close
-            style={{ float: "right", cursor: "pointer" }}
-            onClick={closeEvent}
-          ></Close>
-          <div style={{ width: "80%" }}>
-            <p>{itemlist.p_name}</p>
-            <p>사이즈 : {itemlist.p_size}</p>
-            <p>수량 : {itemlist.amount}</p>
+        <Card>
+          <div
+            style={{
+              backgroundColor: "white",
+              width: "90%",
+              margin: "0 auto",
+              padding: "20px",
+            }}
+          >
+            <Close
+              style={{ float: "right", cursor: "pointer" }}
+              onClick={closeEvent}
+            ></Close>
+            <div style={{ width: "80%" }}>
+              <p>{itemlist.p_name}</p>
 
-            <h5>
-              총 결제 금액 :
-              {Number(row.price * amount)
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              원
-            </h5>
+              {itemlist &&
+              (itemlist.category === "샌들" ||
+                itemlist.category === "슬리퍼" ||
+                itemlist.category === "스니커즈" ||
+                itemlist.category === "로퍼/플랫") ? (
+                <p>사이즈 : {itemlist.p_size}mm</p>
+              ) : (
+                <p>사이즈 : {itemlist.p_size}</p>
+              )}
+              <p>수량 : {itemlist.amount}</p>
+
+              <h5>
+                총 결제 금액 :
+                {Number(row.price * amount)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                원
+              </h5>
+            </div>
           </div>
-        </div>
+        </Card>
       ) : (
         <></>
       )}
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", marginTop: "30px" }}>
         {itemlist && itemlist.p_size ? (
           <button
             type="button"
@@ -806,14 +829,10 @@ function DetailInfo(props) {
               </form>
             </DialogContent>
             <DialogActions>
-              <Button
-                variant="contained"
-                onClick={requestBtn}
-                color="secondary"
-              >
+              <Button variant="contained" onClick={requestBtn} color="primary">
                 결제하기
               </Button>
-              <Button variant="outlined" onClick={handleClose} color="danger">
+              <Button variant="outlined" onClick={handleClose} color="default">
                 취소
               </Button>
             </DialogActions>

@@ -40,4 +40,5 @@ public class TradeDto {
     private int star;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
     private Timestamp writeday;
+    private String u_name;
 }
