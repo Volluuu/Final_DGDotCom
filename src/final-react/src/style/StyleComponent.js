@@ -13,6 +13,7 @@ const StyleComponent = (props) => {
     const [userData, setUserData] = useState({});
     const [genderImg, setGenderImg] = useState('');
     const [check, setCheck] = useState(false);
+    const [like, setLike] = useState(0);
     const getUser = () => {
         const res = axios.get(`http://localhost:9003/style/user/num?num=${elt.u_num}`).then(r => {
             setUserData(r.data);
@@ -23,29 +24,44 @@ const StyleComponent = (props) => {
     }
 
     //좋아요 버튼을 눌렀을 때 색깔이 바뀌는 이벤트 + axios를 호출하여 like 수를 바꿔주는 이벤트
-    const likeChange = e => {
+    const likeChange = async e => {
         e.preventDefault();
+        if(sessionStorage.loginok===undefined) {
+            alert("로그인 한 후 좋아요를 누를 수 있어요");
+            return;
+        }
         if(check) {
-            setCheck(false);
+            await setCheck(false);
             //게시글의 like count를 -1하는 axios 호출 ***************************************************************
+            await axios.post(`http://localhost:9003/style/list/like/substract/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
+                alert("좋아요 감소");
+                getLikeCount();
+            })
         } else {
             setCheck(true);
             //게시글의 like count를 +1하는 axios 호출 ***************************************************************
+            await axios.post(`http://localhost:9003/style/list/like/add/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
+                alert("좋아요 증가");
+                getLikeCount();
+            })
         }
     }
     //axios를 호출하여 커멘트의 갯수를 가져오는 함수
-    const getCommentCount = () => {
-
+    const getLikeCount = () => {
+        axios.get(`http://localhost:9003/style/list/like?style_num=${elt.style_num}`).then(r=>{
+            setLike(r.data);
+        })
     }
 
 
     useEffect(() => {
         getUser();
+        getLikeCount();
     }, []);
 
     return (
         <WrapperDiv>
-            <MyStyleDetail elt={elt} key={elt.style_num}>
+            <MyStyleDetail elt={elt} key={elt.style_num} gender={genderImg} userData={userData}>
                 <SocialImg src={imgSrc}/>
             </MyStyleDetail>
             <CardDetail>
@@ -67,15 +83,17 @@ const StyleComponent = (props) => {
                             check === true? <ThumbUpAltIcon onClick={likeChange} fontSize={"small"} style={{marginRight: "3px", color:"#444" ,cursor:"pointer"}}/> :
                                 <ThumbUpAltOutlinedIcon onClick={likeChange} fontSize={"small"} style={{marginRight: "3px", cursor:"pointer"}}/>
 
-                    }{elt.likes}
-                    <SmsOutlinedIcon fontSize={"small"} style={{marginLeft: "5px", marginRight: "3px"}}/>{elt.comment}
+                    }
+                    <div style={{height:"20px", lineHeight:"22px", marginRight:"5px"}}>{like}</div>
+                    <MyStyleDetail elt={elt} key={elt.style_num} gender={genderImg} userData={userData}>
+                        <SmsOutlinedIcon fontSize={"small"} style={{marginLeft: "5px", marginRight: "3px"}}/>{elt.comment}
+                    </MyStyleDetail>
                 </div>
                 <div className="product_list">
                     {
                         elt.p_list.split(",").map((elt,idx)=><SelectedProduct elt={elt} key={elt}/>)
                     }
                 </div>
-
             </CardDetail>
         </WrapperDiv>
     );
@@ -115,7 +133,9 @@ const CardDetail = styled.div`
   }
 
   & > div.likeAndComment{
+    display: flex;
     color:#AAA;
+    line-height: 50%;
   }
 `
 export default React.memo(StyleComponent);

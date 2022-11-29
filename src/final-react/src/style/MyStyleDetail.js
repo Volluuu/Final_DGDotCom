@@ -45,7 +45,8 @@ const DialogContent = withStyles((theme) => ({
 }))(MuiDialogContent);
 
 export default function MyStyleDetail(props) {
-    const {children, elt} = props;
+    const {children, elt, genderImg, userData} = props;
+    console.log(genderImg);
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -57,13 +58,13 @@ export default function MyStyleDetail(props) {
 
     return (
         <div>
-            <button onClick={handleClickOpen}>
+            <button onClick={handleClickOpen} style={{color:"#AAA"}}>
                 {children}
             </button>
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} fullWidth={true}
                     maxWidth={"lg"}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {elt.u_num} : u_num을 사용해서 axios하기
+                    상세보기
                 </DialogTitle>
                 <DialogContent dividers>
                     <WrapperDiv>
@@ -73,10 +74,20 @@ export default function MyStyleDetail(props) {
 
                         <CommentDiv>
                             <UserInfo>
-                                {elt.content}
+                                <div className="user_name">
+                                    <img src={`${userData.gender}.png`} alt="" style={{width: "24px", marginRight: "10px"}}/>
+                                    {userData.u_name}</div>
+                                <div className="text_box">
+                                    {elt.content}
+                                </div>
+                                <div className="tag_box">
+                                    {
+                                        elt.tag.split(",").map((elt, idx) => <span key={elt} style={{marginRight: "3px"}}>#{elt}</span>)
+                                    }
+                                </div>
                             </UserInfo>
                             <CommentList>
-                                <StyleComment/>
+                                <StyleComment style={elt}/>
                             </CommentList>
                         </CommentDiv>
                     </WrapperDiv>
@@ -101,13 +112,30 @@ const ImgDiv = styled.div`
 `
 const CommentDiv = styled.div`
   width: 30%;
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
 `
 
 const UserInfo = styled.div`
   width: 100%;
-  height: 10%;
+  height: auto;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  & > div.text_box {
+    width: 100%;
+    word-break: break-all;
+    flex-wrap: wrap;
+  }
+
+  & > div.tag_box {
+    margin-bottom: 5px;
+  }
+  & > .user_name {
+    font-size: 15px;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
 `
 const CommentList = styled.div`
   width: 100%;

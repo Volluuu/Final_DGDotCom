@@ -11,7 +11,9 @@ import data.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -45,16 +47,69 @@ public class StyleController {
 		return mapper.getStyleListSelectByTag(tag);
 	}
 
-	//*****************************************************댓글 관련 Controller ****************************************
-	@GetMapping("/comment/root")
-	public List<CommentDto> get() {
-		return mapper.getAllComment();
+	@GetMapping("/list/like")
+	public int getLikeContent(@RequestParam int style_num) {
+		if (mapper.getLikeCount(style_num) == 0) {
+			return 0;
+		}
+		return mapper.getLikeCount(style_num);
 	}
 
-	@GetMapping("/comment/reply")
-	public List<CommentDto> getReply(@RequestParam int parent) {
-		return mapper.getReply(parent);
+	@PostMapping("list/like/add")
+	public void addLike(@RequestParam int u_num, @RequestParam int style_num) {
+		Map<String, Integer> map = new HashMap<>();
+		map.put("u_num", u_num);
+		map.put("style_num", style_num);
+		mapper.addLike(map);
 	}
+
+	@PostMapping("list/like/substract")
+	public void substractLike(@RequestParam int u_num, @RequestParam int style_num) {
+		Map<String, Integer> map = new HashMap<>();
+		map.put("u_num", u_num);
+		map.put("style_num", style_num);
+		mapper.substractLike(map);
+	}
+
+
+
+
+	//*****************************************************댓글 관련 Controller ****************************************
+	@GetMapping("/comment/root")
+	public List<CommentDto> get(@RequestParam int style_num) {
+		return mapper.getAllComment(style_num);
+	}
+
+//	@GetMapping("/comment/root")
+//	public Map<String, Object> getCommentData(@RequestParam int style_num) {
+//		return mapper.getAllComment(style_num);
+//	}
+
+	@GetMapping("/comment/reply")
+	public List<CommentDto> getReply(@RequestParam Map<String, Object> allParameters)
+	{
+		return mapper.getReply(allParameters);
+	}
+
+	@PostMapping("/comment/insert")
+	@ResponseBody
+	public void insertComment(@RequestParam Map<String, Object> allParameters) {
+		mapper.insertComment(allParameters);
+	}
+
+	@PostMapping("/comment/revise")
+	public void reviseComment(@RequestParam Map<String, Object> allParameters) {
+		mapper.reviseComment(allParameters);
+	}
+
+	@PostMapping("/comment/delete")
+	public void deleteComment(@RequestParam int comment_num) {
+		mapper.deleteComment(comment_num);
+	}
+
+
+
+
 
 	//*****************************************************유저 정보 반환 관련 Controller ****************************************
 	@GetMapping("/user/num")

@@ -24,8 +24,8 @@ const MyStyle = () => {
     }
     //********************************************isActive 관련*****************************************************
     const [isActive, setIsActive] = useState({
-        pop: true,
-        new: false
+        pop: false,
+        new: true
     })
     const activeNew = e => {
         setIsActive({
@@ -65,8 +65,8 @@ const MyStyle = () => {
             <div>
                 <StyledTabList>
                     <div>
-                        <PopAndNew onClick={activePop} className={isActive.pop ? "active" : ""}>인기</PopAndNew>
                         <PopAndNew onClick={activeNew} className={isActive.new ? "active" : ""}>최신</PopAndNew>
+                        <PopAndNew onClick={activePop} className={isActive.pop ? "active" : ""}>인기</PopAndNew>
                     </div>
                 </StyledTabList>
                 <KeywordBind>

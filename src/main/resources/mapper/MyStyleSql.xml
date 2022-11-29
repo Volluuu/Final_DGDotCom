@@ -6,17 +6,41 @@
         select * from mystyle order by style_num
     </select>
     <select id="getAllStyleOrderByPop" resultType="StyleDto">
-        select * from mystyle order by likes desc
+        select * from mystyle order by (select count(*) from liketable where style_num = mystyle.style_num) desc
     </select>
     <select id="getStyleListSelectByTag" parameterType="string" resultType="styleDto">
         select * from mystyle where tag like concat('%',#{tag},'%')
     </select>
-<!--    **********************************댓글 관련 SQL ****************************************-->
-    <select id="getAllComment" resultType="CommentDto">
-        select * from comment where u_num = 5 and style_num = 5 and root="yes"
-    </select>
-    <select id="getReply" parameterType="int" resultType="CommentDto">
-        select * from comment where u_num = 5 and style_num = 5 and parent=#{parent}
-    </select>
 
+
+<!--    **********************************댓글 관련 SQL ****************************************-->
+    <select id="getAllComment" parameterType="int" resultType="CommentDto">
+        select * from comment where style_num = #{style_num} and root="yes"
+    </select>
+    <select id="getReply" parameterType="Map" resultType="CommentDto">
+        select * from comment where style_num = #{style_num} and parent=#{parent}
+    </select>
+    <insert id="insertComment" parameterType="Map">
+        insert into comment (comment_num, u_num, style_num, content, root, parent) values
+        (null, #{u_num}, #{style_num}, #{content}, #{root}, #{parent})
+    </insert>
+    <update id="reviseComment" parameterType="Map">
+        update comment set content = #{content} where comment_num = #{comment_num}
+    </update>
+    <delete id="deleteComment" parameterType="int">
+        delete from comment where comment_num = #{comment_num}
+    </delete>
+
+
+
+<!--각 게시글마다 좋아요를 수정하는 SQL-->
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) from liketable where style_num = #{style_num}
+    </select>
+    <insert id="addLike" parameterType="Map">
+        insert liketable (like_num, u_num, style_num) values(null, #{u_num}, #{style_num})
+    </insert>
+    <delete id="substractLike" parameterType="Map">
+        delete from liketable where u_num = #{u_num} and style_num = #{style_num}
+    </delete>
 </mapper>
