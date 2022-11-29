@@ -49,7 +49,6 @@ function MypageBasket(props) {
     axios.get(cartListUrl).then((res) => {
       // console.log("cart data 호출 성공");
       setCartlist(res.data);
-      // console.dir("data:" + JSON.stringify(cartlist));
     });
   };
 
@@ -241,6 +240,7 @@ function MypageBasket(props) {
   const t_addrref = useRef("");
   const t_addrdetailref = useRef("");
   const t_emailref = useRef("");
+  console.log("cc:", t_hpref);
 
   //결제 이벤트
   const requestBtn = (e) => {
@@ -318,12 +318,13 @@ function MypageBasket(props) {
             timer: 1500,
           });
 
-          setTimeout(() => {
-            for (let i = 0; i < checkList.length; i++) {
-              let tradeInsertUrl = localStorage.url + "/trade/insert";
+          for (let i = 0; i < checkList.length; i++) {
+            let tradeInsertUrl = localStorage.url + "/trade/insert";
 
-              axios
-                .post(tradeInsertUrl, {
+            axios
+              .post(
+                tradeInsertUrl,
+                {
                   u_num,
                   p_num: checkList[i].p_num,
                   merchant_uid: rsp.merchant_uid,
@@ -334,22 +335,26 @@ function MypageBasket(props) {
                   count: checkList[i].amount,
                   lastprice: sumPayment,
                   p_size: checkList[i].p_size,
-                  state: "결제완료",
-                })
-                .then((res) => {
-                  let deleteUrl =
-                    localStorage.url +
-                    "/cart/delete?c_num=" +
-                    checkList[i].c_num;
-                  axios.get(deleteUrl).then((res) => {
-                    window.location.reload();
-                  });
-                })
-                .catch((error) => {
-                  console.log("실패" + error);
+                  state: "배송 전",
+                },
+                {
+                  withCredentials: true,
+                  headers: {
+                    Authorization: `Bearer ${localStorage.accessToken}`,
+                  },
+                }
+              )
+              .then((res) => {
+                let deleteUrl =
+                  localStorage.url + "/cart/delete?c_num=" + checkList[i].c_num;
+                axios.get(deleteUrl).then((res) => {
+                  window.location.reload();
                 });
-            }
-          }, 2000);
+              })
+              .catch((error) => {
+                console.log("실패" + error);
+              });
+          }
         } else {
           // 결제 실패 시 로직,
           alert("실패 :" + rsp.error_msg);
@@ -358,185 +363,6 @@ function MypageBasket(props) {
     );
     //--------------------------------------------------------------------
   };
-  // console.log("data:" + JSON.stringify(cartlist));
-  //결제 버튼 클릭 시, Swal 이벤트
-  // function requestBtn() {
-  //   // let b = sel();
-
-  //   Swal.fire({
-  //     title: "결제 정보 입력",
-  //     html: `<h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 이름</h6><br/>
-  //         <input type="text" id="o_name" class="swal2-input" placeholder="구매자 이름 입력" value=${u_data.u_name} style="width:80%">
-  //       <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 연락처 </h6><br/>
-  //         <input type="text" id="o_hp" class="swal2-input" placeholder="전화번호 입력(-포함)" maxLength="13" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" value=${u_data.hp} style="width:80%">
-  //       <h6 style="float:left;margin-left:50px;margin-top:30px">배송받을 주소</h6><br/>
-  //       <div class="input-group">
-  //         <input type="address" id="addrcode" class="swal2-input" placeholder="우편번호" style="width:40%; margin-left:45px" value=${localStorage.address}>
-  //         <button type='button' class="btn btn-secondary" style="width:30%; height:50px; margin-top:20px" onclick='window.open("AddressApi", "", "width=500,height=700")' value=${inputZipCodeValue}>주소찾기</button>
-  //       </div>
-  //        <input type="address" id="o_addr" class="swal2-input" placeholder="주소입력" style="width:80%"  >
-  //        <input type="address" id="o_addrdetail" class="swal2-input" placeholder="상세 주소 입력" style="width:80%">
-  //       <h6 style="float:left;margin-left:50px;margin-top:30px">구매 이메일</h6><br/>
-  //         <input type="email" id="o_email" class="swal2-input" placeholder="이메일 입력" value=${u_data.email} style="width:80%">
-  //         `,
-  //     customClass: {
-  //       confirmButton: "btn btn-success",
-  //       cancelButton: "btn btn-danger",
-  //     },
-  //     confirmButtonText: "결제하기",
-  //     focusConfirm: false,
-  //     allowOutsideClick: false,
-  //     allowEscapeKey: false,
-  //     showCancelButton: true,
-  //     preConfirm: () => {
-  //       // const o_name = Swal.getPopup().querySelector("#o_name").value;
-  //       const o_name = document.getElementById("o_name").value;
-  //       const o_hp = document.getElementById("o_hp").value;
-  //       const addrcode = document.getElementById("addrcode").value;
-  //       const o_addr = document.getElementById("o_addr").value;
-  //       const o_addrdetail = document.getElementById("o_addrdetail").value;
-  //       const o_email = document.getElementById("o_email").value;
-  //       if (
-  //         o_name === "" ||
-  //         o_addr === "" ||
-  //         o_hp === "" ||
-  //         o_email === "" ||
-  //         addrcode === "" ||
-  //         o_addrdetail === ""
-  //       ) {
-  //         Swal.showValidationMessage(
-  //           `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-  //         );
-  //         return false;
-  //       }
-
-  //       return {
-  //         o_name,
-  //         o_hp,
-  //         o_addr,
-  //         addrcode,
-  //         o_addrdetail,
-  //         o_email,
-  //       };
-  //     },
-  //   }).then((result) => {
-  //     // console.dir(result);
-  //     let p_nameArr = new Array();
-  //     for (let i = 0; i < checkList.length; i++) {
-  //       p_nameArr += checkList[i].p_name;
-  //       // console.log("aa:" + p_nameArr);
-  //     }
-
-  //     if (result.isConfirmed) {
-  //       //---------------------------------------------------------------
-
-  //       const IMP = window.IMP; // 생략 가능
-  //       IMP.init("imp81470772"); // 가맹점 식별 코드
-
-  //       // IMP.request_pay(param, callback) 결제창 호출
-  //       IMP.request_pay(
-  //         {
-  //           // param
-  //           // pg: "html5_inicis.INIpayTest", // PG 모듈
-  //           pg: "kakaopay.TC0ONETIME", // PG 모듈
-  //           pay_method: "card", // 지불 수단
-  //           merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-  //           name:
-  //             p_nameArr.slice(0, 12) +
-  //             " ... 외 " +
-  //             (checkList.length - 1) +
-  //             "건", // 상품명
-  //           // amount: sumPayment, // 가격
-  //           amount: "100",
-  //           buyer_email: result.value.o_email,
-  //           buyer_name: result.value.o_name, // 구매자 이름
-  //           buyer_tel: result.value.o_hp, // 구매자 연락처
-  //           buyer_addr:
-  //             "(" +
-  //             result.value.addrcode +
-  //             ")" +
-  //             result.value.o_addr +
-  //             ", " +
-  //             result.value.o_addrdetail, // 구매자 주소지
-  //           // buyer_postcode: "01181", // 구매자 우편번호
-  //           // m_redirect_url: localStorage.url+"/c"
-  //         },
-  //         (rsp) => {
-  //           // callback
-  //           // console.log("rsp:" + JSON.stringify(rsp));
-  //           if (rsp.success) {
-  //             // // 결제 성공 시, 출력 창
-  //             // let msg = "결제가 완료되었습니다.\n";
-  //             // msg += "고유ID : " + rsp.imp_uid + "\n";
-  //             // msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-  //             // msg += "결제 선택 : " + rsp.pg + "\n";
-  //             // msg += "결제 방식 : " + rsp.pay_method + "\n";
-  //             // msg += "결제 금액 : " + rsp.paid_amount + "\n";
-  //             // // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-  //             // msg += "상품명 : " + rsp.name + "\n";
-  //             // msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-  //             // msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-  //             // msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-  //             // msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
-
-  //             // alert("결제 성공:" + msg);
-  //             Swal.fire({
-  //               position: "center",
-  //               icon: "success",
-  //               title: "결제가 완료되었습니다",
-  //               showConfirmButton: false,
-  //               timer: 1500,
-  //             });
-
-  //             for (let i = 0; i < checkList.length; i++) {
-  //               let tradeInsertUrl = localStorage.url + "/trade/insert";
-
-  //               axios
-  //                 .post(tradeInsertUrl, {
-  //                   u_num,
-  //                   p_num: checkList[i].p_num,
-  //                   merchant_uid: rsp.merchant_uid,
-  //                   t_name: rsp.buyer_name,
-  //                   t_hp: rsp.buyer_tel,
-  //                   t_email: rsp.buyer_email,
-  //                   t_addr: rsp.buyer_addr,
-  //                   count: checkList[i].amount,
-  //                   lastprice: sumPayment,
-  //                   p_size: checkList[i].p_size,
-  //                   state: "결제완료",
-  //                 })
-  //                 .then((res) => {
-  //                   let deleteUrl =
-  //                     localStorage.url +
-  //                     "/cart/delete?c_num=" +
-  //                     checkList[i].c_num;
-
-  //                   axios.get(deleteUrl).then((res) => {
-  //                     window.location.reload();
-  //                   });
-  //                 })
-  //                 .catch((error) => {
-  //                   console.log("실패" + error);
-  //                 });
-  //             }
-  //           } else {
-  //             // 결제 실패 시 로직,
-  //             alert("실패 :" + rsp.error_msg);
-  //           }
-  //         }
-  //       );
-  //       //--------------------------------------------------------------------
-  //     } else {
-  //       Swal.fire({
-  //         position: "center",
-  //         icon: "error",
-  //         title: "결제가 취소되었습니다",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //     }
-  //   });
-  // }
 
   //페이지네이션
   const { currentPage } = useParams("");
@@ -562,6 +388,13 @@ function MypageBasket(props) {
   useEffect(() => {
     totalPay();
   }, [checkList]);
+
+  //유효성 검사
+  const validation = (e) => {
+    if (e.target.value.length < 13) {
+      return false;
+    }
+  };
 
   return (
     <div data-v-f263fda4="" data-v-39b2348a="" className="content_area">
@@ -765,27 +598,30 @@ function MypageBasket(props) {
                   ) : (
                     <></>
                   )}
-
                   {cartlist &&
-                    cartlist.carr.map((p, i) => (
-                      <Link
-                        key={i}
-                        style={{
-                          color: p === Number(currentPage) ? "blue" : "black",
-                          textShadow:
-                            p === Number(currentPage)
-                              ? "5px 5px 5px gray"
-                              : "none",
-                          fontWeight: "bold",
-                          boxSizing: "border-box",
-                          width: "30px",
-                          height: "30px",
-                        }}
-                        to={`/mypage/cart/${p}`}
-                      >
-                        <li>{p}</li>
-                      </Link>
-                    ))}
+                    cartlist.carr.map((p, i) =>
+                      cartlist.carr == 1 ? (
+                        <React.Fragment key={i}></React.Fragment>
+                      ) : (
+                        <Link
+                          key={i}
+                          style={{
+                            color: p === Number(currentPage) ? "blue" : "black",
+                            textShadow:
+                              p === Number(currentPage)
+                                ? "5px 5px 5px gray"
+                                : "none",
+                            fontWeight: "bold",
+                            boxSizing: "border-box",
+                            width: "30px",
+                            height: "30px",
+                          }}
+                          to={`/mypage/cart/${p}`}
+                        >
+                          <li>{p}</li>
+                        </Link>
+                      )
+                    )}
                   {cartlist && cartlist.endPage < cartlist.totalPage ? (
                     <Link to={`/mypage/cart/${cartlist.endPage + 1}`}>
                       <li>&gt;</li>
@@ -886,6 +722,7 @@ function MypageBasket(props) {
               name="t_name"
               label="배송받을 이름"
               inputRef={t_nameref}
+              error={t_nameref.current.value === "" ? true : false}
               type="text"
               fullWidth
               defaultValue={u_data.u_name}
@@ -898,11 +735,18 @@ function MypageBasket(props) {
               id="t_hp"
               name="t_hp"
               inputRef={t_hpref}
+              error={t_hpref.current.value == "" ? true : false}
               label="배송받을 연락처"
               type="text"
               fullWidth
               defaultValue={u_data.hp}
               onChange={handleInput}
+              inputProps={{ maxLength: 13 }}
+              onInput={(e) => {
+                e.target.value = e.target.value
+                  .replace(/[^0-9]/g, "")
+                  .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+              }}
             />
             <TextField
               required
@@ -911,10 +755,11 @@ function MypageBasket(props) {
               id="t_addr"
               name="t_addr"
               inputRef={t_addrref}
+              error={t_addrref.current.value === "" ? true : false}
               label="배송받을 주소"
               type="text"
               style={{ width: "80%" }}
-              defaultValue={u_data.addr}
+              defaultValue={u_data && u_data.addr.split(",")[0].substring(0)}
               onChange={handleInput}
               value={addressData.address}
             />
@@ -946,7 +791,9 @@ function MypageBasket(props) {
               margin="dense"
               id="t_addrdetail"
               name="t_addrdetail"
+              defaultValue={u_data && u_data.addr.split(",")[1].substring(1)}
               inputRef={t_addrdetailref}
+              error={t_addrdetailref.current.value === "" ? true : false}
               label="상세 주소"
               type="text"
               fullWidth
@@ -960,6 +807,7 @@ function MypageBasket(props) {
               id="t_email"
               name="t_email"
               inputRef={t_emailref}
+              error={t_emailref.current.value === "" ? true : false}
               label="구매자 email"
               type="email"
               fullWidth
