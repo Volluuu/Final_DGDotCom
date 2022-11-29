@@ -11,9 +11,4 @@ public class HomeController {
     public String home() {
         return "서버 실행 잘 됨";
     }
-
-    @GetMapping("/mypage")
-    public String loginAccess(){
-        return "로그인 됨";
-    }
 }
