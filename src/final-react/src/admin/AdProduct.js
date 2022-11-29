@@ -82,8 +82,6 @@ function AdProduct(props) {
     }
 
 
-    console.log(checkItems.length);
-
     //상품 삭제
     const deleteProduct = (p_num) => {
         const deleteUrl = localStorage.url + "/admin/deleteProduct?p_num=" + p_num
@@ -131,9 +129,6 @@ function AdProduct(props) {
                        onChange={(e) => {
                            setSearchTerm(e.target.value);
                        }}/>
-                {/*<button type='button'*/}
-                {/*onClick={search}*/}
-                {/*id='searchbtn'>검색</button>*/}
             </div>
             <div className='container-fluid'>
                 <div className='row'>
@@ -168,17 +163,7 @@ function AdProduct(props) {
 
                         <tbody className='tbody-hj'>
                         {productdata &&
-                            _perPage
-                            //     .filter((r) => {
-                            //     if (searchTerm == '') {
-                            //         return r;
-                            //     } else if (r.p_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            //         r.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            //         r.brand.toLowerCase().includes(searchTerm.toLowerCase())) {
-                            //         return r;
-                            //     }
-                            // })
-                                .currentData().map((r, idx) =>
+                            _perPage.currentData().map((r, idx) =>
                                 <tr key={idx} className='tr-hj' align='center'>
                                     <td className='td-hj'>
                                         <Checkbox
@@ -214,10 +199,6 @@ function AdProduct(props) {
                     </table>
                     <div>
                         <Pagination
-
-
-
-
                             onChange={handleChange}
                             count={pcount}
                             page={page}

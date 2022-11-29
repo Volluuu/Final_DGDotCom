@@ -4,7 +4,8 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import Checkbox from "@material-ui/core/Checkbox";
 import './button.css';
-import Pagination from 'react-js-pagination';
+import {Pagination} from "@mui/material";
+import UsePagination from "./usePagination";
 import './page.css'
 import './search.css'
 
@@ -13,23 +14,20 @@ import './search.css'
 function UserInfo({path}) {
     // const {currentPage} = useParams();
     // console.log("currentPage=" + currentPage);
+    const [userData, setUserData] = useState([]);
     const [checkItems, setCheckItems] = useState([]);
     const [page, setPage] = useState(1);
-    const [userData, setUserData] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    let items = 4;
+    let items = 6;
+    const [searchList, setSearchList] = useState([]);
+    const pcount = Math.ceil(searchList.length / items);
+    const _perPage = UsePagination(searchList, items);
 
-    const handlePageChange = (page) => {
-        setPage(page);
+    const handleChange = (e, p) => {
+        setPage(p);
+        _perPage.jump(p);
+        setCheckItems([]);
     };
-
-    const getAllList = () => {
-        let url = localStorage.url + "/admin/user";
-        axios.get(url)
-            .then(res => {
-                setUserData(res.data)
-            })
-    }
 
 
     // 체크박스 전체 단일 개체 선택
@@ -77,8 +75,33 @@ function UserInfo({path}) {
     }
 
     //검색
+    const search = () => {
+        setSearchList(userData.filter((r) =>{
+            if(searchTerm == ''){
+                return r;
+            }else if(r.u_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                r.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                r.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                r.addr.toLowerCase().includes(searchTerm.toLowerCase()))
+            {
+                return r;
+            }
+        }))
+    }
 
+    const getAllList = () => {
+        let url = localStorage.url + "/admin/user";
+        axios.get(url)
+            .then(res => {
+                setUserData(res.data);
+                setSearchList(res.data);
+            })
+    }
 
+    useEffect(() =>{
+        search();
+
+    }, [searchTerm])
     //currentPage 값이 변경될때마다 함수 다시 호출
     useEffect(() => {
         getAllList();
@@ -87,24 +110,16 @@ function UserInfo({path}) {
     return (
 
         <div className='container-fluid'>
-            {/*<input*/}
-            {/*    className="input-search"*/}
-            {/*    type="text"*/}
-            {/*    maxLength="25"*/}
-            {/*    placeholder="파일명 또는 태그명을 입력해주세요"*/}
-            {/*    onChange={(e) => {*/}
-            {/*        setSearchTerm(e.target.value);*/}
-            {/*    }}*/}
-            {/*/>*/}
-
             <div className="search">
                 <input type="text"
+                       style={{margin:'0 -12px'}}
                        className='search-input'
                        placeholder="검색어 입력"
                        onChange={(e) => {
                            setSearchTerm(e.target.value);
                        }}/>
             </div>
+
             <div className='row'>
                 {/*<h5>총 {posts.utotalCount}명</h5>*/}
                 <table className='table-hj'>
@@ -136,18 +151,7 @@ function UserInfo({path}) {
                     <tbody className='tbody-hj'>
                     {
                         userData&&
-                        userData.filter((r) =>{
-                            if(searchTerm == ''){
-                                return r;
-                            }else if(r.u_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                r.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    r.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                        r.addr.toLowerCase().includes(searchTerm.toLowerCase()))
-                            {
-                                return r;
-                            }
-                        })
-                            .map((r, idx) =>
+                        _perPage.currentData().map((r, idx) =>
                                 <tr key={idx} className='tr-hj' align='center'>
                                     <td className='td-hj'><Checkbox
                                         type={"checkbox"}
@@ -164,10 +168,11 @@ function UserInfo({path}) {
                                     <td className='td-hj'>{r.gaip}</td>
                                     <td className='td-hj'>{r.point}</td>
                                 </tr>
-                    ).slice(
-                            items * (page - 1),
-                            items * (page - 1) + items
-                        )
+                    )
+                        //     .slice(
+                        //     items * (page - 1),
+                        //     items * (page - 1) + items
+                        // )
                     }
 
 
@@ -175,16 +180,12 @@ function UserInfo({path}) {
                 </table>
 
                 <div style={{}}>
-                <Pagination
-                    activePage={page}
-                    itemsCountPerPage={4}
-                    totalItemsCount={userData.length}
-                    pageRangeDisplayed={5}
-                    prevPageText={'<'}
-                    nextPageText={'>'}
-                    onChange={handlePageChange}
-                />
-                </div>
+                    <Pagination
+                        onChange={handleChange}
+                        count={pcount}
+                        page={page}
+                    />
+
                 <div style={{float: 'right'}}>
                     <button type='button'
                             className="hj-btn hj-btn-red"
@@ -193,6 +194,7 @@ function UserInfo({path}) {
                                 deleteUser(checkItems);
                             }}>삭제
                     </button>
+                </div>
                 </div>
             </div>
         </div>
