@@ -23,12 +23,16 @@
         where u_num = #{u_num}
     </delete>
 
-    <!--회원 페이징처리-->
-    <select id="AdminUserPaging" parameterType="Map" resultType="UserDto">
-        select *
-        from user
-        order by u_num desc limit #{startnum}, #{perpage}
-    </select>
+<!--    &lt;!&ndash;회원 페이징처리&ndash;&gt;-->
+<!--    <select id="AdminUserPaging" parameterType="Map" resultType="UserDto">-->
+<!--        select *-->
+<!--        from user-->
+<!--        <if test="searchcolumn!='' and searchcolumn!=null and searchword!=null">-->
+<!--            where ${searchcolumn} like concat('%',#{searchword},'%')-->
+<!--        </if>-->
+<!--        order by u_num desc limit #{startnum}, #{perpage}-->
+<!--    </select>-->
+
     <!--=================================상품시작=============================================-->
     <!--총 상품수-->
     <select id="TotalProduct" resultType="int">
@@ -42,7 +46,7 @@
         from product
     </select>
 
-    <select id="ProductPaging" parameterType="Map" resultType="JoinDto">
+    <select id="AllProduct" resultType="JoinDto">
         SELECT product.p_num,
                product.category,
                product.photo,
@@ -55,7 +59,6 @@
                inven.amount
         from product
                  left join inven on product.p_num = inven.p_num
-        order by product.p_num desc limit #{startnum},#{perpage}
     </select>
 
     <!--상품 정보-->

@@ -2,8 +2,8 @@ import React from 'react';
 import DashBoard from "./DashBoard";
 import UserInfo from "./UserInfo";
 import AdProduct from "./AdProduct";
-import Cs from "./Cs";
-import Banner from "./Banner";
+// import Cs from "./Cs";
+// import Banner from "./Banner";
 import {useParams} from "react-router-dom";
 import logo from "../admin/logo192.png";
 import InsertForm from "./insertForm";
@@ -154,14 +154,14 @@ function AdminMenu(props) {
                             <DeliveryComplete/>
                         }
 
-                        {
-                            path==="cs" &&
-                            <Cs/>
-                        }
-                        {
-                            path==="banner" &&
-                            <Banner/>
-                        }
+                        {/*{*/}
+                        {/*    path==="cs" &&*/}
+                        {/*    <Cs/>*/}
+                        {/*}*/}
+                        {/*{*/}
+                        {/*    path==="banner" &&*/}
+                        {/*    <Banner/>*/}
+                        {/*}*/}
 
                     </div>
                 </div>

@@ -17,10 +17,13 @@ public interface AdminMapper {
     public List<UserDto> AdminGetAllUser();
 
     /* 회원정보 페이징을위한 메서드 */
-    public List<UserDto> AdminUserPaging(Map<String,Integer> map);
+//    public List<UserDto> AdminUserPaging(Map<String,Integer> map);
 
     /* 회원정보를 삭제하기위한 메서드 */
     public String DeleteUser(int u_num);
+
+    /* 회원 검색 메서드*/
+    public List<UserDto> SearchUser(String u_name);
 
     /* -------------------상품시작------------------- */
 
@@ -29,7 +32,7 @@ public interface AdminMapper {
     public List<ProductDto> GetAllProduct();
 
     /* 상품정보를 불러오기위한 메서드 */
-    public List<JoinDto> ProductPaging(Map<String,Integer> map);
+    public List<JoinDto> AllProduct();
 
     /* 상품을 추가하기위한 메서드 */
     public void InsertProduct(JoinDto dto);
