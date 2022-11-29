@@ -98,17 +98,9 @@ function DetailInfo(props) {
     // console.log("addlist:" + JSON.stringify(itemlist));
   };
 
-  // //여러 데이터 추가 시,
-  // const [addlist, setAddlist] = useState([{ ...itemlist }]);
-  // //배열 추가 이벤트
-  // const additem = (itemlist) => {
-  //   for (let i = 0; i < addlist.length; i++){
-
-  //   } setAddlist(...addlist, itemlist);
-  // };
-
   //유저정보
   const [u_data, setU_data] = useState("");
+
   //유저정보 불러오기
   const userdata = () => {
     let userUrl = localStorage.url + "/cart/userdata?u_num=" + u_num;
@@ -205,7 +197,7 @@ function DetailInfo(props) {
     IMP.request_pay(
       {
         // param
-        // pg: "html5_inicis.INIpayTest", // PG 모듈
+        // pg: "html5_inicis.INIBillTst", // PG 모듈
         pg: "kakaopay.TC0ONETIME", // PG 모듈
         pay_method: "card", // 지불 수단
         merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
@@ -262,7 +254,9 @@ function DetailInfo(props) {
               count: itemlist.amount,
               lastprice: itemlist.price * itemlist.amount,
               p_size: itemlist.p_size,
-              state: "결제완료",
+              state: "배송 전",
+              withCredentials: true,
+              headers: { Authorization: `Bearer ${localStorage.accessToken}` },
             })
             .then((res) => {
               Swal.fire({
@@ -765,6 +759,12 @@ function DetailInfo(props) {
                   fullWidth
                   defaultValue={u_data.hp}
                   onChange={handleInput}
+                  inputProps={{ maxLength: 13 }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value
+                      .replace(/[^0-9]/g, "")
+                      .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+                  }}
                 />
                 <TextField
                   required

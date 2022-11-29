@@ -586,7 +586,17 @@ function MypageOrder(props) {
                         </span>
                       </span>
                       <Link to={`/mypage/orderdetail/${jitem.merchant_uid}`}>
-                        <span style={{ textAlign: "right" }}>
+                        <span
+                          style={{
+                            textAlign: "right",
+                            color:
+                              jitem.state === "배송 전"
+                                ? "#FF0000"
+                                : jitem.state === "배송 중"
+                                ? "#0000FF"
+                                : "#A020F0",
+                          }}
+                        >
                           {jitem.merchant_uid}
                         </span>
                       </Link>
