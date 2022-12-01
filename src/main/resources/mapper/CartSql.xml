@@ -5,16 +5,15 @@
     <select id="userCart" parameterType="int" resultType="UserDto">
         select * from user where u_num = #{u_num}
     </select>
-
-    <!--    총 수량 얻기 ( 페이징처리)-->
-    <select id="getCartCount" resultType="int">
+<!--    총 수량 얻기 ( 페이징처리)-->
+    <select id="getCartCount" parameterType="int" resultType="int">
         select count(*) from cart
     </select>
-
+<!--유저 정보로 된 장바구니 수량 얻기-->
     <select id="getUserCartCount" parameterType="int" resultType="int">
         select count(*) from cart where u_num=#{u_num}
     </select>
-
+<!--장바구니 입력-->
     <insert id="insertCart" parameterType="CartDto">
         insert into cart values (null,#{u_num},#{p_num},#{p_size},#{amount},now())
     </insert>
