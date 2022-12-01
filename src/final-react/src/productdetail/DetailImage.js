@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 
 // 이미지 출력 컴포넌트
@@ -133,6 +134,7 @@ function DetailImage(props) {
             height="500px"
           />
         </div>
+
         <div
           ref={imageZoomRef}
           className="imageZoom"
@@ -152,6 +154,7 @@ function DetailImage(props) {
             zIndex: "1",
           }}
         ></div>
+
         <div ref={boxRef}>
           <div
             ref={cursorBoxRef}
