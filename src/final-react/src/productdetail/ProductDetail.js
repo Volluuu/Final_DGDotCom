@@ -6,6 +6,8 @@ import DetailDelivery from "./DetailDelivery";
 import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
 import DetailReview from "./DetailReview";
+import Footer from "../home/Footer";
+import Detail from "./Detail.css";
 
 function ProductDetail(props) {
   const { p_num } = useParams(); //u_num
@@ -67,77 +69,85 @@ function ProductDetail(props) {
   useEffect(() => {
     avgReview();
   }, [reviewData]);
-  return (
-    <div
-      style={{
-        width: "70%",
-        margin: "0 auto",
-      }}
-    >
-      <br />
-      <h1>상품 상세 정보</h1>
-      <br />
-      <br />
 
+  return (
+    <div>
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          flexWrap: "wrap",
+          width: "70%",
+          margin: "0 auto",
         }}
       >
+        <br />
+        <h1>상품 상세 정보</h1>
+        <br />
+        <br />
+
         <div
           style={{
-            width: "40%",
-            minWidth: "600px",
-            textAlign: "center",
-            cursor: "zoom-in",
-            // border: "1px solid black",
-            position: "relative",
-            height: "100vh",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            flexWrap: "wrap",
           }}
         >
-          <Card>
-            <DetailImage row={productdata} />
-          </Card>
+          <div
+            style={{
+              width: "40%",
+              minWidth: "600px",
+              textAlign: "center",
+              // border: "1px solid black",
+              position: "relative",
+              // position: "fixed",
+              height: "100vh",
+            }}
+          >
+            <Card style={{ cursor: "zoom-in" }}>
+              <DetailImage row={productdata} />
+            </Card>
+          </div>
+          <div
+            style={{
+              width: "40%",
+              minWidth: "600px",
+              // border: "1px solid red",
+              position: "relative",
+            }}
+          >
+            <div>
+              <Card>
+                <DetailInfo
+                  row={productdata}
+                  star={starRate}
+                  rev={avgReviewCnt}
+                />
+              </Card>
+            </div>
+            <br />
+            <div>
+              <Card>
+                <DetailDelivery />
+              </Card>
+            </div>
+          </div>
         </div>
+
+        <br />
+        <br />
         <div
           style={{
-            width: "40%",
-            minWidth: "600px",
-            // border: "1px solid red",
-            position: "relative",
+            width: "100%",
+            margin: "0 auto",
+            // border: "1px solid blue",
+            minHeight: "50vh",
           }}
         >
-          <div>
-            <Card>
-              <DetailInfo
-                row={productdata}
-                star={starRate}
-                rev={avgReviewCnt}
-              />
-            </Card>
-          </div>
-          <br />
-          <div>
-            <Card>
-              <DetailDelivery />
-            </Card>
-          </div>
+          <DetailReview row={reviewData} />
         </div>
       </div>
-
       <br />
-      <br />
-      <div
-        style={{
-          width: "100%",
-          margin: "0 auto",
-          // border: "1px solid blue",
-        }}
-      >
-        <DetailReview row={reviewData} />
+      <div>
+        <Footer />
       </div>
     </div>
   );

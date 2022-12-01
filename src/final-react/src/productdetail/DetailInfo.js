@@ -7,11 +7,7 @@ import {
   DialogTitle,
   TextField,
 } from "@material-ui/core";
-import {
-  AddCircleOutlineRounded,
-  Close,
-  RemoveCircleOutline,
-} from "@material-ui/icons";
+import { AddTwoTone, Close, RemoveTwoTone } from "@material-ui/icons";
 import { Rating } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -497,7 +493,7 @@ function DetailInfo(props) {
             className="form-select"
             p_num={row.p_num}
             name="p_size"
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -525,7 +521,7 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             name="p_size"
             id="p_size"
@@ -557,7 +553,9 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+            }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -589,7 +587,7 @@ function DetailInfo(props) {
         return (
           <select
             className="form-select sizeselect"
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -597,26 +595,21 @@ function DetailInfo(props) {
             <option value="no" disabled>
               선택
             </option>
-            <option value="zero">재고 없음</option>
+            <option value="zero" disabled>
+              재고 없음
+            </option>
           </select>
         );
     }
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>{row.category}</h1>
+    <div style={{ padding: "40px" }}>
+      <h2>{row.category}</h2>
       <br />
       <h3>{row.brand}</h3>
       <h5>{row.p_name}</h5>
 
-      <br />
-      <h5>
-        {Number(row.price)
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-        원
-      </h5>
       <br />
       <div>
         <Rating name="half-rating" value={star} precision={0.1} readOnly />(
@@ -626,55 +619,98 @@ function DetailInfo(props) {
         </Link>
       </div>
       <br />
+      <h5 style={{ textAlign: "right" }}>
+        {Number(row.price)
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        원
+      </h5>
+      <br />
       <div>
         <p>옵션 선택</p>
         {selectform(row.category)}
       </div>
       <br />
-      <div>
-        <p>수량</p>
-        <RemoveCircleOutline
-          value={amount}
-          onClick={subamount}
-          style={{ cursor: "pointer" }}
-        />
-        &nbsp;<span>{amount}</span>&nbsp;
-        <AddCircleOutlineRounded
-          value={amount}
-          onClick={addamount}
-          style={{ cursor: "pointer" }}
-        />
-      </div>
-      <br />
+
       {itemlist && itemlist.p_size ? (
-        <Card>
+        <div style={{ border: "1px solid lightgray" }}>
+          <Close
+            style={{ float: "right", cursor: "pointer" }}
+            onClick={closeEvent}
+          ></Close>
           <div
             style={{
               backgroundColor: "white",
-              width: "90%",
+              // width: "90%",
               margin: "0 auto",
               padding: "20px",
             }}
           >
-            <Close
-              style={{ float: "right", cursor: "pointer" }}
-              onClick={closeEvent}
-            ></Close>
-            <div style={{ width: "80%" }}>
-              <p>{itemlist.p_name}</p>
+            <div>
+              <p style={{ fontWeight: "bold" }}>{itemlist.p_name}</p>
+              <br />
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                {itemlist &&
+                (itemlist.category === "샌들" ||
+                  itemlist.category === "슬리퍼" ||
+                  itemlist.category === "스니커즈" ||
+                  itemlist.category === "로퍼/플랫") ? (
+                  <p
+                    style={{ width: "45%", fontWeight: "bold", color: "gray" }}
+                  >
+                    {itemlist.p_size}mm
+                  </p>
+                ) : (
+                  <p
+                    style={{ width: "45%", fontWeight: "bold", color: "gray" }}
+                  >
+                    {itemlist.p_size}
+                  </p>
+                )}
+                <div style={{ width: "30%" }}>
+                  <div
+                    style={{
+                      width: "62%",
+                      display: "flex",
+                    }}
+                  >
+                    <RemoveTwoTone
+                      value={amount}
+                      onClick={subamount}
+                      style={{
+                        cursor: "pointer",
+                        border: "1px solid lightgray",
+                      }}
+                    />
 
-              {itemlist &&
-              (itemlist.category === "샌들" ||
-                itemlist.category === "슬리퍼" ||
-                itemlist.category === "스니커즈" ||
-                itemlist.category === "로퍼/플랫") ? (
-                <p>사이즈 : {itemlist.p_size}mm</p>
-              ) : (
-                <p>사이즈 : {itemlist.p_size}</p>
-              )}
-              <p>수량 : {itemlist.amount}</p>
+                    <p
+                      style={{
+                        width: "50%",
+                        textAlign: "center",
+                      }}
+                    >
+                      {amount}
+                    </p>
 
-              <h5>
+                    <AddTwoTone
+                      value={amount}
+                      onClick={addamount}
+                      style={{
+                        cursor: "pointer",
+                        border: "1px solid lightgray",
+                      }}
+                    />
+                  </div>
+                </div>
+                <p>
+                  {itemlist.price
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  원
+                </p>
+              </div>
+              <br />
+              <h5 style={{ textAlign: "right" }}>
                 총 결제 금액 :
                 {Number(row.price * amount)
                   .toString()
@@ -683,7 +719,7 @@ function DetailInfo(props) {
               </h5>
             </div>
           </div>
-        </Card>
+        </div>
       ) : (
         <></>
       )}
