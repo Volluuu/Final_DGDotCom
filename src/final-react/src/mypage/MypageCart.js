@@ -52,6 +52,8 @@ function MypageBasket(props) {
     });
   };
 
+  console.log("db:", cartlist);
+
   // 체크된 아이템을 담을 배열
   const [checkList, setCheckList] = useState([]);
 
@@ -178,8 +180,9 @@ function MypageBasket(props) {
     for (let i = 0; i < checkList.length; i++) {
       total += Number(
         checkList[i].discount !== 0
-          ? ((checkList[i].price * checkList[i].discount) / 100) *
-              checkList[i].amount
+          ? checkList[i].price * checkList[i].amount -
+              ((checkList[i].price * checkList[i].discount) / 100) *
+                checkList[i].amount
           : checkList[i].price * checkList[i].amount
       );
     }
@@ -521,7 +524,15 @@ function MypageBasket(props) {
                   {citem.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   원
                 </td>
-                <td>{citem.discount}</td>
+                <td>
+                  {citem.discount}%<br />
+                  {citem.discount === 0
+                    ? 0
+                    : ((citem.price * citem.discount) / 100)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  원
+                </td>
                 <td>
                   <div className="input-group">
                     <button
@@ -562,7 +573,10 @@ function MypageBasket(props) {
                     ? (citem.price * citem.amount)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    : (((citem.price * citem.discount) / 100) * citem.amount)
+                    : (
+                        citem.price * citem.amount -
+                        ((citem.price * citem.discount) / 100) * citem.amount
+                      )
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   원
@@ -600,7 +614,7 @@ function MypageBasket(props) {
                   )}
                   {cartlist &&
                     cartlist.carr.map((p, i) =>
-                      cartlist.carr == 1 ? (
+                      cartlist.carr === 1 ? (
                         <React.Fragment key={i}></React.Fragment>
                       ) : (
                         <Link

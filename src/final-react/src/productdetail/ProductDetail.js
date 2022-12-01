@@ -2,6 +2,7 @@ import { Card } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import DetailDelivery from "./DetailDelivery";
 import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
 import DetailReview from "./DetailReview";
@@ -12,6 +13,7 @@ function ProductDetail(props) {
   const [productdata, setProductdata] = useState({}); //구매 데이터
   const productUrl = localStorage.url + "/product/"; //상품 정보 url
   const [reviewData, setReviewData] = useState(""); //리뷰 데이터
+  const [avgReviewCnt, setAvgReviewCnt] = useState(0);
 
   //상세정보 불러오기
   const productDetail = (p_num) => {
@@ -40,6 +42,7 @@ function ProductDetail(props) {
       return;
     }
     // console.log("aa:", reviewData);
+    setAvgReviewCnt(reviewData.list.length);
     let starArr = [];
     for (let i = 0; i < reviewData.list.length; i++) {
       starArr.push(reviewData.list[i].star);
@@ -50,7 +53,7 @@ function ProductDetail(props) {
     } else {
       const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
       setStarRate(Math.round(average(starArr) * 10) / 10);
-      console.log("ss:", average(starArr));
+      // console.log("ss:", average(starArr));
     }
   };
   // console.log("detail:" + JSON.stringify(productdata));
@@ -81,6 +84,7 @@ function ProductDetail(props) {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-around",
+          flexWrap: "wrap",
         }}
       >
         <div
@@ -91,26 +95,39 @@ function ProductDetail(props) {
             cursor: "zoom-in",
             // border: "1px solid black",
             position: "relative",
+            height: "100vh",
           }}
         >
           <Card>
             <DetailImage row={productdata} />
           </Card>
         </div>
-
-        <Card>
-          <div
-            style={{
-              width: "40%",
-              minWidth: "600px",
-              // border: "1px solid red",
-              position: "relative",
-            }}
-          >
-            <DetailInfo row={productdata} star={starRate} />
+        <div
+          style={{
+            width: "40%",
+            minWidth: "600px",
+            // border: "1px solid red",
+            position: "relative",
+          }}
+        >
+          <div>
+            <Card>
+              <DetailInfo
+                row={productdata}
+                star={starRate}
+                rev={avgReviewCnt}
+              />
+            </Card>
           </div>
-        </Card>
+          <br />
+          <div>
+            <Card>
+              <DetailDelivery />
+            </Card>
+          </div>
+        </div>
       </div>
+
       <br />
       <br />
       <div

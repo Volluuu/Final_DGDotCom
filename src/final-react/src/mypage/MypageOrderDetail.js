@@ -77,116 +77,125 @@ function MypageOrderDetail(props) {
   // }, [orderList]);
 
   return (
-    <div data-v-39b2348a="" className="content_area">
-      <div className="my_purchase">
-        <div data-v-88eb18f6="" className="content_title">
-          <div data-v-88eb18f6="" className="title">
-            <h3 data-v-88eb18f6="">
-              <b>주문 상세 내역</b>
-              &nbsp;
-              <span style={{ fontSize: "0.6em" }}>
-                {u_data.u_name}님의 주문내역을 한 눈에 볼 수 있습니다!
-              </span>
-            </h3>
-            <br />
-            <h5>
-              주문 번호 : {merchant_uid.currentPage} &nbsp;&nbsp;주문일자 :
-              {orderList && orderList.list[0].day}
-            </h5>
+    <div>
+      <div data-v-39b2348a="" className="content_area">
+        <div className="my_purchase">
+          <div data-v-88eb18f6="" className="content_title">
+            <div data-v-88eb18f6="" className="title">
+              <h3 data-v-88eb18f6="">
+                <b>주문 상세 내역</b>
+                &nbsp;
+                <span style={{ fontSize: "0.6em" }}>
+                  {u_data.u_name}님의 주문내역을 한 눈에 볼 수 있습니다!
+                </span>
+              </h3>
+              <br />
+              <h5>
+                주문 번호 : {merchant_uid.currentPage} &nbsp;&nbsp;주문일자 :
+                {orderList && orderList.list[0].day}
+              </h5>
+            </div>
           </div>
-        </div>
-        <br />
-        <div data-v-f263fda4="">
-          <div
-            data-v-50c8b1d2=""
-            data-v-f263fda4=""
-            className="purchase_list all bid"
-          >
-            <table
-              style={{ textAlign: "center" }}
-              className="table table-hover"
-            >
-              <thead>
-                <tr>
-                  <th style={{ width: "30%" }}>상품정보</th>
-                  <th style={{ width: "10%" }}>할인</th>
-                  <th style={{ width: "10%" }}>개당 가격(수량)</th>
-                  <th style={{ width: "10%" }}>사이즈</th>
-                  <th style={{ width: "10%" }}>주문상태</th>
-                  <th style={{ width: "10%" }}>배송상태</th>
-                </tr>
-              </thead>
-
-              {orderList &&
-                orderList.list.map((oitem, idx) => (
-                  <tbody key={idx}>
-                    <tr>
-                      <td
-                        style={{ textAlign: "left", verticalAlign: "middle" }}
-                      >
-                        <Link
-                          style={{ verticalAlign: "middle" }}
-                          to={`/product/detail/${oitem.p_num}`}
-                        >
-                          <img
-                            alt=""
-                            src={productUrl + oitem.photo}
-                            width="100px"
-                            style={{ float: "left" }}
-                          />
-                          <span>{oitem.p_name}</span>
-                        </Link>
-                      </td>
-                      <td>
-                        {oitem.discount}%
-                        <br />({(oitem.price * oitem.discount) / 100}원)
-                      </td>
-                      <td>
-                        {oitem.price
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        원
-                        <br />({oitem.count}개)
-                      </td>
-                      <td>{oitem.p_size}</td>
-                      <td>
-                        {oitem.invoice === null
-                          ? "상품 준비중"
-                          : `상품 발송\n` + oitem.invoice}
-                      </td>
-                      <td>{oitem.state}</td>
-                    </tr>
-                  </tbody>
-                ))}
-            </table>
-          </div>
-        </div>
-        <br></br>
-        <div>
-          <div style={{ float: "left", width: "50%" }}>
-            <OrderPay row={orderList} />
-          </div>
-          <div style={{}}>
-            <OrderUser row={orderList} />
-          </div>
-        </div>
-
-        {/* <div data-v-50c8b1d2="" className="purchase_list bidding ask">
-          <div data-v-541a17ff="" data-v-50c8b1d2="" className="empty_area"> */}
-        <div style={{ textAlign: "center" }}>
           <br />
-          <Link
-            data-v-3d1bcc82=""
-            data-v-541a17ff=""
-            to="/product/list"
-            className="btn outlinegrey small"
-          >
-            {" "}
-            SHOP 바로가기{" "}
-          </Link>
+          <div data-v-f263fda4="">
+            <div
+              data-v-50c8b1d2=""
+              data-v-f263fda4=""
+              className="purchase_list all bid"
+            >
+              <table
+                style={{ textAlign: "center" }}
+                className="table table-hover"
+              >
+                <thead>
+                  <tr>
+                    <th style={{ width: "30%" }}>상품정보</th>
+                    <th style={{ width: "10%" }}>할인</th>
+                    <th style={{ width: "10%" }}>개당 가격(수량)</th>
+                    <th style={{ width: "10%" }}>사이즈</th>
+                    <th style={{ width: "10%" }}>주문상태</th>
+                    <th style={{ width: "10%" }}>배송상태</th>
+                  </tr>
+                </thead>
+
+                {orderList &&
+                  orderList.list.map((oitem, idx) => (
+                    <tbody key={idx}>
+                      <tr>
+                        <td
+                          style={{ textAlign: "left", verticalAlign: "middle" }}
+                        >
+                          <Link
+                            style={{ verticalAlign: "middle" }}
+                            to={`/product/detail/${oitem.p_num}`}
+                          >
+                            <img
+                              alt=""
+                              src={productUrl + oitem.photo}
+                              width="100px"
+                              style={{ float: "left" }}
+                            />
+                            <span>{oitem.p_name}</span>
+                          </Link>
+                        </td>
+                        <td>
+                          {oitem.discount}%
+                          <br />({(oitem.price * oitem.discount) / 100}원)
+                        </td>
+                        <td>
+                          {oitem.price
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          원
+                          <br />({oitem.count}개)
+                        </td>
+                        <td>{oitem.p_size}</td>
+                        <td>
+                          {oitem.invoice === null
+                            ? "상품 준비중"
+                            : `상품 발송\n` + oitem.invoice}
+                        </td>
+                        <td>{oitem.state}</td>
+                      </tr>
+                    </tbody>
+                  ))}
+              </table>
+            </div>
+          </div>
+          <br></br>
+          <div>
+            <div style={{ float: "left", width: "50%" }}>
+              <OrderPay row={orderList} />
+            </div>
+            <div style={{}}>
+              <OrderUser row={orderList} />
+            </div>
+          </div>
+
+          {/* <div data-v-50c8b1d2="" className="purchase_list bidding ask">
+          <div data-v-541a17ff="" data-v-50c8b1d2="" className="empty_area"> */}
+          <div style={{ textAlign: "center" }}>
+            <br />
+          </div>
         </div>
-        {/* </div>
-        </div> */}
+      </div>
+      <br />
+      <div
+        style={{
+          textAlign: "center",
+          margin: "0 auto",
+          width: "80%",
+        }}
+      >
+        <Link
+          data-v-3d1bcc82=""
+          data-v-541a17ff=""
+          to="/product/list"
+          className="btn outlinegrey small"
+        >
+          {" "}
+          SHOP 바로가기{" "}
+        </Link>
       </div>
     </div>
   );
