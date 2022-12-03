@@ -18,7 +18,7 @@ function UserInfo({path}) {
     const [checkItems, setCheckItems] = useState([]);
     const [page, setPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
-    let items = 6;
+    let items = 10;
     const [searchList, setSearchList] = useState([]);
     const pcount = Math.ceil(searchList.length / items);
     const _perPage = UsePagination(searchList, items);
