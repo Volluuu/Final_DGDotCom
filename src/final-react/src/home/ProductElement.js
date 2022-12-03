@@ -88,7 +88,7 @@ function ProductElement(props) {
     //**********************************************************************************
     const [elt, setElt] = useState('');
     const updateData = () => {
-        const res = axios.get(`http://localhost:9003/list/card?num=${num}`).then(res => {
+        const res = axios.get(`${process.env.REACT_APP_URL}/list/card?num=${num}`).then(res => {
                 setElt(res.data);
         });
     }
@@ -101,7 +101,7 @@ function ProductElement(props) {
             <Card className={classes.root}>
                 <CardMedia
                     className={classes.media}
-                    image={`http://localhost:9003/product/${elt.photo}`}
+                    image={`${process.env.REACT_APP_URL}/product/${elt.photo}`}
                     title="Paella dish"
                 />
                             <div className={classes.infoBox}>

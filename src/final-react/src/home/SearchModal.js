@@ -58,7 +58,7 @@ export default function TransitionsModal() {
 
             } else {
                 navigate(`/product/list?keyword=${word}`)
-                axios.post(`http://localhost:9003/list/keyword?word=${word}`).then(res => {
+                axios.post(`${process.env.REACT_APP_URL}/list/keyword?word=${word}`).then(res => {
                 });
                 setOpen(false);
                 setWord('');
@@ -72,29 +72,30 @@ export default function TransitionsModal() {
     );
     const updateLatest = async () => {
         const num = sessionStorage.u_num;
-        const res = await axios.get(`http://localhost:9003/list/latest/get?num=${num}`);
+        const res = await axios.get(`${process.env.REACT_APP_URL}/list/latest/get?num=${num}`);
         setLatest(res.data);
     }
     const concatLatest = async () => {
         const num = sessionStorage.u_num;
-        await axios.post(`http://localhost:9003/list/latest/update?num=${num}&word=${word}`);
+        await axios.post(`${process.env.REACT_APP_URL}/list/latest/update?num=${num}&word=${word}`);
     }
 
     const deleteLatest = async () => {
         const num = sessionStorage.u_num;
-        await axios.post(`http://localhost:9003/list/latest/delete?num=${num}`).then();
+        await axios.post(`${process.env.REACT_APP_URL}/list/latest/delete?num=${num}`).then();
     }
     const updateWord = async () => {
-        await axios.get(`http://localhost:9003/list/search?word=${word}`).then(res => {
+        await axios.get(`${process.env.REACT_APP_URL}/list/search?word=${word}`).then(res => {
             setSearchList(res.data);
         })
     }
 
     useEffect(() => {
+        console.log("render");
         updateLatest().then();
         const debounce = setTimeout(() => {
             if (word) {
-                updateWord();
+                updateWord().then();
             } else {
                 setSearchList([]);
             }

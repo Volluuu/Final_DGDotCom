@@ -45,8 +45,7 @@ const DialogContent = withStyles((theme) => ({
 }))(MuiDialogContent);
 
 export default function MyStyleDetail(props) {
-    const {children, elt, genderImg, userData} = props;
-    console.log(genderImg);
+    const {children, elt, userData} = props;
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -61,15 +60,15 @@ export default function MyStyleDetail(props) {
             <button onClick={handleClickOpen} style={{color:"#AAA"}}>
                 {children}
             </button>
-            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} fullWidth={true}
-                    maxWidth={"lg"}>
+            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} fullWidth={false}
+                    maxWidth={false}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     상세보기
                 </DialogTitle>
                 <DialogContent dividers>
                     <WrapperDiv>
                         <ImgDiv>
-                            <img src={`http://localhost:9003/mystyle/${elt.photo}`} alt=""/>
+                            <img src={`${process.env.REACT_APP_URL}/mystyle/${elt.photo}`} alt=""/>
                         </ImgDiv>
 
                         <CommentDiv>
@@ -99,15 +98,24 @@ export default function MyStyleDetail(props) {
 
 const WrapperDiv = styled.div`
   display: flex;
+  height: 100%;
+  width:100%;
+  @media(max-height : 768px) {
+    height:548px;
+  }
 `
 const ImgDiv = styled.div`
   width: 70%;
+  height: 750px;
   background-color: black;
   display: flex;
   justify-content: center;
 
   & > img {
     height:  100%;
+  }
+  @media(max-height: 768px) {
+    height : 550px;
   }
 `
 const CommentDiv = styled.div`
@@ -119,9 +127,10 @@ const CommentDiv = styled.div`
 
 const UserInfo = styled.div`
   width: 100%;
-  height: auto;
+  height: 100px;
   padding-left: 10px;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border : 1px solid #CCC;
   & > div.text_box {
     width: 100%;
     word-break: break-all;
@@ -139,7 +148,6 @@ const UserInfo = styled.div`
 `
 const CommentList = styled.div`
   width: 100%;
-  height: 90%;
   display: flex;
   flex-wrap: wrap;
   word-break: break-all;

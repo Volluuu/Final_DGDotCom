@@ -11,6 +11,7 @@ import data.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,10 +81,18 @@ public class StyleController {
 		return mapper.getAllComment(style_num);
 	}
 
-//	@GetMapping("/comment/root")
-//	public Map<String, Object> getCommentData(@RequestParam int style_num) {
-//		return mapper.getAllComment(style_num);
-//	}
+	@GetMapping("/comment/content")
+	public Map<String, Object> getCommentData(@RequestParam int style_num) {
+		Map<String, Object> map = new HashMap<>();
+		List<CommentDto> list = mapper.getAllComment(style_num);
+		List<UserDto> user = new ArrayList<>();
+		for (CommentDto commentDto : list) {
+			user.add(user_mapper.getUserByNum(commentDto.getU_num()));
+		}
+		map.put("list", list);
+		map.put("user", user);
+		return map;
+	}
 
 	@GetMapping("/comment/reply")
 	public List<CommentDto> getReply(@RequestParam Map<String, Object> allParameters)
@@ -92,13 +101,12 @@ public class StyleController {
 	}
 
 	@PostMapping("/comment/insert")
-	@ResponseBody
-	public void insertComment(@RequestParam Map<String, Object> allParameters) {
+	public void insertComment(@RequestBody Map<String, Object> allParameters) {
 		mapper.insertComment(allParameters);
 	}
 
 	@PostMapping("/comment/revise")
-	public void reviseComment(@RequestParam Map<String, Object> allParameters) {
+	public void reviseComment(@RequestBody Map<String, Object> allParameters) {
 		mapper.reviseComment(allParameters);
 	}
 

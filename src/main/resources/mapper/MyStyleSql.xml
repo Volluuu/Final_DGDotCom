@@ -15,21 +15,21 @@
 
 <!--    **********************************댓글 관련 SQL ****************************************-->
     <select id="getAllComment" parameterType="int" resultType="CommentDto">
-        select * from comment where style_num = #{style_num} and root="yes"
+        select c.*, u.u_name, u.gender from comment c left join user u on c.u_num = u.u_num where style_num = #{style_num} and root="yes"
     </select>
     <select id="getReply" parameterType="Map" resultType="CommentDto">
-        select * from comment where style_num = #{style_num} and parent=#{parent}
+        select c.*, u.u_name, u.gender from comment c left join user u on c.u_num = u.u_num where style_num = #{style_num} and parent=#{parent}
     </select>
     <insert id="insertComment" parameterType="Map">
-        insert into comment (comment_num, u_num, style_num, content, root, parent) values
-        (null, #{u_num}, #{style_num}, #{content}, #{root}, #{parent})
+        insert into comment (comment_num, u_num, style_num, content, root, parent, isdel) values
+        (null, #{u_num}, #{style_num}, #{content}, #{root}, #{parent}, false)
     </insert>
     <update id="reviseComment" parameterType="Map">
         update comment set content = #{content} where comment_num = #{comment_num}
     </update>
-    <delete id="deleteComment" parameterType="int">
-        delete from comment where comment_num = #{comment_num}
-    </delete>
+    <update id="deleteComment" parameterType="int">
+        update comment set isdel = true where comment_num = #{comment_num}
+    </update>
 
 
 

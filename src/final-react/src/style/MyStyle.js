@@ -9,17 +9,17 @@ const MyStyle = () => {
     const [styleList, setStyleList] = useState([]);
     const [nowTag, setNowTag] = useState('');
     const getStyleListOrderByNew = async () => {
-        const res = await axios.get("http://localhost:9003/style/list/new");
+        const res = await axios.get(process.env.REACT_APP_URL+"/style/list/new");
         setStyleList(res.data);
         console.dir(styleList);
     }
     const getStyleListOrderByPop = async () => {
-        const res = await axios.get("http://localhost:9003/style/list/pop");
+        const res = await axios.get(process.env.REACT_APP_URL +"/style/list/pop");
         setStyleList(res.data);
     }
     const getStyleListSelectByTag = async (tag) => {
         const subTag = tag.substr(1);
-        const res = await axios.get(`http://localhost:9003/style/list/tags?tag=${subTag}`);
+        const res = await axios.get(process.env.REACT_APP_URL + `/style/list/tags?tag=${subTag}`);
         await setStyleList(res.data);
     }
     //********************************************isActive 관련*****************************************************
@@ -84,8 +84,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx === 0 || idx % 4 === 0).map((elt, idx) =>
-                                    <li>
-                                            <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                            <StyleComponent elt={elt} />
                                     </li>
                                 )
                             }
@@ -93,8 +93,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 1).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }
@@ -102,8 +102,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 2).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }
@@ -111,8 +111,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 3).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }

@@ -9,13 +9,13 @@ import MyStyleDetail from "./MyStyleDetail";
 
 const StyleComponent = (props) => {
     const {elt} = props;
-    const imgSrc = `http://localhost:9003/mystyle/${elt.photo}`;
+    const imgSrc = process.env.REACT_APP_URL + `/mystyle/${elt.photo}`;
     const [userData, setUserData] = useState({});
     const [genderImg, setGenderImg] = useState('');
     const [check, setCheck] = useState(false);
     const [like, setLike] = useState(0);
     const getUser = () => {
-        const res = axios.get(`http://localhost:9003/style/user/num?num=${elt.u_num}`).then(r => {
+        const res = axios.get(`${process.env.REACT_APP_URL}/style/user/num?num=${elt.u_num}`).then(r => {
             setUserData(r.data);
             setGenderImg(`${r.data.gender}.png`);
             elt.writeday = elt.writeday.substr(0, 10);
@@ -33,14 +33,14 @@ const StyleComponent = (props) => {
         if(check) {
             await setCheck(false);
             //게시글의 like count를 -1하는 axios 호출 ***************************************************************
-            await axios.post(`http://localhost:9003/style/list/like/substract/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
+            await axios.post(`${process.env.REACT_APP_URL}/style/list/like/substract/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
                 alert("좋아요 감소");
                 getLikeCount();
             })
         } else {
             setCheck(true);
             //게시글의 like count를 +1하는 axios 호출 ***************************************************************
-            await axios.post(`http://localhost:9003/style/list/like/add/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
+            await axios.post(`${process.env.REACT_APP_URL}/style/list/like/add/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`).then(r=>{
                 alert("좋아요 증가");
                 getLikeCount();
             })
@@ -48,7 +48,7 @@ const StyleComponent = (props) => {
     }
     //axios를 호출하여 커멘트의 갯수를 가져오는 함수
     const getLikeCount = () => {
-        axios.get(`http://localhost:9003/style/list/like?style_num=${elt.style_num}`).then(r=>{
+        axios.get(`${process.env.REACT_APP_URL}/style/list/like?style_num=${elt.style_num}`).then(r=>{
             setLike(r.data);
         })
     }
@@ -109,7 +109,7 @@ const CardDetail = styled.div`
   text-align: left;
   padding: 8px 4px 0px;
   margin-left: 8px;
-  & > div.\ {
+  & > div. {
   }
 
   & > img {
