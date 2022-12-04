@@ -65,14 +65,14 @@ function AdminMenu(props) {
                             <span>배송관리</span>
                         </a>
                         <div id='collapseTwo' className='collapse show' aria-labelledby='headingTwo'
-                         style={{}}>
+                         style={{margin:'0',padding:'0'}}>
                             <div className='py-2 collapse-inner rounded'>
                                 <a className='collapse-item' href='/admin/beforedelivery'
-                                style={{color:'rightgray'}}>-배송전</a>
+                                style={{color:'lightgray'}}>-배송전</a>
                                 <a className='collapse-item' href='/admin/delivering'
-                                   style={{color:'rightgray'}}>-배송중</a>
+                                   style={{color:'lightgray'}}>-배송중</a>
                                 <a className='collapse-item' href='/admin/deliverycomplete'
-                                   style={{color:'rightgray'}}>-배송완료</a>
+                                   style={{color:'lightgray'}}>-배송완료</a>
 
                             </div>
 
