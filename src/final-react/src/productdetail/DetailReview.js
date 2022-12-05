@@ -14,7 +14,12 @@ function DetailReview(props) {
       </span>
       <table
         className="table table-borderless"
-        style={{ display: "table-cell" }}
+        style={
+          {
+            // display: "table-cell",
+            // border: "1px solid blue",
+          }
+        }
       >
         {row && row.list.length !== 0 ? (
           row.list.map((ritem, idx) => (
