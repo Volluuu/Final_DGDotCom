@@ -5,14 +5,13 @@ import AnnouncementBar from "./AnnouncementBar";
 
 function Home(props) {
     localStorage.url = process.env.REACT_APP_URL;
-    //http://localhost:9003
     return (
         <div>
             <AnnouncementBar/>
             <BannerSwiper/>
-            <EventBanner/>
-            <EventBanner/>
-            <EventBanner/>
+            <EventBanner type={"first"}/>
+            <EventBanner type={"second"}/>
+            <EventBanner type={"third"}/>
         </div>
     );
 }
