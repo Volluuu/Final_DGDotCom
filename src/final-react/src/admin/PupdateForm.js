@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import EditIcon from '@material-ui/icons/Edit';
+import './button.css';
 
 function PupdateForm(props) {
     const [photo, setPhoto] = useState([]);
@@ -64,12 +65,20 @@ function PupdateForm(props) {
         <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop: '5rem',
+            marginTop: '2rem'
         }}>
             <form onSubmit={onSubmits} style={{
                 border: '2px solid lightgray',
                 minWidth: '500px'
             }}>
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    종류</div>
                 <input
                     type="text"
                     value={data.category}
@@ -87,11 +96,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    브랜드</div>
                 <input
                     type="text"
                     value={data.brand}
@@ -110,11 +128,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    상품명</div>
                 <input
                     type="text"
                     value={data.p_name}
@@ -132,11 +159,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    성별</div>
                 <input
                     type="text"
                     value={data.gender}
@@ -154,11 +190,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    가격</div>
                 <input
                     type="text"
                     value={data.price}
@@ -176,12 +221,52 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
 
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    할인율</div>
+                <input
+                    type="text"
+                    value={data.discount}
+                    placeholder="할인율"
+                    onChange={(e) =>  {
+                        setData({
+                            ...data,
+                            discount:e.target.value
+                        })
+                    }}
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        height: '3rem',
+                        padding: '0.5rem',
+                        fontSize: '1.1em',
+                        fontWeight: '500',
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
+                    }}
+                />
+
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    사이즈</div>
                 <input
                     type="text"
                     value={data.p_size}
@@ -199,10 +284,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
+
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    재고수</div>
                 <input
                     type="text"
                     value={data.amount}
@@ -220,14 +315,22 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
-                        border: '1px solid lightgray'
+                        border: '1px solid lightgray',
+                        marginBottom:'12px',
+                        color:'lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    사진</div>
                 <input
                     type="file"
-                    placeholder="사진"
                     className='upimage'
                     onChange={uploadPhoto}
                     style={{
@@ -237,19 +340,20 @@ function PupdateForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
-                    }}
-                />
+                    }}/>
+                <p style={{marginTop:'4px',marginBottom:'12px'}}>* 이미지를 넣지않으면 기본이미지가 유지됩니다.</p>
 
                 <button type="submit"
-                        className='insertbtn'
+                        className='hj-btn hj-btn-green'
                         style={{
                             width: '100%',
                             border: 'none',
                             fontSize: '1.2em',
                             borderRadius: '0.2rem',
                             cursor: 'pointer',
+                            marginTop: '2rem'
                         }}>수정하기
                 </button>
             </form>

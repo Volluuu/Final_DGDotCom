@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import styled from 'styled-components';
 import './button.css'
 import Checkbox from "@material-ui/core/Checkbox";
 import EditIcon from '@material-ui/icons/Edit';
@@ -152,9 +151,10 @@ function AdProduct(props) {
                             <th className='th-hj'>사진</th>
                             <th className='th-hj'>종류</th>
                             <th className='th-hj'>브랜드</th>
-                            <th className='th-hj'>이름</th>
+                            <th className='th-hj'>상품명</th>
                             <th className='th-hj'>가격</th>
                             <th className='th-hj'>판매수</th>
+                            <th className='th-hj'>할인율</th>
                             <th className='th-hj'>사이즈</th>
                             <th className='th-hj'>재고 수</th>
                             <th className='th-hj'>수정</th>
@@ -180,13 +180,14 @@ function AdProduct(props) {
                                     <td className='td-hj'>{r.p_name}</td>
                                     <td className='td-hj'>{r.price}</td>
                                     <td className='td-hj'>{r.sellamount}</td>
+                                    <td className='td-hj'>{r.discount}</td>
                                     <td className='td-hj'>{r.p_size}</td>
                                     <td className='td-hj'>{r.amount}</td>
                                     <td className='td-hj'>
                                         <EditIcon
                                             style={{cursor: 'pointer'}}
                                             onClick={() => {
-                                                navi(`/admin/pupdateform/${r.p_num}`);
+                                                navi(`/admin/pupdateform/${r.i_num}`);
                                             }}/></td>
                                 </tr>
                             )

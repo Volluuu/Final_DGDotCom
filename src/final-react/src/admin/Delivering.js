@@ -74,9 +74,9 @@ function Delivering(props) {
                     <tbody className='tbody-hj'>
                     {
                         data.tlist &&
-                        data.tlist.map((r, d_number) =>
-                            <tr key={d_number} className='tr-hj' align='center'>
-                                <td className='td-hj'>{d_number + 1}</td>
+                        data.tlist.map((r, idx) =>
+                            <tr key={idx} className='tr-hj' align='center'>
+                                <td className='td-hj'>{data.no - idx}</td>
                                 <td className='td-hj'>{r.t_name}</td>
                                 <td className='td-hj'>{r.t_hp}</td>
                                 <td className='td-hj'>{r.t_addr}</td>

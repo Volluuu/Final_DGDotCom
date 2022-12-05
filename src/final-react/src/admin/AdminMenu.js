@@ -5,7 +5,7 @@ import AdProduct from "./AdProduct";
 // import Cs from "./Cs";
 // import Banner from "./Banner";
 import {useParams} from "react-router-dom";
-import logo from "../admin/logo192.png";
+import logo from "./logo.png";
 import InsertForm from "./insertForm";
 import PupdateForm from "./PupdateForm";
 import BeforeDelivery from "./BeforeDelivery";
@@ -22,7 +22,7 @@ function AdminMenu(props) {
                     style={{backgroundColor: 'mediumpurple'}}>
                     {/* 로고*/}
                     <a className='sidebar-brand d-flex align-items-center justify-content-center' href='/'>
-                        <img alt='#' src={logo} style={{width: '80px', height: '80px'}}/>
+                        <img alt='#' src={logo} style={{width: '150px', height: '170px'}}/>
                     </a>
 
                     {/*로고 아래*/}
@@ -65,14 +65,14 @@ function AdminMenu(props) {
                             <span>배송관리</span>
                         </a>
                         <div id='collapseTwo' className='collapse show' aria-labelledby='headingTwo'
-                         style={{}}>
+                         style={{margin:'0',padding:'0'}}>
                             <div className='py-2 collapse-inner rounded'>
                                 <a className='collapse-item' href='/admin/beforedelivery'
-                                style={{color:'rightgray'}}>-배송전</a>
+                                style={{color:'lightgray'}}>-배송전</a>
                                 <a className='collapse-item' href='/admin/delivering'
-                                   style={{color:'rightgray'}}>-배송중</a>
+                                   style={{color:'lightgray'}}>-배송중</a>
                                 <a className='collapse-item' href='/admin/deliverycomplete'
-                                   style={{color:'rightgray'}}>-배송완료</a>
+                                   style={{color:'lightgray'}}>-배송완료</a>
 
                             </div>
 

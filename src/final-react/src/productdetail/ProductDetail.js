@@ -7,7 +7,7 @@ import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
 import DetailReview from "./DetailReview";
 import Footer from "../home/Footer";
-import Detail from "./Detail.css";
+// import Detail from "./Detail.css";
 
 function ProductDetail(props) {
   const { p_num } = useParams(); //u_num
