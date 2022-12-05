@@ -26,7 +26,7 @@ function AdminMenu(props) {
                     </a>
 
                     {/*로고 아래*/}
-                    <hr className='sidebar-divider my-0'/>
+                    <hr className='sidebar-divider my-2'/>
 
                     {/*사이드바 메뉴*/}
                     <div className="sidebar-heading" style={{fontSize: '24px'}}>
@@ -101,8 +101,8 @@ function AdminMenu(props) {
                 {/*상단 바 시작, 상단 바 색깔을 nav태그에서 변경 가능*/}
                 <div id='content-wrapper' className='d-flex flex-column'>
                     <div id='content'>
-                        <nav className='navbar navbar-expand navbar-light topbar mb-4 static-top shadow'
-                             style={{backgroundColor: 'mediumpurple'}}>
+                        <nav className='navbar navbar-expand navbar-light topbar mb-1 static-top shadow'
+                             style={{backgroundColor: 'mediumpurple',height:'78px'}}>
 
                             {/*상단 바 우측 관리자 이름 표시*/}
                             <ul className="navbar-nav ml-auto">
