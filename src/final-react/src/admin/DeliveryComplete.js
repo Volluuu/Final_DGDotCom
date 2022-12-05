@@ -51,7 +51,7 @@ function DeliveryComplete(props) {
                                 <td className='td-hj'>{r.t_hp}</td>
                                 <td className='td-hj'>{r.t_addr}</td>
                                 <td className='td-hj'>{r.count}</td>
-                                <td className='td-hj'>{r.lastprice}</td>
+                                <td className='td-hj'>{r.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                 <td className='td-hj'>{r.p_size}</td>
                                 <td className='td-hj'>{r.invoice}</td>
                                 <td className='td-hj'>{r.state}</td>

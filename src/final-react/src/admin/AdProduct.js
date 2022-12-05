@@ -178,7 +178,7 @@ function AdProduct(props) {
                                     <td className='td-hj'>{r.category}</td>
                                     <td className='td-hj'>{r.brand}</td>
                                     <td className='td-hj'>{r.p_name}</td>
-                                    <td className='td-hj'>{r.price}</td>
+                                    <td className='td-hj'>{r.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                     <td className='td-hj'>{r.sellamount}</td>
                                     <td className='td-hj'>{r.discount}</td>
                                     <td className='td-hj'>{r.p_size}</td>

@@ -301,7 +301,7 @@ function DashBoard(props) {
                                                                    alt='' src={photouurl + r.photo}/></td>
                                         <td className='td-hj'>{r.p_name}</td>
                                         <td className='td-hj'>{r.brand}</td>
-                                        <td className='td-hj'>{r.price}</td>
+                                        <td className='td-hj'>{r.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                     </tr>
 
                                 )
