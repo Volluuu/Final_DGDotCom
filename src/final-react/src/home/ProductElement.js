@@ -110,50 +110,26 @@ function ProductElement(props) {
   useEffect(() => {
     updateData();
   }, []);
- },
-        brand      : { // 브랜드 글자 표시하는 객체
-            textDecoration: "underline",
-            marginBottom  : "2.7px", // 글자 크기
-        },
-        productname: { // 상품 이름 표시하는 객체
-            fontSize  : "18px", //글자크기
-            lineHeight: "19.8px", // 자간
-        },
 
-    }));
-    //새로운 클래스를 만들었을 때 변수에 선언을 먼저 해준 뒤 classes라는 변수에 다시 할당하여 사용
-    //리액트의 Hook은 반복문, 조건문(이항연산자) 내에서 사용불가
-    const big = useBig(); const small = useSmall();
-    const classes = type==='big'? big : small;
-
-    //**********************************************************************************
-    const [elt, setElt] = useState('');
-    const updateData = () => {
-        const res = axios.get(`${process.env.REACT_APP_URL}/list/card?num=${num}`).then(res => {
-                setElt(res.data);
-        });
-    }
-    useEffect(() => {
-        updateData();
-    }, []);
-
-    return (
-        <ProductCard to={`/product/detail/${elt.p_num}`}>
-            <Card className={classes.root}>
-                <CardMedia
-                    className={classes.media}
-                    image={`${process.env.REACT_APP_URL}/product/${elt.photo}`}
-                    title="Paella dish"
-                />
-                            <div className={classes.infoBox}>
-                                <div>
-                                    <p className={classes.brand}>{elt.brand}</p>
-                                    <p className={classes.productname}>{elt.p_name}</p>
-                                </div>
-                            </div>
-                            <p style={{position: "relative", bottom: 0, left: "5%"}}>{elt.price}</p>
-            </Card>
-        </ProductCard>
-    );
+  return (
+    <ProductCard to={`/product/detail/${elt.p_num}`}>
+      <Card className={classes.root}>
+        <CardMedia
+          className={classes.media}
+          image={`${process.env.REACT_APP_URL}/product/${elt.photo}`}
+          title="Paella dish"
+        />
+        <div className={classes.infoBox}>
+          <div>
+            <p className={classes.brand}>{elt.brand}</p>
+            <p className={classes.productname}>{elt.p_name}</p>
+          </div>
+        </div>
+        <p style={{ position: "relative", bottom: 0, left: "5%" }}>
+          {elt.price}
+        </p>
+      </Card>
+    </ProductCard>
+  );
 }
 export default React.memo(ProductElement);
