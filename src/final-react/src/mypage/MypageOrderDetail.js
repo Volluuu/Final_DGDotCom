@@ -26,6 +26,9 @@ function MypageOrderDetail(props) {
   };
 
   const List = () => {
+    // if (orderList === "") {
+    //   return;
+    // }
     let detailUrl =
       localStorage.url +
       "/trade/orderdetail?merchant_uid=" +
@@ -71,6 +74,10 @@ function MypageOrderDetail(props) {
     List();
     userdata();
   }, []);
+
+  // useEffect(() => {
+  //   List();
+  // }, [orderList]);
 
   // useEffect(() => {
   //   fdata();
@@ -140,7 +147,11 @@ function MypageOrderDetail(props) {
                         </td>
                         <td>
                           {oitem.discount}%
-                          <br />({(oitem.price * oitem.discount) / 100}원)
+                          <br />(
+                          {((oitem.price * oitem.discount) / 100)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          원)
                         </td>
                         <td>
                           {oitem.price
@@ -150,10 +161,11 @@ function MypageOrderDetail(props) {
                           <br />({oitem.count}개)
                         </td>
                         <td>{oitem.p_size}</td>
-                        <td>
+                        <td style={{ whiteSpace: "pre-line" }}>
                           {oitem.invoice === null
                             ? "상품 준비중"
-                            : `상품 발송\n` + oitem.invoice}
+                            : `상품 발송
+                            (${oitem.invoice})`}
                         </td>
                         <td>{oitem.state}</td>
                       </tr>

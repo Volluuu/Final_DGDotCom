@@ -123,7 +123,7 @@ function DetailInfo(props) {
   // console.log("dd:", u_data === "");
 
   const handleClose = () => {
-    setAddressData("");
+    // setAddressData("");
     setOpen(false);
     setPopup(false);
     Swal.fire({
@@ -133,6 +133,7 @@ function DetailInfo(props) {
       showConfirmButton: false,
       timer: 1500,
     });
+    window.location.reload();
   };
 
   //주소 이벤트
@@ -196,7 +197,7 @@ function DetailInfo(props) {
         // param
         // pg: "html5_inicis.INIpayTest", // PG 모듈
         pg: "kakaopay.TC0ONETIME", // PG 모듈
-        pay_method: "card", // 지불 수단
+        pay_method: "kakaopay", // 지불 수단
         merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
         name: itemlist.p_name,
         // amount: sumPayment, // 가격
@@ -215,27 +216,27 @@ function DetailInfo(props) {
         // console.log("rsp:" + JSON.stringify(rsp));
         if (rsp.success) {
           // // 결제 성공 시, 출력 창
-          let msg = "결제가 완료되었습니다.\n";
-          msg += "고유ID : " + rsp.imp_uid + "\n";
-          msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
-          msg += "결제 선택 : " + rsp.pg + "\n";
-          msg += "결제 방식 : " + rsp.pay_method + "\n";
-          msg += "결제 금액 : " + rsp.paid_amount + "\n";
-          // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
-          msg += "상품명 : " + rsp.name + "\n";
-          msg += "구매자 이름 : " + rsp.buyer_name + "\n";
-          msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
-          msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
-          msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
+          // let msg = "결제가 완료되었습니다.\n";
+          // msg += "고유ID : " + rsp.imp_uid + "\n";
+          // msg += "상점 거래ID : " + rsp.merchant_uid + "\n";
+          // msg += "결제 선택 : " + rsp.pg + "\n";
+          // msg += "결제 방식 : " + rsp.pay_method + "\n";
+          // msg += "결제 금액 : " + rsp.paid_amount + "\n";
+          // // msg += "카드 승인번호 : " + rsp.apply_num + "\n";
+          // msg += "상품명 : " + rsp.name + "\n";
+          // msg += "구매자 이름 : " + rsp.buyer_name + "\n";
+          // msg += "구매자 번호 : " + rsp.buyer_tel + "\n";
+          // msg += "구매자 주소 : " + rsp.buyer_addr + "\n";
+          // msg += "구매자 이메일 : " + rsp.buyer_email + "\n";
 
-          alert("결제 성공:" + msg);
-          // Swal.fire({
-          //   position: "center",
-          //   icon: "success",
-          //   title: "결제가 완료되었습니다",
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+          // alert("결제 성공:" + msg);
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "결제가 완료되었습니다",
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
           let tradeInsertUrl = localStorage.url + "/cart/insertTrade";
 
@@ -275,10 +276,11 @@ function DetailInfo(props) {
           Swal.fire({
             position: "center",
             icon: "error",
-            title: rsp.error_msg,
+            title: "결재를 취소하였습니다.",
             showConfirmButton: false,
             timer: 1500,
           });
+          window.location.reload();
         }
       }
     );
@@ -365,7 +367,10 @@ function DetailInfo(props) {
                         // setAmount(1);
                         // setItemlist("");
                         closeEvent();
+                        // alert("취소");
                       }
+                      // alert("취소222");
+                      closeEvent();
                     });
                     // navi("/product/list");
                   });
@@ -416,8 +421,9 @@ function DetailInfo(props) {
                 navi("/mypage/cart/1");
               }
               if (result.isDismissed) {
-                setAmount(1);
-                setItemlist({});
+                // setAmount(1);
+                // setItemlist({});
+                closeEvent();
               }
             });
             // navi("/product/list");
@@ -628,7 +634,7 @@ function DetailInfo(props) {
       </h5>
       <br />
       <div>
-        <p>옵션 선택</p>
+        <span>옵션 선택</span>
         {selectform(row.category)}
       </div>
       <br />
@@ -703,12 +709,12 @@ function DetailInfo(props) {
                     />
                   </div>
                 </div>
-                <p>
+                <span>
                   {itemlist.price
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                   원
-                </p>
+                </span>
               </div>
               <br />
               <h5 style={{ textAlign: "right" }}>
@@ -790,6 +796,7 @@ function DetailInfo(props) {
                   name="t_name"
                   label="배송받을 이름"
                   inputRef={t_nameref}
+                  error={t_nameref.current.value === "" ? true : false}
                   type="text"
                   fullWidth
                   defaultValue={u_data.u_name}
@@ -801,6 +808,7 @@ function DetailInfo(props) {
                   id="t_hp"
                   name="t_hp"
                   inputRef={t_hpref}
+                  error={t_hpref.current.value == "" ? true : false}
                   label="배송받을 연락처"
                   type="text"
                   fullWidth
@@ -820,10 +828,13 @@ function DetailInfo(props) {
                   id="t_addr"
                   name="t_addr"
                   inputRef={t_addrref}
+                  error={t_addrref.current.value === "" ? true : false}
                   label="배송받을 주소"
                   type="text"
                   style={{ width: "80%" }}
-                  defaultValue={u_data.addr}
+                  defaultValue={
+                    u_data && u_data.addr.split(",")[0].substring(0)
+                  }
                   onChange={handleInput}
                   value={addressData.address}
                 />
@@ -856,9 +867,13 @@ function DetailInfo(props) {
                   id="t_addrdetail"
                   name="t_addrdetail"
                   inputRef={t_addrdetailref}
+                  error={t_addrdetailref.current.value === "" ? true : false}
                   label="상세 주소"
                   type="text"
                   fullWidth
+                  defaultValue={
+                    u_data && u_data.addr.split(",")[1].substring(1)
+                  }
                 />
 
                 <TextField
@@ -868,6 +883,7 @@ function DetailInfo(props) {
                   id="t_email"
                   name="t_email"
                   inputRef={t_emailref}
+                  error={t_emailref.current.value === "" ? true : false}
                   label="구매자 email"
                   type="email"
                   fullWidth

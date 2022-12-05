@@ -211,6 +211,7 @@ function MypageBasket(props) {
       showConfirmButton: false,
       timer: 1500,
     });
+    window.location.reload();
   };
 
   //주소 이벤트
@@ -243,7 +244,7 @@ function MypageBasket(props) {
   const t_addrref = useRef("");
   const t_addrdetailref = useRef("");
   const t_emailref = useRef("");
-  console.log("cc:", t_hpref);
+  // console.log("cc:", t_hpref);
 
   //결제 이벤트
   const requestBtn = (e) => {
@@ -289,7 +290,7 @@ function MypageBasket(props) {
         // param
         // pg: "html5_inicis.INIpayTest", // PG 모듈
         pg: "kakaopay.TC0ONETIME", // PG 모듈
-        pay_method: "card", // 지불 수단
+        pay_method: "kakaopay", // 지불 수단
         merchant_uid: "order_" + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
         name:
           checkList.length > 1
@@ -336,7 +337,11 @@ function MypageBasket(props) {
                   t_email: rsp.buyer_email,
                   t_addr: rsp.buyer_addr,
                   count: checkList[i].amount,
-                  lastprice: sumPayment,
+                  lastprice:
+                    checkList[i].discount === 0
+                      ? checkList[i].price
+                      : checkList[i].price -
+                        (checkList[i].price * checkList[i].discount) / 100,
                   p_size: checkList[i].p_size,
                   state: "배송 전",
                 },
@@ -670,10 +675,10 @@ function MypageBasket(props) {
                 )}
               </td>
               <td colSpan={5} style={{ textAlign: "center" }}>
-                <p>
+                <span>
                   총 결제 금액 : \
                   {sumPayment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                </p>
+                </span>
               </td>
               <td colSpan={2} style={{ textAlign: "center" }}>
                 {/* <button
@@ -701,7 +706,7 @@ function MypageBasket(props) {
             <tr>
               <td colSpan={10} style={{ textAlign: "center" }}>
                 <br />
-                <p>장바구니가 비었습니다</p>
+                <span>장바구니가 비었습니다</span>
                 <br />
                 <br />
                 <Link
