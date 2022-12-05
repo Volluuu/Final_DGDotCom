@@ -303,6 +303,16 @@ function KakaoLogin(props) {
                                     <div className="input_item" data-v-6c561060="">
                                         <input type="text" placeholder="이름을 입력하세요" autoComplete="off" value={name}
                                                className="input_txt" data-v-6c561060="" disabled={true}
+                                               style={{
+                                                   fontSize: "1.1em",
+                                                   color: "#bdbdbd",
+                                                   fontStyle: "italic",
+                                                   WebkitTouchCallout: "none",
+                                                   userSelect: "none",
+                                                   MozUserSelect: "none",
+                                                   msUserSelect: "none",
+                                                   WebkitUserSelect: "none",
+                                               }}
                                         />
                                     </div>
                                     <p className="input_error" data-v-6c561060="" data-v-6ca47fe2="">이름을 정확히 입력해주세요.</p>
