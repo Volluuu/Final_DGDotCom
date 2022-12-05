@@ -266,7 +266,7 @@ function KakaoLogin(props) {
                                     <button data-v-3d1bcc82="" data-v-587be1b3="" type="button"
                                             style={{marginBottom: "8px"}}
                                             className="btn btn_modify outlinegrey small"
-                                            disabled={true}> 인증번호 받기
+                                            disabled={true}> 인증코드 받기
                                     </button>
                                 </div>
                                 <div data-v-6c561060="" data-v-6ca47fe2=""
