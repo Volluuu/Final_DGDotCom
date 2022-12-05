@@ -15,6 +15,7 @@ import KakaoLogin from "./user/KakaoLogin";
 import FindEmail from "./user/FindEmail";
 import FindPass from "./user/FindPass";
 import MyStyle from "./style/MyStyle";
+import MyStyleForm from "./style/MyStyleForm";
 
 function RouteMain(props) {
   return (
@@ -161,6 +162,7 @@ function RouteMain(props) {
               <>
                 <Menu />
                 <MyStyle />
+                  <Footer/>
               </>
             }
           />
@@ -203,6 +205,14 @@ function RouteMain(props) {
             }
           />
         </Route>
+          <Route path={"/mystyle/form"} element={
+              <>
+                  <Menu/>
+                  <MyStyleForm/>
+                  <Footer/>
+              </>
+          }>
+          </Route>
         {/* 잘못된 주소*/}
         <Route
           path={"*"}

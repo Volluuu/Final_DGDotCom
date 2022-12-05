@@ -6,17 +6,58 @@
         select * from mystyle order by style_num
     </select>
     <select id="getAllStyleOrderByPop" resultType="StyleDto">
-        select * from mystyle order by likes desc
+        select * from mystyle order by (select count(*) from liketable where style_num = mystyle.style_num) desc
     </select>
     <select id="getStyleListSelectByTag" parameterType="string" resultType="styleDto">
         select * from mystyle where tag like concat('%',#{tag},'%')
     </select>
-<!--    **********************************댓글 관련 SQL ****************************************-->
-    <select id="getAllComment" resultType="CommentDto">
-        select * from comment where u_num = 5 and style_num = 5 and root="yes"
+    <select id="getStyleNumLatest">
+        select style_num from mystyle order by style_num desc limit 1;
     </select>
-    <select id="getReply" parameterType="int" resultType="CommentDto">
-        select * from comment where u_num = 5 and style_num = 5 and parent=#{parent}
-    </select>
+    <insert id="insertStyle" parameterType="StyleDto">
+        insert into mystyle (style_num, photo, u_num, content, tag, p_list, writeday) values
+        (null, #{photo}, #{u_num}, #{content}, #{tag}, #{p_list}, now())
+    </insert>
+    <delete id="deleteStyle" parameterType="int">
+        delete from mystyle where style_num = #{style_num}
+    </delete>
 
+
+
+<!--    **********************************댓글 관련 SQL ****************************************-->
+    <select id="getAllComment" parameterType="int" resultType="CommentDto">
+        select c.*, u.u_name, u.gender from comment c left join user u on c.u_num = u.u_num where style_num = #{style_num} and root="yes"
+    </select>
+    <select id="getReply" parameterType="Map" resultType="CommentDto">
+        select c.*, u.u_name, u.gender from comment c left join user u on c.u_num = u.u_num where style_num = #{style_num} and parent=#{parent}
+    </select>
+    <insert id="insertComment" parameterType="Map">
+        insert into comment (comment_num, u_num, style_num, content, root, parent, isdel) values
+        (null, #{u_num}, #{style_num}, #{content}, #{root}, #{parent}, false)
+    </insert>
+    <update id="reviseComment" parameterType="Map">
+        update comment set content = #{content} where comment_num = #{comment_num}
+    </update>
+    <update id="deleteComment" parameterType="int">
+        update comment set isdel = true where comment_num = #{comment_num}
+    </update>
+
+
+
+<!--각 게시글마다 좋아요를 수정하는 SQL-->
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) from liketable where style_num = #{style_num}
+    </select>
+    <select id="getCommentCount" parameterType="int" resultType="int">
+        select count(*) from comment where style_num = #{style_num}
+    </select>
+    <insert id="addLike" parameterType="Map">
+        insert liketable (like_num, u_num, style_num) values(null, #{u_num}, #{style_num})
+    </insert>
+    <delete id="substractLike" parameterType="Map">
+        delete from liketable where u_num = #{u_num} and style_num = #{style_num}
+    </delete>
+    <select id="isCheck" parameterType="Map" resultType="boolean">
+        select * from liketable where u_num = #{u_num} and style_num = #{style_num}
+    </select>
 </mapper>

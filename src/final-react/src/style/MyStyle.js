@@ -2,30 +2,31 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styled from "styled-components";
 import StyleComponent from "./StyleComponent";
 import axios from "axios";
-import {Link, NavLink} from "react-router-dom";
-import MyStyleDetail from "./MyStyleDetail";
+import {Link, useNavigate} from "react-router-dom";
+
 
 const MyStyle = () => {
     const [styleList, setStyleList] = useState([]);
     const [nowTag, setNowTag] = useState('');
+    const navi = useNavigate();
     const getStyleListOrderByNew = async () => {
-        const res = await axios.get("http://localhost:9003/style/list/new");
+        const res = await axios.get(process.env.REACT_APP_URL+"/style/list/new");
         setStyleList(res.data);
         console.dir(styleList);
     }
     const getStyleListOrderByPop = async () => {
-        const res = await axios.get("http://localhost:9003/style/list/pop");
+        const res = await axios.get(process.env.REACT_APP_URL +"/style/list/pop");
         setStyleList(res.data);
     }
     const getStyleListSelectByTag = async (tag) => {
         const subTag = tag.substr(1);
-        const res = await axios.get(`http://localhost:9003/style/list/tags?tag=${subTag}`);
+        const res = await axios.get(process.env.REACT_APP_URL + `/style/list/tags?tag=${subTag}`);
         await setStyleList(res.data);
     }
     //********************************************isActive 관련*****************************************************
     const [isActive, setIsActive] = useState({
-        pop: true,
-        new: false
+        pop: false,
+        new: true
     })
     const activeNew = e => {
         setIsActive({
@@ -54,8 +55,13 @@ const MyStyle = () => {
         setNowTag(e.target.innerText.substr(1));
         getStyleListSelectByTag(e.target.innerText).then();
     }
-    //********************************************isActive 관련*****************************************************
+    const moveToForm = () => {
+        if(sessionStorage.loginok===undefined) {
+            alert("로그인한 후에 이용하실 수 있어요");
+            return;
+        }
 
+    }
     useEffect(() => {
         getStyleListOrderByNew().then();
     }, []);
@@ -65,8 +71,14 @@ const MyStyle = () => {
             <div>
                 <StyledTabList>
                     <div>
-                        <PopAndNew onClick={activePop} className={isActive.pop ? "active" : ""}>인기</PopAndNew>
                         <PopAndNew onClick={activeNew} className={isActive.new ? "active" : ""}>최신</PopAndNew>
+                        <PopAndNew onClick={activePop} className={isActive.pop ? "active" : ""}>인기</PopAndNew>
+                        {
+                            sessionStorage.loginok===undefined?
+                                <AddStyleButton to={"/mystyle"} onClick={moveToForm}>+</AddStyleButton>
+                                :
+                                <AddStyleButton to={"/mystyle/form"}>+</AddStyleButton>
+                        }
                     </div>
                 </StyledTabList>
                 <KeywordBind>
@@ -84,8 +96,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx === 0 || idx % 4 === 0).map((elt, idx) =>
-                                    <li>
-                                            <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                            <StyleComponent elt={elt} />
                                     </li>
                                 )
                             }
@@ -93,8 +105,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 1).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }
@@ -102,8 +114,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 2).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }
@@ -111,8 +123,8 @@ const MyStyle = () => {
                         <ul>
                             {
                                 styleList.filter((elt, idx) => idx % 4 === 3).map((elt, idx) =>
-                                    <li>
-                                        <StyleComponent elt={elt} key={elt.style_num}/>
+                                    <li key={elt.style_num}>
+                                        <StyleComponent elt={elt}/>
                                     </li>
                                 )
                             }
@@ -135,14 +147,17 @@ const StyledTabList = styled.div`
   margin: 0 auto;
   margin-bottom: 20px;
   & > div {
-    width: 200px;
+    width: 300px;
     justify-content: space-between;
     display: flex;
   }
 `
 const PopAndNew = styled.button`
+  background-color: #EEE;
+  color:#CCC;
   font-size: 18px;
   border: 1px solid white;
+  border-radius: 20px;
   padding: 16px 12px;
   line-height: 50%;
   font-weight: 600;
@@ -152,6 +167,18 @@ const PopAndNew = styled.button`
     color: white;
     font-weight: 600;
   }
+`
+const AddStyleButton = styled(Link)`
+  width: 62px;
+  background-color: #EEE;
+  text-align: center;
+  color:#CCC;
+  font-size: 18px;
+  border: 1px solid white;
+  border-radius: 20px;
+  padding: 16px 12px;
+  line-height: 50%;
+  font-weight: 600; 
 `
 const KeywordBind = styled.div`
   display: flex;

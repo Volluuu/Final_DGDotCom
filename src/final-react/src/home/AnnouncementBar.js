@@ -29,25 +29,30 @@ export default function AnnouncementBar() {
                     backgroundColor:"black",
                     height:"30px",
                     width:"100%",
-                }}>공지사항11111111111111111111111111111111</SwiperSlide>
+                    letterSpacing:"2px"
+                }}>공지사항 : 네이버 로그인 개인정보방침 관련으로 인해 지원 중단</SwiperSlide>
                 <SwiperSlide style={{
                     color:"white",
                     backgroundColor:"black",
                     height:"30px",
-                    width:"100%"
-                }}>공지사항22222222222222222222222222222222</SwiperSlide>
+                    width:"100%",
+                    letterSpacing:"2px"
+
+                }}>공지사항 : 12월 9일 강남구청 자바 3기 수료</SwiperSlide>
                 <SwiperSlide style={{
                     color:"white",
                     backgroundColor:"black",
                     height:"30px",
-                    width:"100%"
-                }}>공지사항33333333333333333333333333333333</SwiperSlide>
+                    width:"100%",
+                    letterSpacing:"2px"
+                }}>공지사항 : 1조 프로젝트 많은 관심과 응원 부탁드립니다.</SwiperSlide>
                 <SwiperSlide style={{
                     color:"white",
                     backgroundColor:"black",
                     height:"30px",
-                    width:"100%"
-                }}>공지사항44444444444444444444444444444444</SwiperSlide>
+                    width:"100%",
+                    letterSpacing:"2px"
+                }}>공지사항 : 12월 9일(금) ~ 12월 12(월) 수료식으로 인해 배송 지연</SwiperSlide>
             </Swiper>
         </>
     );

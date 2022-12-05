@@ -31,15 +31,15 @@ const Footer = () => {
         <div>
             <ImageBox>
                 <ImgBanner>
-                    <p style={{marginBottom:"10px"}}>D : DOORIYAN</p>
-                    두리안은 맛없다.
+                    <p style={{marginBottom:"10px"}}>D : Dynamic</p>
+                    항상 역동적인 감각으로 패션을 바라봅니다.
                 </ImgBanner>
                 <ImgBanner style={{
                     backgroundImage: 'url("https://kream.co.kr/_nuxt/img/home_banner_bottom2.0077547.png")',
                     backgroundColor: "#3B3A3C"
                 }}>
-                    <p style={{marginBottom:"10px"}}>G : GUN</p>
-                    총에 맞으면 아프다.
+                    <p style={{marginBottom:"10px"}}>G : Gorgeous</p>
+                    DG는 언제나 멋을 추구합니다.
                 </ImgBanner>
             </ImageBox>
             <div style={{padding: "50px 40px"}}>

@@ -7,7 +7,7 @@ const SelectedProduct = (props) => {
     const {elt} = props;
     const [product, setProduct] = useState({});
     const getProduct = () => {
-        axios.get(`http://localhost:9003/style/user/selected?num=${elt}`).then(r => {
+        axios.get(`${process.env.REACT_APP_URL}/style/user/selected?num=${elt}`).then(r => {
             setProduct(r.data);
         })
     }
@@ -22,7 +22,7 @@ const SelectedProduct = (props) => {
     return (
         <Link to={"/product/detail/" + product.p_num}>
             <Wrapper>
-                <img src={"http://localhost:9003/product/" + product.photo} alt=""/>
+                <img src={process.env.REACT_APP_URL + "/product/" + product.photo} alt=""/>
                 <div>
                     <div>{getName()}</div>
                     <div>{product.price}원</div>

@@ -14,6 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AddressApi from "../mypage/AddressApi";
+import DetailReview from "./DetailReview";
 
 function DetailInfo(props) {
   // DetailDto
@@ -615,9 +616,7 @@ function DetailInfo(props) {
         <Rating name="half-rating" value={star} precision={0.1} readOnly />(
         {star}) &nbsp;
         <Link>
-          <span style={{ fontSize: "13px" }} onClick={onClickHandle}>
-            후기더보기(+{rev})
-          </span>
+          <span style={{ fontSize: "13px" }}>후기더보기(+{rev})</span>
         </Link>
       </div>
       <br />

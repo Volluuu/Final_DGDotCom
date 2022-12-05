@@ -116,7 +116,7 @@ function ProductElement(props) {
       <Card className={classes.root}>
         <CardMedia
           className={classes.media}
-          image={`http://localhost:9003/product/${elt.photo}`}
+          image={`${process.env.REACT_APP_URL}/product/${elt.photo}`}
           title="Paella dish"
         />
         <div className={classes.infoBox}>
