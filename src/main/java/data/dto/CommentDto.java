@@ -12,4 +12,7 @@ public class CommentDto {
 	private String content;
 	private String root;
 	private int parent;
+	private int isdel;
+	private String u_name;
+	private String gender;
 }

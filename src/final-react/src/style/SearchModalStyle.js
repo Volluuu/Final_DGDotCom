@@ -5,8 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import {NavLink, useNavigate} from "react-router-dom";
 import axios from "axios";
-import SearchListVirtual from "./SearchListVirtual";
-import BasicSearchShow from "./BasicSearchShow";
+import SearchListVirtualStyle from "./SearchListVirtualStyle";
 import styled from "styled-components";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function TransitionsModal() {
+export default function SearchModalStyle(props) {
+    const {product, setProduct} = props;
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -39,7 +39,6 @@ export default function TransitionsModal() {
     };
     //검색 리스트를 가져오는 이벤트 **********************************
     const [word, setWord] = useState('');
-    const navigate = useNavigate();
     const [searchList, setSearchList] = useState([]);
     const [latest, setLatest] = useState([]);
     const changeWord = useCallback(
@@ -49,41 +48,6 @@ export default function TransitionsModal() {
         [],
     );
 
-    const onSubmit = useCallback(
-        (e) => {
-            e.preventDefault();
-            if (word === '') {
-                navigate("/product/list");
-                setOpen(false);
-
-            } else {
-                navigate(`/product/list?keyword=${word}`)
-                axios.post(`${process.env.REACT_APP_URL}/list/keyword?word=${word}`).then(res => {
-                });
-                setOpen(false);
-                setWord('');
-            }
-            const setOpenAndWord = () => {
-                setWord('');
-            }
-            concatLatest().then();
-        },
-        [word],
-    );
-    const updateLatest = async () => {
-        const num = sessionStorage.u_num;
-        const res = await axios.get(`${process.env.REACT_APP_URL}/list/latest/get?num=${num}`);
-        setLatest(res.data);
-    }
-    const concatLatest = async () => {
-        const num = sessionStorage.u_num;
-        await axios.post(`${process.env.REACT_APP_URL}/list/latest/update?num=${num}&word=${word}`);
-    }
-
-    const deleteLatest = async () => {
-        const num = sessionStorage.u_num;
-        await axios.post(`${process.env.REACT_APP_URL}/list/latest/delete?num=${num}`).then();
-    }
     const updateWord = async () => {
         await axios.get(`${process.env.REACT_APP_URL}/list/search?word=${word}`).then(res => {
             setSearchList(res.data);
@@ -91,8 +55,6 @@ export default function TransitionsModal() {
     }
 
     useEffect(() => {
-        console.log("render");
-        updateLatest().then();
         const debounce = setTimeout(() => {
             if (word) {
                 updateWord().then();
@@ -107,7 +69,7 @@ export default function TransitionsModal() {
     return (
         <>
             <button type="button" onClick={handleOpen}
-                    style={{width: "60px", height: "30px", border: "3px solid black"}}>
+                    style={{width: "60px", height: "30px", border: "3px solid black", fontFamily:"inherit"}}>
                 검색
             </button>
             <Modal
@@ -125,7 +87,6 @@ export default function TransitionsModal() {
                 <Fade in={open}>
                     <div className={classes.paper} style={{height: "100%", display: "flex", overflowY: "auto"}}>
                         <p id="transition-modal-description">
-                            <form onSubmit={onSubmit}>
                                 <InputBar>
                                     <input className={"in"} type="text" placeholder={"상품명 입력"} autoFocus={true} style={{
                                         border     : "1px solid #ccc",
@@ -147,12 +108,10 @@ export default function TransitionsModal() {
                                 </InputBar>
                                 <div style={{margin: "0 auto"}}>
                                     {
-                                        word === '' ? <BasicSearchShow latest={latest} deleteLatest={deleteLatest} setLatest={setLatest} open={open} handOpen={handleOpen} handleClose={handleClose}/> : searchList.length < 1 ?
-                                            <NoResult>no result</NoResult> :
-                                            <SearchListVirtual searchlist={searchList} open={open} handOpen={handleOpen} handleClose={handleClose}/>
+                                        word === '' ? <NoResult>no result</NoResult> :
+                                            <SearchListVirtualStyle searchlist={searchList} open={open} handOpen={handleOpen} handleClose={handleClose} product={product} setProduct={setProduct}/>
                                     }
                                 </div>
-                            </form>
                         </p>
                     </div>
                 </Fade>

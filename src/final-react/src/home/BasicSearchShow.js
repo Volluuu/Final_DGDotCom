@@ -54,11 +54,11 @@ const BasicSearchShow = (props) => {
     const [hot_brand, setHot_brand] = useState([]);
 
     const updateHot = async () => {
-        const res = await axios.get("http://localhost:9003/list/hot");
+        const res = await axios.get(process.env.REACT_APP_URL + "/list/hot");
         setHot(res.data);
     }
     const updateHotBrand = async () => {
-        const res = await axios.get("http://localhost:9003/list/brand");
+        const res = await axios.get(process.env.REACT_APP_URL + "/list/brand");
         setHot_brand(res.data);
     }
 
@@ -111,17 +111,17 @@ const BasicSearchShow = (props) => {
 
             <EltDiv>
                 <CategoryElt to={`/product/list/?keyword=후드`}  onClick={handleClose}>
-                    <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020517860.PNG" alt=""/>
+                    <img className={"CategoryEltPhoto"} src={process.env.REACT_APP_URL + "/product/20221104020517860.PNG"} alt=""/>
                     <p className={"CategoryEltInfo"}>상의</p>
                 </CategoryElt>
                 <CategoryElt to={`/product/list/?keyword=바지`}  onClick={handleClose}>
-                    <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104020634615.PNG" alt=""/>
+                    <img className={"CategoryEltPhoto"} src={process.env.REACT_APP_URL + "/product/20221104020634615.PNG"} alt=""/>
                     <p className={"CategoryEltInfo"}>하의</p>
                 </CategoryElt><CategoryElt to={`/product/list/?keyword=패딩`} onClick={handleClose}>
-                <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104001835856.PNG" alt=""/>
+                <img className={"CategoryEltPhoto"} src={process.env.REACT_APP_URL + "/product/20221104001835856.PNG"} alt=""/>
                 <p className={"CategoryEltInfo"}>아우터</p>
             </CategoryElt><CategoryElt to={`/product/list/?keyword=패션잡화`} onClick={handleClose}>
-                <img className={"CategoryEltPhoto"} src="http://localhost:9003/product/20221104022610637.PNG" alt=""/>
+                <img className={"CategoryEltPhoto"} src={process.env.REACT_APP_URL + "/product/20221104022610637.PNG"} alt=""/>
                 <p className={"CategoryEltInfo"}>패션잡화</p>
             </CategoryElt>
             </EltDiv>
