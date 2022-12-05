@@ -17,7 +17,7 @@ import AddressApi from "../mypage/AddressApi";
 
 function DetailInfo(props) {
   // DetailDto
-  const { row, rev, star } = props;
+  const { row, rev, star, onClickHandle } = props;
 
   //이동 Hook
   const navi = useNavigate();
@@ -605,17 +605,19 @@ function DetailInfo(props) {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h2>{row.category}</h2>
+      <h2>
+        <Link to={`/product/list?brands=${row.brand}`}>{row.brand}</Link>
+      </h2>
       <br />
-      <h3>{row.brand}</h3>
       <h5>{row.p_name}</h5>
-
       <br />
       <div>
         <Rating name="half-rating" value={star} precision={0.1} readOnly />(
         {star}) &nbsp;
         <Link>
-          <span style={{ fontSize: "13px" }}>후기더보기(+{rev})</span>
+          <span style={{ fontSize: "13px" }} onClick={onClickHandle}>
+            후기더보기(+{rev})
+          </span>
         </Link>
       </div>
       <br />

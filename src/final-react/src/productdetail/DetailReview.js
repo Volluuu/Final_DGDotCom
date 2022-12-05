@@ -1,6 +1,5 @@
-import { StarRounded } from "@material-ui/icons";
 import { Rating } from "@mui/material";
-import React from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 function DetailReview(props) {
   const { row } = props;

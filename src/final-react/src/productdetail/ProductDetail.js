@@ -1,13 +1,14 @@
 import { Card } from "@material-ui/core";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import DetailDelivery from "./DetailDelivery";
 import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
 import DetailReview from "./DetailReview";
 import Footer from "../home/Footer";
-// import Detail from "./Detail.css";
+import Detail from "./Detail.css";
+import { ArrowUpward } from "@material-ui/icons";
 
 function ProductDetail(props) {
   const { p_num } = useParams(); //u_num
@@ -70,8 +71,49 @@ function ProductDetail(props) {
     avgReview();
   }, [reviewData]);
 
+  //퀵메뉴 이벤트
+  const [ScrollY, setScrollY] = useState(0);
+  const [BtnStatus, setBtnStatus] = useState(false); // 버튼 상태
+
+  const handleFollow = () => {
+    setScrollY(window.pageYOffset);
+    if (ScrollY > 100) {
+      // 100 이상이면 버튼이 보이게
+      setBtnStatus(true);
+    } else {
+      // 100 이하면 버튼이 사라지게
+      setBtnStatus(false);
+    }
+  };
+
+  const handleTop = () => {
+    // 클릭하면 스크롤이 위로 올라가는 함수
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    setScrollY(0); // ScrollY 의 값을 초기화
+    setBtnStatus(false); // BtnStatus의 값을 false로 바꿈 => 버튼 숨김
+  };
+
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener("scroll", handleFollow);
+    };
+    watch();
+    return () => {
+      window.removeEventListener("scroll", handleFollow);
+    };
+  });
+
   return (
     <div>
+      <button
+        className={BtnStatus ? "topBtn active" : "topBtn"} // 버튼 노출 여부
+        onClick={handleTop} // 버튼 클릭시 함수 호출
+      >
+        <ArrowUpward fontSize="large" />
+      </button>
       <div
         style={{
           width: "70%",
@@ -79,10 +121,12 @@ function ProductDetail(props) {
         }}
       >
         <br />
-        <h1>상품 상세 정보</h1>
+        <h1 style={{ paddingLeft: "40px" }}>
+          <Link to={`/product/list?categories=${productdata.category}`}>
+            {productdata && productdata.category}
+          </Link>
+        </h1>
         <br />
-        <br />
-
         <div
           style={{
             display: "flex",

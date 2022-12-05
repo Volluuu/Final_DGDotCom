@@ -367,7 +367,7 @@ function DetailDelivery(props) {
             <br />
             <br /> - 오늘(오후 11:59까지) 결제하면 내일 바로 출고되어 빠른
             배송이 가능합니다. (연휴 및 공휴일, 천재지변, 택배사 사유 등
-            예외적으로 출고일이 변경될 수 있습니다. <br />
+            예외적으로 출고일이 변경될 수 있습니다.) <br />
             <br />
             <span style={{ fontWeight: "bold" }}>[일반 구매]</span>
             <br /> - 거래가 체결된 시점부터 48시간(일요일•공휴일 제외) 내에
@@ -469,10 +469,10 @@ function DetailDelivery(props) {
                 <strong className="title" data-v-53b73c92>
                   100% 정품 보증
                 </strong>
-                <p className="desc" data-v-53b73c92>
+                <span className="desc" data-v-53b73c92>
                   DG.com에서 검수한 상품이 정품이 아닐 경우, 구매가의 3배를
                   보상합니다.
-                </p>
+                </span>
               </div>
             </li>
             <br />
@@ -490,10 +490,10 @@ function DetailDelivery(props) {
                 <strong className="title" data-v-53b73c92>
                   엄격한 다중 검수
                 </strong>
-                <p className="desc" data-v-53b73c92>
+                <span className="desc" data-v-53b73c92>
                   모든 상품은 검수센터에 도착한 후, 상품별 전문가 그룹의
                   체계적인 시스템을 거쳐 검수를 진행합니다.
-                </p>
+                </span>
               </div>
             </li>
             <br />
@@ -511,10 +511,10 @@ function DetailDelivery(props) {
                 <strong className="title" data-v-53b73c92>
                   정품 인증 패키지
                 </strong>
-                <p className="desc" data-v-53b73c92>
+                <span className="desc" data-v-53b73c92>
                   검수에 합격한 경우에 한하여 DG.com의 정품 인증 패키지가 포함된
                   상품이 배송됩니다.
-                </p>
+                </span>
               </div>
             </li>
           </ul>
