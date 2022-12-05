@@ -34,4 +34,11 @@ public class TradeDto {
     private int price;
     private int discount;
     private int readcount;
+    //리뷰정보
+    private int r_num;
+    private String content;
+    private int star;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
+    private Timestamp writeday;
+    private String u_name;
 }

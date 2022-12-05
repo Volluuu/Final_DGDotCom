@@ -1,3 +1,4 @@
+import { Card } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 
 // 이미지 출력 컴포넌트
@@ -101,15 +102,21 @@ function DetailImage(props) {
     imageZoomRef.current.style.backgroundImage = `url(${photo}`;
   }, [cursorCoordi]);
 
+  useEffect(() => {
+    imageZoomRef.current.style.backgroundImage = `url(${photo}`;
+    imageZoomRef.current.style.visibility = "hidden";
+  }, []);
+
   return (
     <div
       className="productContainer"
-      style={{ paddingLeft: "10%", height: "1200px", display: "inline-block" }}
+      style={{ height: "550px", display: "inline-block" }}
     >
-      <div className="productHeader" style={{ width: "100%", height: "600px" }}>
+      <div className="productHeader" style={{ width: "100%", height: "550px" }}>
         <div
           className="productImage"
           ref={productImageRef}
+          name="productImage"
           style={{
             width: "570px",
 
@@ -127,9 +134,11 @@ function DetailImage(props) {
             height="500px"
           />
         </div>
+
         <div
           ref={imageZoomRef}
           className="imageZoom"
+          name="zoomImage"
           style={{
             position: "absolute",
             // width: "530px",
@@ -138,11 +147,14 @@ function DetailImage(props) {
             // top: "22%",
             width: "600px",
             height: "600px",
-            marginTop: "32px",
-            top: "15%",
+            // marginTop: "32px",
+            // top: "15%",
             display: "inline-block",
+            backgroundColor: "white",
+            zIndex: "1",
           }}
         ></div>
+
         <div ref={boxRef}>
           <div
             ref={cursorBoxRef}

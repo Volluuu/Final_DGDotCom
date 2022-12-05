@@ -31,86 +31,114 @@ public class AdminController {
         return adminMapper.AdminGetAllUser();
     }
 
-    //유저 페이징
-    @GetMapping("/userpagelist")
-    public Map<String,Object> AdminUserPaging(@RequestParam(defaultValue = "1") int currentPage) {
-        System.out.println("currentPage="+currentPage);
-
-        //페이징처리
-        int utotalCount;//총갯수
-        int perPage = 4;//한페이지당 출력할 글 갯수
-        int perBlock = 3; //출력할 페이지 갯수
-        int startNum; //db에서 가져올 시작번호
-        int startPage;//출력할 시작페이지
-        int endPage;//출력할 끝페이지
-        int totalPage; //총 페이지수
-        int no;//출력할 시작번호
-
-        //총갯수
-        utotalCount = adminMapper.TotalUser();
-        //총 페이지수
-        totalPage = utotalCount / perPage + (utotalCount % perPage == 0 ? 0 : 1);
-        //시작페이지
-        startPage = (currentPage - 1) / perBlock * perBlock + 1;
-        //끝페이지
-        endPage = startPage + perBlock - 1;
-        if (endPage > totalPage)
-            endPage = totalPage;
-
-        //시작번호
-        startNum = (currentPage - 1) * perPage;
-        //각페이지당 출력할 번호
-        no = utotalCount - (currentPage - 1) * perPage;
-        //데이터 가져오기
-        Map<String, Integer> map = new HashMap<>();
-        map.put("startnum", startNum);
-        map.put("perpage", perPage);
-
-        List<UserDto> ulist = adminMapper.AdminUserPaging(map);
-
-        //출력할 페이지번호들을 Vector에 담아서 보내기
-        Vector<Integer> parr = new Vector<>();
-        for (int i = startPage; i <= endPage; i++) {
-            parr.add(i);
-        }
-
-        //리액트로 필요한 변수들을 Map에 담아서 보낸다
-        Map<String, Object> smap = new HashMap<>();
-        smap.put("utotalCount",utotalCount);
-        smap.put("ulist",ulist);
-        smap.put("parr",parr);
-        smap.put("startPage",startPage);
-        smap.put("endPage",endPage);
-        smap.put("no",no);
-        smap.put("totalPage",totalPage);
-
-        return smap;
-
-    }
-
-    //삭제
-    @DeleteMapping("/deleteuser")
-    public void deleteUser(@RequestParam int u_num)
+    //리뷰
+    @GetMapping("/review")
+    public List<ReviewDto> TotalReview()
     {
-        adminMapper.DeleteUser(u_num);
+        return adminMapper.TotalReview();
     }
 
+    //유저 페이징
+//    @GetMapping("/userpagelist")
+//    public Map<String,Object> AdminUserPaging(@RequestParam(defaultValue = "1") int currentPage,
+//                                              @RequestParam(value = "searchcolumn", required = false, defaultValue = "") String sc,
+//                                              @RequestParam(value = "searchword", required = false, defaultValue = "") String sw
+//    ) {
+//        System.out.println("currentPage="+currentPage);
+//
+//        //페이징처리
+//        int utotalCount;//총갯수
+//        int perPage = 4;//한페이지당 출력할 글 갯수
+//        int perBlock = 3; //출력할 페이지 갯수
+//        int startNum; //db에서 가져올 시작번호
+//        int startPage;//출력할 시작페이지
+//        int endPage;//출력할 끝페이지
+//        int totalPage; //총 페이지수
+//        int no;//출력할 시작번호
+//
+//        //총갯수
+//        utotalCount = adminMapper.TotalUser();
+//        //총 페이지수
+//        totalPage = utotalCount / perPage + (utotalCount % perPage == 0 ? 0 : 1);
+//        //시작페이지
+//        startPage = (currentPage - 1) / perBlock * perBlock + 1;
+//        //끝페이지
+//        endPage = startPage + perBlock - 1;
+//        if (endPage > totalPage)
+//            endPage = totalPage;
+//
+//        //시작번호
+//        startNum = (currentPage - 1) * perPage;
+//        //각페이지당 출력할 번호
+//        no = utotalCount - (currentPage - 1) * perPage;
+//        //데이터 가져오기
+//        Map<String, Integer> map = new HashMap<>();
+//        map.put("startnum", startNum);
+//        map.put("perpage", perPage);
+//
+//        List<UserDto> ulist = adminMapper.AdminUserPaging(map);
+//
+//        //출력할 페이지번호들을 Vector에 담아서 보내기
+//        Vector<Integer> parr = new Vector<>();
+//        for (int i = startPage; i <= endPage; i++) {
+//            parr.add(i);
+//        }
+//
+//        //리액트로 필요한 변수들을 Map에 담아서 보낸다
+//        Map<String, Object> smap = new HashMap<>();
+//        smap.put("utotalCount",utotalCount);
+//        smap.put("ulist",ulist);
+//        smap.put("parr",parr);
+//        smap.put("startPage",startPage);
+//        smap.put("endPage",endPage);
+//        smap.put("no",no);
+//        smap.put("totalPage",totalPage);
+//        smap.put("searchcolumn",sc);
+//        smap.put("searchword",sw);
+//        return smap;
+//
+//    }
+//
+//    //삭제
+//    @DeleteMapping("/deleteuser")
+//    public void deleteUser(@RequestParam int u_num)
+//    {
+//        adminMapper.DeleteUser(u_num);
+//    }
+//
+//    //회원 이름,Email검색
+//    @GetMapping("/searchuser")
+//    public List<UserDto> SearchUser(@RequestParam String word)
+//    {
+//        return adminMapper.SearchUser(word);
+//    }
+//
+//
     /*------------------------- 상품 시작 ---------------------------*/
 
     //상품 가져오기
     @GetMapping("/product")
-    public List<ProductDto> TotalProduct()
+    public List<JoinDto> AllProduct(@RequestParam(defaultValue = "1") int currentPage)
+    {
+         System.out.println("currentPage=" + currentPage);
+        return adminMapper.AllProduct();
+    }
+
+    @GetMapping("/allproduct")
+    public List<ProductDto> GetAllProduct()
     {
         return adminMapper.GetAllProduct();
     }
+    //상품 갯수
+
     //상품 리스트
     @GetMapping("/ProductPaging")
     public Map<String,Object> ProductPaging(@RequestParam(defaultValue = "1") int currentPage) {
         System.out.println("currentPage=" + currentPage);
         //페이징 처리
         int ptotalCount;//총갯수
-        int perPage = 6;//한페이지당 출력할 글 갯수
-        int perBlock = 10; //출력할 페이지 갯수
+        int perPage = 5;//한페이지당 출력할 글 갯수
+        int perBlock = 2; //출력할 페이지 갯수
         int startNum; //db에서 가져올 시작번호
         int startPage;//출력할 시작페이지
         int endPage;//출력할 끝페이지
@@ -138,7 +166,7 @@ public class AdminController {
         map.put("startnum", startNum);
         map.put("perpage", perPage);
 
-        List<JoinDto> list = adminMapper.ProductPaging(map);
+        List<JoinDto> productList = adminMapper.ProductPaging(map);
 
         //출력할 페이지번호들을 Vector에 담아서 보내기
         Vector<Integer> parr = new Vector<>();
@@ -147,16 +175,16 @@ public class AdminController {
         }
 
         //리액트로 필요한 변수들을 Map에 담아서 보낸다
-        Map<String, Object> smap = new HashMap<>();
-        smap.put("ptotalCount",ptotalCount);
-        smap.put("list",list);
-        smap.put("parr",parr);
-        smap.put("startPage",startPage);
-        smap.put("endPage",endPage);
-        smap.put("no",no);
-        smap.put("totalPage",totalPage);
+        Map<String, Object> jmap = new HashMap<>();
+        jmap.put("ptotalCount",ptotalCount);
+        jmap.put("productList",productList);
+        jmap.put("parr",parr);
+        jmap.put("startPage",startPage);
+        jmap.put("endPage",endPage);
+        jmap.put("no",no);
+        jmap.put("totalPage",totalPage);
 
-        return smap;
+        return jmap;
     }
 
     //사진 업로드시 저장할 파일명
@@ -284,6 +312,7 @@ public class AdminController {
         int endPage;//출력할 끝페이지
         int totalPage; //총 페이지수
         int no;//출력할 시작번호
+
 
         //총갯수
         stotalCount = adminMapper.TotalBeforeDelivery();
@@ -502,6 +531,11 @@ public class AdminController {
     }
          /*------------------------- 배너 끝 ---------------------------*/
 
+    @GetMapping("/style")
+         public int AllStyle()
+         {
+             return adminMapper.AllStyle();
+         }
 
 }
 

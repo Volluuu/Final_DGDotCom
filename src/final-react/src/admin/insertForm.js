@@ -14,6 +14,7 @@ function InsertForm(props) {
     const [price, setPrice] = useState("");
     const [p_size, setP_size] = useState("");
     const [amount, setAmount] = useState("");
+    const [discount, setDiscount] = useState("");
     const [message, setMessage] = useState("");
     const navi = useNavigate();
 
@@ -41,7 +42,7 @@ function InsertForm(props) {
 
         let url = localStorage.url + "/admin/productInsert";
 
-        axios.post(url, {category,photo,brand,gender,p_name,price,p_size,amount})
+        axios.post(url, {category,photo,brand,gender,p_name,price,p_size,amount,discount})
             .then(res=>{
                 setCategory('');
                 setPhoto('');
@@ -51,6 +52,7 @@ function InsertForm(props) {
                 setPrice('');
                 setP_size('');
                 setAmount('');
+                setDiscount('');
                 setMessage('상품이 추가되었습니다!')
                 navi('/admin/adproduct');
             })
@@ -60,16 +62,23 @@ function InsertForm(props) {
         <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginTop: '5rem',
+            marginTop: '2rem'
         }}>
             <form onSubmit={onSubmit} style={{
                 border: '2px solid lightgray',
                 minWidth: '500px'
             }}>
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    종류</div>
                 <input
                     type="text"
                     value={category}
-                    placeholder="종류"
                     onChange={(e) => setCategory(e.target.value)}
                     style={{
                         display: 'block',
@@ -78,15 +87,22 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    브랜드</div>
                 <input
                     type="text"
                     value={brand}
-                    placeholder="브랜드"
                     onChange={(e) => setBrand(e.target.value)}
                     style={{
                         display: 'block',
@@ -95,15 +111,22 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    상품명</div>
                 <input
                     type="text"
                     value={p_name}
-                    placeholder="이름"
                     onChange={(e) => setP_name(e.target.value)}
                     style={{
                         display: 'block',
@@ -112,15 +135,22 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    성별</div>
                 <input
                     type="text"
                     value={gender}
-                    placeholder="성별"
                     onChange={(e) => setGender(e.target.value)}
                     style={{
                         display: 'block',
@@ -129,15 +159,22 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    가격</div>
                 <input
                     type="text"
                     value={price}
-                    placeholder="가격"
                     onChange={(e) => setPrice(e.target.value)}
                     style={{
                         display: 'block',
@@ -146,16 +183,47 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
 
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    할인율</div>
+                <input
+                    type="text"
+                    value={discount}
+                    onChange={(e) => setDiscount(e.target.value)}
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        height: '3rem',
+                        padding: '0.5rem',
+                        fontSize: '1.1em',
+                        fontWeight: '500',
+                        marginBottom:'12px',
+                        border: '1px solid lightgray'
+                    }}
+                />
+
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    사이즈</div>
                 <input
                     type="text"
                     value={p_size}
-                    placeholder="사이즈"
                     onChange={(e) => setP_size(e.target.value)}
                     style={{
                         display: 'block',
@@ -164,14 +232,22 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
+
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    재고수</div>
                 <input
                     type="text"
                     value={amount}
-                    placeholder="재고수"
                     onChange={(e) => setAmount(e.target.value)}
                     style={{
                         display: 'block',
@@ -180,14 +256,21 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
+                <div style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '3rem',
+                    padding: '0.5rem',
+                    fontSize: '1.1em',
+                    fontWeight: '500'}}>
+                    사진</div>
                 <input
                     type="file"
-                    placeholder="사진"
                     onChange={uploadPhoto}
                     style={{
                         display: 'block',
@@ -196,19 +279,20 @@ function InsertForm(props) {
                         padding: '0.5rem',
                         fontSize: '1.1em',
                         fontWeight: '500',
-                        marginBottom: '2rem',
+                        marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
                 />
 
                 <button type="submit"
-                        className='insertbtn'
+                        className='hj-btn hj-btn-green'
                         style={{
                             width: '100%',
                             border: 'none',
                             fontSize: '1.2em',
                             borderRadius: '0.2rem',
                             cursor: 'pointer',
+                            marginTop: '2rem'
                         }}>추가하기
                 </button>
 

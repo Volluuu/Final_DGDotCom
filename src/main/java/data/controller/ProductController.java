@@ -1,6 +1,7 @@
 package data.controller;
 
 import data.dto.ProductDto;
+import data.dto.TradeDto;
 import data.mapper.KeywordMapper;
 import data.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,19 @@ public class ProductController {
 //        System.out.println("p_num:"+p_num);
 
         return productMapper.getProduct(p_num);
+    }
+
+    @GetMapping("/reviewlist")
+    public Map<String,Object> reviewList(@RequestParam int p_num) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("p_num",p_num);
+
+        List<ProductDto> list = productMapper.getReviewData(map);
+
+        Map<String, Object> rmap = new HashMap<>();
+        rmap.put("list", list);
+
+        return rmap;
     }
 }

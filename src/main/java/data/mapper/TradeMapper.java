@@ -29,4 +29,5 @@ public interface TradeMapper {
     public void deleteUid(String merchant_uid);
 //    수정
 //    public updateCart(CartDto dto);
+
 }

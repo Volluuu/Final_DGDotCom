@@ -2,10 +2,10 @@ import React from 'react';
 import DashBoard from "./DashBoard";
 import UserInfo from "./UserInfo";
 import AdProduct from "./AdProduct";
-import Cs from "./Cs";
-import Banner from "./Banner";
+// import Cs from "./Cs";
+// import Banner from "./Banner";
 import {useParams} from "react-router-dom";
-import logo from "../admin/logo192.png";
+import logo from "./logo.png";
 import InsertForm from "./insertForm";
 import PupdateForm from "./PupdateForm";
 import BeforeDelivery from "./BeforeDelivery";
@@ -22,11 +22,11 @@ function AdminMenu(props) {
                     style={{backgroundColor: 'mediumpurple'}}>
                     {/* 로고*/}
                     <a className='sidebar-brand d-flex align-items-center justify-content-center' href='/'>
-                        <img alt='#' src={logo} style={{width: '80px', height: '80px'}}/>
+                        <img alt='#' src={logo} style={{width: '150px', height: '170px'}}/>
                     </a>
 
                     {/*로고 아래*/}
-                    <hr className='sidebar-divider my-0'/>
+                    <hr className='sidebar-divider my-2'/>
 
                     {/*사이드바 메뉴*/}
                     <div className="sidebar-heading" style={{fontSize: '24px'}}>
@@ -65,14 +65,14 @@ function AdminMenu(props) {
                             <span>배송관리</span>
                         </a>
                         <div id='collapseTwo' className='collapse show' aria-labelledby='headingTwo'
-                         style={{}}>
+                         style={{margin:'0',padding:'0'}}>
                             <div className='py-2 collapse-inner rounded'>
                                 <a className='collapse-item' href='/admin/beforedelivery'
-                                style={{color:'rightgray'}}>-배송전</a>
+                                style={{color:'lightgray'}}>-배송전</a>
                                 <a className='collapse-item' href='/admin/delivering'
-                                   style={{color:'rightgray'}}>-배송중</a>
+                                   style={{color:'lightgray'}}>-배송중</a>
                                 <a className='collapse-item' href='/admin/deliverycomplete'
-                                   style={{color:'rightgray'}}>-배송완료</a>
+                                   style={{color:'lightgray'}}>-배송완료</a>
 
                             </div>
 
@@ -101,8 +101,8 @@ function AdminMenu(props) {
                 {/*상단 바 시작, 상단 바 색깔을 nav태그에서 변경 가능*/}
                 <div id='content-wrapper' className='d-flex flex-column'>
                     <div id='content'>
-                        <nav className='navbar navbar-expand navbar-light topbar mb-4 static-top shadow'
-                             style={{backgroundColor: 'mediumpurple'}}>
+                        <nav className='navbar navbar-expand navbar-light topbar mb-1 static-top shadow'
+                             style={{backgroundColor: 'mediumpurple',height:'78px'}}>
 
                             {/*상단 바 우측 관리자 이름 표시*/}
                             <ul className="navbar-nav ml-auto">
@@ -154,14 +154,14 @@ function AdminMenu(props) {
                             <DeliveryComplete/>
                         }
 
-                        {
-                            path==="cs" &&
-                            <Cs/>
-                        }
-                        {
-                            path==="banner" &&
-                            <Banner/>
-                        }
+                        {/*{*/}
+                        {/*    path==="cs" &&*/}
+                        {/*    <Cs/>*/}
+                        {/*}*/}
+                        {/*{*/}
+                        {/*    path==="banner" &&*/}
+                        {/*    <Banner/>*/}
+                        {/*}*/}
 
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 package data.mapper;
 
 import data.dto.ProductDto;
+import data.dto.TradeDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface ProductMapper {
     public List<ProductDto> getProductList(Map<String,Object>map);
 //    상품 데이터 출력
     public ProductDto getProduct(int p_num);
+    //리뷰 데이터
+    public List<ProductDto> getReviewData(Map<String,Object>map);
 }

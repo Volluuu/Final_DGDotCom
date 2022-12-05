@@ -63,4 +63,9 @@
     <select id="getProduct" parameterType="int" resultType="ProductDto">
         select * from product where p_num=#{p_num}
     </select>
+
+    <!--    리뷰데이터-->
+    <select id="getReviewData" parameterType="int" resultType="ProductDto">
+        SELECT * FROM review R JOIN product P ON R.p_num=P.p_num JOIN user U ON  U.u_num=R.u_num where P.p_num=#{p_num}
+    </select>
 </mapper>

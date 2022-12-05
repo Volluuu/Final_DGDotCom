@@ -40,7 +40,8 @@ public class CartController {
 //        System.out.println("ProCP:"+currentPage);
 
         //페이징처리
-        int totalCount = cartMapper.getCartCount();
+        int totalCount = cartMapper.getUserCartCount(u_num);
+//        System.out.println("tot:"+totalCount);
 
 //        System.out.println("tot:"+totalCount);
         int perPage = 10;//한 페이지당 보여질 글의 갯수
@@ -70,6 +71,8 @@ public class CartController {
         //각 페이지에서 보여질 시작번호
         //예: 1페이지->0, 2페이지:5, 3페이지 : 10...
         startNum = (currentPage - 1) * perPage;
+        System.out.println("SN:"+startNum);
+        System.out.println("PN:"+perPage);
 
         //각페이지당 출력할 시작번호 구하기
         //예: 총글갯수가 23이라면  1페이지는 23,2페이지는 18,3페이지는 13...

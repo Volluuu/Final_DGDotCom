@@ -1,25 +1,23 @@
 import {
   Button,
+  Card,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
 } from "@material-ui/core";
-import {
-  AddCircleOutlineRounded,
-  Close,
-  RemoveCircleOutline,
-} from "@material-ui/icons";
+import { AddTwoTone, Close, RemoveTwoTone } from "@material-ui/icons";
+import { Rating } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AddressApi from "../mypage/AddressApi";
 
 function DetailInfo(props) {
   // DetailDto
-  const { row } = props;
+  const { row, rev, star, onClickHandle } = props;
 
   //이동 Hook
   const navi = useNavigate();
@@ -96,17 +94,9 @@ function DetailInfo(props) {
     // console.log("addlist:" + JSON.stringify(itemlist));
   };
 
-  // //여러 데이터 추가 시,
-  // const [addlist, setAddlist] = useState([{ ...itemlist }]);
-  // //배열 추가 이벤트
-  // const additem = (itemlist) => {
-  //   for (let i = 0; i < addlist.length; i++){
-
-  //   } setAddlist(...addlist, itemlist);
-  // };
-
   //유저정보
   const [u_data, setU_data] = useState("");
+
   //유저정보 불러오기
   const userdata = () => {
     let userUrl = localStorage.url + "/cart/userdata?u_num=" + u_num;
@@ -121,8 +111,15 @@ function DetailInfo(props) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (e) => {
+    if (u_data === "") {
+      alert("로그인 후, 이용가능합니다");
+      setOpen(false);
+      navi("../../../user/login");
+      return;
+    }
     setOpen(true);
   };
+  // console.log("dd:", u_data === "");
 
   const handleClose = () => {
     setAddressData("");
@@ -170,7 +167,8 @@ function DetailInfo(props) {
 
   //결제
   const requestBtn = (e) => {
-    setOpen(false);
+    // setOpen(false);
+
     let t_name = t_nameref.current.value;
     let t_hp = t_hpref.current.value;
     let t_addr = t_addrref.current.value;
@@ -184,12 +182,10 @@ function DetailInfo(props) {
       t_addrdetail === "" ||
       t_email === ""
     ) {
-      Swal.showValidationMessage(
-        `잘못된 정보입니다. 다시 확인 후 입력해주세요`
-      );
-      return false;
+      alert("정보가 누락되었습니다");
+      return;
     }
-
+    setOpen(false);
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp81470772"); // 가맹점 식별 코드
 
@@ -254,7 +250,9 @@ function DetailInfo(props) {
               count: itemlist.amount,
               lastprice: itemlist.price * itemlist.amount,
               p_size: itemlist.p_size,
-              state: "결제완료",
+              state: "배송 전",
+              withCredentials: true,
+              headers: { Authorization: `Bearer ${localStorage.accessToken}` },
             })
             .then((res) => {
               Swal.fire({
@@ -319,130 +317,126 @@ function DetailInfo(props) {
 
   //장바구니 이벤트
   const addcart = (e) => {
-    // console.log("cartlist:" + cartlist);
-    // console.log("length:" + cartlist.length);
-    // console.log("itemlist:" + JSON.stringify(itemlist));
-    //중복 비교
-    for (let i = 0; i < cartlist.length; i++) {
-      if (
-        itemlist.p_name === cartlist[i].p_name &&
-        itemlist.p_size === cartlist[i].p_size
-      ) {
-        // console.log("비교1:" + 1);
-        // Swal.fire({
-        //   position: "center",
-        //   icon: "warning",
-        //   title: "동일한 상품이 존재합니다",
-        //   showConfirmButton: false,
-        //   timer: 1500,
-        // });
-        // return;
-        Swal.fire({
-          title: "동일한 상품이 존재합니다",
-          text: "그래도 추가하시겠습니까?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "장바구니 추가",
-        }).then((result) => {
-          // console.log("result:" + JSON.stringify(result));
-          if (result.isConfirmed) {
-            // navi("/mypage/cart/1");
-            let insertUrl = localStorage.url + "/cart/insert";
-            if (itemlist.p_size != null) {
-              axios
-                .post(insertUrl, {
-                  u_num,
-                  p_num: itemlist.p_num,
-                  p_size: itemlist.p_size,
-                  amount,
-                })
-                .then((res) => {
-                  // alert("장바구니 추가");
-                  Swal.fire({
-                    title: "장바구니에 추가되었습니다",
-                    text: "장바구니로 이동하시겠습니까?",
-                    icon: "success",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "장바구니로 이동",
-                  }).then((result) => {
-                    // console.log("result:" + JSON.stringify(result));
-                    if (result.isConfirmed) {
-                      navi("/mypage/cart/1");
-                    }
-                    if (result.isDismissed) {
-                      setAmount(1);
-                      setItemlist("");
-                    }
+    if (sessionStorage.loginok === "yes") {
+      //중복 비교
+      for (let i = 0; i < cartlist.length; i++) {
+        //동일한 상품이 존재할 때-----------------------------------------------------------------------------------------
+        if (
+          itemlist.p_name === cartlist[i].p_name &&
+          itemlist.p_size === cartlist[i].p_size
+        ) {
+          Swal.fire({
+            title: "동일한 상품이 존재합니다",
+            text: "그래도 추가하시겠습니까?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "장바구니 추가",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // DB insert
+              let insertUrl = localStorage.url + "/cart/insert";
+              if (itemlist.p_size != null) {
+                axios
+                  .post(insertUrl, {
+                    u_num,
+                    p_num: itemlist.p_num,
+                    p_size: itemlist.p_size,
+                    amount,
+                  })
+                  .then((res) => {
+                    // alert("장바구니 추가");
+                    Swal.fire({
+                      title: "장바구니에 추가되었습니다",
+                      text: "장바구니로 이동하시겠습니까?",
+                      icon: "success",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "장바구니로 이동",
+                    }).then((result) => {
+                      // console.log("result:" + JSON.stringify(result));
+                      if (result.isConfirmed) {
+                        navi("/mypage/cart/1");
+                      }
+                      if (result.isDismissed) {
+                        // setAmount(1);
+                        // setItemlist("");
+                        closeEvent();
+                      }
+                    });
+                    // navi("/product/list");
                   });
-                  // navi("/product/list");
+              } else {
+                Swal.fire({
+                  position: "center",
+                  icon: "error",
+                  title: "옵션을 선택해주세요.",
+                  showConfirmButton: false,
+                  timer: 1000,
                 });
-            } else {
-              Swal.fire({
-                position: "center",
-                icon: "error",
-                title: "옵션을 선택해주세요.",
-                showConfirmButton: false,
-                timer: 1000,
-              });
-              return;
+                return;
+              }
             }
-          }
-          if (result.isDismissed) {
-            // setAmount(1);
-            // setItemlist({});
-            closeEvent();
-          }
+            if (result.isDismissed) {
+              // setAmount(1);
+              // setItemlist({});
+              closeEvent();
+            }
+          });
+          // navi("/product/list");
+          return;
+        }
+      }
+
+      let insertUrl = localStorage.url + "/cart/insert";
+      if (itemlist.p_size != null) {
+        axios
+          .post(insertUrl, {
+            u_num,
+            p_num: itemlist.p_num,
+            p_size: itemlist.p_size,
+            amount,
+          })
+          .then((res) => {
+            // alert("장바구니 추가");
+            Swal.fire({
+              title: "장바구니에 추가되었습니다",
+              text: "장바구니로 이동하시겠습니까?",
+              icon: "success",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "장바구니로 이동",
+            }).then((result) => {
+              // console.log("result:" + JSON.stringify(result));
+              if (result.isConfirmed) {
+                navi("/mypage/cart/1");
+              }
+              if (result.isDismissed) {
+                setAmount(1);
+                setItemlist({});
+              }
+            });
+            // navi("/product/list");
+          });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "옵션을 선택해주세요.",
+          showConfirmButton: false,
+          timer: 1000,
         });
-        // navi("/product/list");
         return;
       }
     }
-
-    // let insertUrl = localStorage.url + "/cart/insert";
-    // if (itemlist.p_size != null) {
-    //   axios
-    //     .post(insertUrl, {
-    //       u_num,
-    //       p_num: itemlist.p_num,
-    //       p_size: itemlist.p_size,
-    //       amount,
-    //     })
-    //     .then((res) => {
-    //       // alert("장바구니 추가");
-    //       Swal.fire({
-    //         title: "장바구니에 추가되었습니다",
-    //         text: "장바구니로 이동하시겠습니까?",
-    //         icon: "success",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         cancelButtonColor: "#d33",
-    //         confirmButtonText: "장바구니로 이동",
-    //       }).then((result) => {
-    //         // console.log("result:" + JSON.stringify(result));
-    //         if (result.isConfirmed) {
-    //           navi("/mypage/cart/1");
-    //         }
-    //         if (result.isDismissed) {
-    //           setAmount(1);
-    //           setItemlist({});
-    //         }
-    //       });
-    //       // navi("/product/list");
-    //     });
-    // } else {
-    //   Swal.fire({
-    //     position: "center",
-    //     icon: "error",
-    //     title: "옵션을 선택해주세요.",
-    //     showConfirmButton: false,
-    //     timer: 1000,
-    //   });
-    //   return;
-    // }
+    if (sessionStorage.loginok == null) {
+      alert("로그인 후, 이용가능합니다");
+      navi("../../../user/login");
+      return;
+    }
   };
 
   // let insertUrl = localStorage.url + "/cart/insert";
@@ -499,7 +493,7 @@ function DetailInfo(props) {
             className="form-select"
             p_num={row.p_num}
             name="p_size"
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -527,7 +521,7 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             name="p_size"
             id="p_size"
@@ -559,7 +553,9 @@ function DetailInfo(props) {
           <select
             className="form-select sizeselect"
             p_num={row.p_num}
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+            }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -591,7 +587,7 @@ function DetailInfo(props) {
         return (
           <select
             className="form-select sizeselect"
-            style={{ width: "150px", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             onChange={additemlist}
             id="p_size"
             defaultValue={"no" || ""}
@@ -599,21 +595,33 @@ function DetailInfo(props) {
             <option value="no" disabled>
               선택
             </option>
-            <option value="zero">재고 없음</option>
+            <option value="zero" disabled>
+              재고 없음
+            </option>
           </select>
         );
     }
   }
 
   return (
-    <div>
-      <h1>{row.category}</h1>
+    <div style={{ padding: "40px" }}>
+      <h2>
+        <Link to={`/product/list?brands=${row.brand}`}>{row.brand}</Link>
+      </h2>
       <br />
-      <h3>{row.brand}</h3>
       <h5>{row.p_name}</h5>
-
       <br />
-      <h5>
+      <div>
+        <Rating name="half-rating" value={star} precision={0.1} readOnly />(
+        {star}) &nbsp;
+        <Link>
+          <span style={{ fontSize: "13px" }} onClick={onClickHandle}>
+            후기더보기(+{rev})
+          </span>
+        </Link>
+      </div>
+      <br />
+      <h5 style={{ textAlign: "right" }}>
         {Number(row.price)
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -625,53 +633,99 @@ function DetailInfo(props) {
         {selectform(row.category)}
       </div>
       <br />
-      <div>
-        <p>수량</p>
-        <RemoveCircleOutline
-          value={amount}
-          onClick={subamount}
-          style={{ cursor: "pointer" }}
-        />
-        &nbsp;<span>{amount}</span>&nbsp;
-        <AddCircleOutlineRounded
-          value={amount}
-          onClick={addamount}
-          style={{ cursor: "pointer" }}
-        />
-      </div>
-      <br />
+
       {itemlist && itemlist.p_size ? (
-        <div
-          style={{
-            border: "1px solid gray",
-            backgroundColor: "lightgray",
-            width: "50%",
-            float: "right",
-            padding: "20px",
-          }}
-        >
+        <div style={{ border: "1px solid lightgray" }}>
           <Close
             style={{ float: "right", cursor: "pointer" }}
             onClick={closeEvent}
           ></Close>
-          <div style={{ width: "80%" }}>
-            <p>{itemlist.p_name}</p>
-            <p>사이즈 : {itemlist.p_size}</p>
-            <p>수량 : {itemlist.amount}</p>
+          <div
+            style={{
+              backgroundColor: "white",
+              // width: "90%",
+              margin: "0 auto",
+              padding: "20px",
+            }}
+          >
+            <div>
+              <p style={{ fontWeight: "bold" }}>{itemlist.p_name}</p>
+              <br />
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                {itemlist &&
+                (itemlist.category === "샌들" ||
+                  itemlist.category === "슬리퍼" ||
+                  itemlist.category === "스니커즈" ||
+                  itemlist.category === "로퍼/플랫") ? (
+                  <p
+                    style={{ width: "45%", fontWeight: "bold", color: "gray" }}
+                  >
+                    {itemlist.p_size}mm
+                  </p>
+                ) : (
+                  <p
+                    style={{ width: "45%", fontWeight: "bold", color: "gray" }}
+                  >
+                    {itemlist.p_size}
+                  </p>
+                )}
+                <div style={{ width: "30%" }}>
+                  <div
+                    style={{
+                      width: "62%",
+                      display: "flex",
+                    }}
+                  >
+                    <RemoveTwoTone
+                      value={amount}
+                      onClick={subamount}
+                      style={{
+                        cursor: "pointer",
+                        border: "1px solid lightgray",
+                      }}
+                    />
 
-            <h5>
-              총 결제 금액 :
-              {Number(row.price * amount)
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              원
-            </h5>
+                    <p
+                      style={{
+                        width: "50%",
+                        textAlign: "center",
+                      }}
+                    >
+                      {amount}
+                    </p>
+
+                    <AddTwoTone
+                      value={amount}
+                      onClick={addamount}
+                      style={{
+                        cursor: "pointer",
+                        border: "1px solid lightgray",
+                      }}
+                    />
+                  </div>
+                </div>
+                <p>
+                  {itemlist.price
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  원
+                </p>
+              </div>
+              <br />
+              <h5 style={{ textAlign: "right" }}>
+                총 결제 금액 :
+                {Number(row.price * amount)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                원
+              </h5>
+            </div>
           </div>
         </div>
       ) : (
         <></>
       )}
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", marginTop: "30px" }}>
         {itemlist && itemlist.p_size ? (
           <button
             type="button"
@@ -753,6 +807,12 @@ function DetailInfo(props) {
                   fullWidth
                   defaultValue={u_data.hp}
                   onChange={handleInput}
+                  inputProps={{ maxLength: 13 }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value
+                      .replace(/[^0-9]/g, "")
+                      .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+                  }}
                 />
                 <TextField
                   required
@@ -817,14 +877,10 @@ function DetailInfo(props) {
               </form>
             </DialogContent>
             <DialogActions>
-              <Button
-                variant="contained"
-                onClick={requestBtn}
-                color="secoundary"
-              >
+              <Button variant="contained" onClick={requestBtn} color="primary">
                 결제하기
               </Button>
-              <Button variant="outlined" onClick={handleClose} color="danger">
+              <Button variant="outlined" onClick={handleClose} color="default">
                 취소
               </Button>
             </DialogActions>

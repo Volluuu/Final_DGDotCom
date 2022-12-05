@@ -38,4 +38,6 @@
     <delete id="deleteUid" parameterType="String">
 
     </delete>
+
+
 </mapper>

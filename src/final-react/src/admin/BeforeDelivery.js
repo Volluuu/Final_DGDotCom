@@ -16,7 +16,6 @@ function BeforeDelivery(props) {
                 setData(res.data);
             })
     }
-
    // update button이벤트
     const insertInvoice = (e) => {
         let upin = document.querySelector(".ui").previousElementSibling.value;
@@ -60,12 +59,12 @@ function BeforeDelivery(props) {
                         data.tlist &&
                         data.tlist.map((r, d_number) =>
                             <tr key={d_number} className='tr-hj' align='center'>
-                                <td className='td-hj'>{data.no - d_number}</td>
+                                <td className='td-hj'>{d_number+++1}</td>
                                 <td className='td-hj'>{r.t_name}</td>
                                 <td className='td-hj'>{r.t_hp}</td>
                                 <td className='td-hj'>{r.t_addr}</td>
                                 <td className='td-hj'>{r.count}</td>
-                                <td className='td-hj'>{r.lastprice}</td>
+                                <td className='td-hj'>{r.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                 <td className='td-hj'>{r.p_size}</td>
                                 <td className='td-hj'>
                                     <input type={'text'}
