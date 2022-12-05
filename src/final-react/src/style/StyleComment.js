@@ -122,16 +122,17 @@ const StyleComment = (props) => {
                                             {elt.u_name} :
                                         </div>
                                         <div style={{width: "80%", wordBreak: "break-all"}}>
-                                            {elt.isdel ? <span>삭제된 댓글입니다</span> : elt.content}
+                                            {elt.isdel ? <div style={{color:"#ccc", display:"inline-block", height:"100%"}}>삭제된 댓글입니다</div> :
+                                                <div style={{display:"inline-block", height:"100%"}}>{elt.content}</div>}
                                             <Answer ref={(element) => {
                                                 answerRef.current[idx] = element;
                                             }}
                                                     value={"no"}
                                                     onClick={() => pressAnswer(idx)}
                                             >답글</Answer>
-                                            <DeleteButton onClick={() => deleteComment(elt.comment_num)}>
+                                            {sessionStorage.u_num==elt.u_num? <DeleteButton onClick={() => deleteComment(elt.comment_num)}>
                                                 x
-                                            </DeleteButton>
+                                            </DeleteButton> : ""}
                                         </div>
                                     </div>
                                     <form onSubmit={(e) => submitAnswer(e, idx, elt.comment_num)} ref={(element) => {
@@ -163,7 +164,7 @@ const StyleComment = (props) => {
                                     </form>
                                     <div key={idx}>
                                         <StyleReply style={style} parent={elt.comment_num} cnt={10} plus={10}
-                                                    getData={getData} list={list}/>
+                                                    getData={getData} list={list} deleteComment={deleteComment}/>
                                     </div>
                                 </div>
                         )

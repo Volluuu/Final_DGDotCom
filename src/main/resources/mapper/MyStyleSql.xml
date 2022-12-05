@@ -11,6 +11,17 @@
     <select id="getStyleListSelectByTag" parameterType="string" resultType="styleDto">
         select * from mystyle where tag like concat('%',#{tag},'%')
     </select>
+    <select id="getStyleNumLatest">
+        select style_num from mystyle order by style_num desc limit 1;
+    </select>
+    <insert id="insertStyle" parameterType="StyleDto">
+        insert into mystyle (style_num, photo, u_num, content, tag, p_list, writeday) values
+        (null, #{photo}, #{u_num}, #{content}, #{tag}, #{p_list}, now())
+    </insert>
+    <delete id="deleteStyle" parameterType="int">
+        delete from mystyle where style_num = #{style_num}
+    </delete>
+
 
 
 <!--    **********************************댓글 관련 SQL ****************************************-->
@@ -37,10 +48,16 @@
     <select id="getLikeCount" parameterType="int" resultType="int">
         select count(*) from liketable where style_num = #{style_num}
     </select>
+    <select id="getCommentCount" parameterType="int" resultType="int">
+        select count(*) from comment where style_num = #{style_num}
+    </select>
     <insert id="addLike" parameterType="Map">
         insert liketable (like_num, u_num, style_num) values(null, #{u_num}, #{style_num})
     </insert>
     <delete id="substractLike" parameterType="Map">
         delete from liketable where u_num = #{u_num} and style_num = #{style_num}
     </delete>
+    <select id="isCheck" parameterType="Map" resultType="boolean">
+        select * from liketable where u_num = #{u_num} and style_num = #{style_num}
+    </select>
 </mapper>

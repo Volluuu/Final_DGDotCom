@@ -15,6 +15,8 @@ public interface MyStyleMapper {
 
 	public List<StyleDto> getAllStyleOrderByPop();
 
+	public void insertStyle(StyleDto dto);
+	public void deleteStyle(int style_num);
 	//*****************************************************댓글 관련 Mapper ***************
 	public List<CommentDto> getAllComment(int style_num);
 
@@ -27,8 +29,8 @@ public interface MyStyleMapper {
 	public void deleteComment(int comment_num);
 	//*****************************************************좋아요 관련 Mapper ***************
 	public int getLikeCount(int style_num);
-
+	public int getCommentCount(int style_num);
 	public void addLike(Map<String, Integer> map);
-
 	public void substractLike(Map<String, Integer> map);
+	public boolean isCheck(Map<String, Integer> map);
 }

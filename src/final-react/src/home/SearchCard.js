@@ -18,7 +18,6 @@ const SearchCard = ({key, product, style}) => {
 
     const ProductUrl = `${process.env.REACT_APP_URL}/product/${product.photo}`
     const detailUrl = `/product/detail/${product.p_num}`
-    console.log(ProductUrl);
     return (
         <div className={"SearchCard-virtualized"} style={style}>
             <Link to={detailUrl}>

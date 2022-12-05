@@ -3,7 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 
 const StyleReply = (props) => {
-    const {parent, style, cnt, plus, getData, list} = props;
+    const {parent, style, cnt, plus, getData, list, deleteComment} = props;
     const [replyList, setReplyList] = useState([]);
     const [comment, setComment] = useState("");
 
@@ -11,7 +11,6 @@ const StyleReply = (props) => {
     const answerInputRef = useRef([]);
     const openRef = useRef([]);
 
-    const cWidth2 = 280 - cnt + "px";
     const LeftMargin = cnt + "px";
     const minus = "-" + plus + "px";
     const getList = (props) => {
@@ -80,13 +79,17 @@ const StyleReply = (props) => {
                                         {elt.u_name} :
                                     </div>
                                     <div style={{}}>
-                                        작성 내용 : {elt.content}
+                                        {elt.isdel ? <div style={{color:"#ccc", display:"inline-block", height:"100%"}}>삭제된 댓글입니다</div> :
+                                            <div style={{display:"inline-block", height:"100%"}}>{elt.content}</div>}
                                         <Answer ref={(element) => {
                                             answerRef.current[idx] = element;
                                         }}
                                                 value={"no"}
                                                 onClick={() => pressAnswer(idx)}
                                         >답글</Answer>
+                                        {sessionStorage.u_num==elt.u_num? <DeleteButton onClick={() => deleteComment(elt.comment_num)}>
+                                            x
+                                        </DeleteButton> : ""}
                                     </div>
                                 </div>
                                 {
@@ -119,7 +122,7 @@ const StyleReply = (props) => {
                                     </form>
                                 }
                                 <div>
-                                    <StyleReply style={style} parent={elt.comment_num} cnt={cnt} plus={plus + 10} getData={getData} list={list}/>
+                                    <StyleReply style={style} parent={elt.comment_num} cnt={cnt} plus={plus + 10} getData={getData} list={list} deleteComment={deleteComment}/>
                                 </div>
                             </div>
                         </div>
@@ -145,4 +148,8 @@ const Answer = styled.button`
   }
 
   margin-left: 5px;
+`
+const DeleteButton = styled.button`
+  margin-left: 5px;
+  color: #ccc;
 `

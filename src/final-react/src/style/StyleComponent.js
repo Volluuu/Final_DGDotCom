@@ -14,15 +14,34 @@ const StyleComponent = (props) => {
     const [genderImg, setGenderImg] = useState('');
     const [check, setCheck] = useState(false);
     const [like, setLike] = useState(0);
-    const getUser = () => {
-        const res = axios.get(`${process.env.REACT_APP_URL}/style/user/num?num=${elt.u_num}`).then(r => {
+    const [comment, setComment] = useState(0);
+    const getUser = async () => {
+        await axios.get(`${process.env.REACT_APP_URL}/style/user/num?num=${elt.u_num}`).then(r => {
             setUserData(r.data);
             setGenderImg(`${r.data.gender}.png`);
             elt.writeday = elt.writeday.substr(0, 10);
-
         });
     }
 
+
+    //axios를 호출하여 커멘트의 갯수를 가져오는 함수
+    const getLikeCount = async () => {
+        const res = await axios.get(`${process.env.REACT_APP_URL}/style/list/like/count?style_num=${elt.style_num}`);
+        setLike(res.data);
+    }
+    const getCommentCount = async () => {
+        const res = await axios.get(`${process.env.REACT_APP_URL}/style/list/comment/count?style_num=${elt.style_num}`)
+        setComment(res.data);
+    }
+    const isCheck = async () => {
+        if(sessionStorage.loginok===undefined) {
+
+        } else {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/style/list/like/check/?u_num=${sessionStorage.u_num}&style_num=${elt.style_num}`)
+                setCheck(res.data);
+        }
+
+    }
     //좋아요 버튼을 눌렀을 때 색깔이 바뀌는 이벤트 + axios를 호출하여 like 수를 바꿔주는 이벤트
     const likeChange = async e => {
         e.preventDefault();
@@ -46,17 +65,12 @@ const StyleComponent = (props) => {
             })
         }
     }
-    //axios를 호출하여 커멘트의 갯수를 가져오는 함수
-    const getLikeCount = () => {
-        axios.get(`${process.env.REACT_APP_URL}/style/list/like?style_num=${elt.style_num}`).then(r=>{
-            setLike(r.data);
-        })
-    }
-
 
     useEffect(() => {
-        getUser();
-        getLikeCount();
+        getUser().then();
+        getLikeCount().then();
+        getCommentCount().then();
+        isCheck().then();
     }, []);
 
     return (
@@ -86,7 +100,7 @@ const StyleComponent = (props) => {
                     }
                     <div style={{height:"20px", lineHeight:"22px", marginRight:"5px"}}>{like}</div>
                     <MyStyleDetail elt={elt} key={elt.style_num} gender={genderImg} userData={userData}>
-                        <SmsOutlinedIcon fontSize={"small"} style={{marginLeft: "5px", marginRight: "3px"}}/>{elt.comment}
+                        <SmsOutlinedIcon fontSize={"small"} style={{marginLeft: "5px", marginRight: "3px"}}/>{comment}
                     </MyStyleDetail>
                 </div>
                 <div className="product_list">

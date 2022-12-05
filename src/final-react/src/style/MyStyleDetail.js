@@ -10,6 +10,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import StyleComment from "./StyleComment";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const styles = (theme) => ({
     root       : {
@@ -54,7 +56,15 @@ export default function MyStyleDetail(props) {
     const handleClose = () => {
         setOpen(false);
     };
-
+    const deleteStyle = () => {
+        if(window.confirm("정말로 삭제하시겠습니까?")) {
+            console.log(localStorage.url + "style/list/delete/style?style_num=" + elt.style_num);
+            axios.post(localStorage.url + "/style/list/delete/style?style_num=" + elt.style_num).then(r=>{
+                alert("삭제되었습니다.");
+                window.location.reload();
+            })
+        }
+    }
     return (
         <div>
             <button onClick={handleClickOpen} style={{color:"#AAA"}}>
@@ -63,7 +73,9 @@ export default function MyStyleDetail(props) {
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} fullWidth={false}
                     maxWidth={false}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    상세보기
+                    {
+                        sessionStorage.loginok!==undefined && sessionStorage.u_num==userData.u_num ? <button onClick={deleteStyle}>삭제</button> : <div>상세보기</div>
+                    }
                 </DialogTitle>
                 <DialogContent dividers>
                     <WrapperDiv>
