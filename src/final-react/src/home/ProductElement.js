@@ -132,7 +132,7 @@ function ProductElement(props) {
             left: "5%",
           }}
         >
-          \{elt && elt.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          {elt && elt.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
         </p>
       </Card>
     </ProductCard>
