@@ -1,4 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import SearchModalStyle from "./SearchModalStyle";
 import axios from "axios";
@@ -12,35 +13,38 @@ export const MyStyleForm = () => {
     const [photo, setPhoto] = useState('');
     const photoRef = useRef();
     const [product, setProduct] = useState([]);
-    const onKeyPress = e => {
-        if (e.target.value.length !== 0 && e.key === 'Enter') {
+    const [u_num, setU_num] = useState(0);
+    const navi = useNavigate();
+    const tagInputRef = useRef();
+    let hashTagStr = "";
+    let productstr = "";
+    const onClick = e => {
+        e.preventDefault();
+        if (tagInputRef.current.value.length !== 0) {
             submitTagItem()
         }
     }
 
     const submitTagItem = () => {
-        let updatedTagList = [...tagList]
-        updatedTagList.push(tagItem)
-        setTagList(updatedTagList)
+        let updatedTag = [...tagList]
+        updatedTag.push(tagItem)
+        setTagList(updatedTag)
         setTagItem('')
+        tagInputRef.current.value = "";
     }
 
     const deleteTagItem = e => {
+        e.preventDefault();
         const deleteTagItem = e.target.parentElement.firstChild.innerText
-        const filteredTagList = tagList.filter(tagItem => tagItem !== deleteTagItem)
-        setTagList(filteredTagList)
+        const filteredTag = tagList.filter(tagItem => tagItem !== deleteTagItem)
+        setTagList(filteredTag)
     }
     const DeleteItem = (id) => {
         if(window.confirm("해당 품목을 삭제하시겠습니까?")){
         setProduct(product.filter((elt, idx)=> id !== idx));
         }
     }
-    const setImage = e => {
-        if(!e.target.files[0]) {
-            return;
-        }
-        photoRef.current = e.target.files[0];
-    }
+
     const uploadPhoto = (e) => {
         const uploadUrl = localStorage.url + "/style/list/insert/style/photo";
 
@@ -54,37 +58,37 @@ export const MyStyleForm = () => {
             headers: {'Content-Type': 'multipart/form-data'}
         }).then(res=>{
             setPhoto(res.data);
+            setU_num(sessionStorage.u_num);
         })
     }
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("u_num", sessionStorage.u_num);
-        //1. 사진담기
-        // 위에서 해결
-        //2. 내용담기
-        formData.append("content", content);
-        //3. 해시태그 담기
-        let hashtag = "";
-        for(let i = 0; i < tagList.length; i++) {
-            hashtag =hashtag + "," + tagList[i];
-        }
-        formData.append("tag", hashtag.substr(1));
 
-        //4. 상품 리스트 담기
-        let productstr = "";
+
+        for(let i = 0; i < tagList.length; i++) {
+            hashTagStr =hashTagStr + "," + tagList[i];
+        }
         for(let i = 0; i < product.length; i++) {
             productstr = productstr + "," + product[i].p_num;
         }
-        formData.append("p_list", productstr.substr(1));
+        console.log(productstr);
+        console.log(hashTagStr);
 
-        const url = localStorage.url + "/list/insert/style";
-        axios.post(url, {formData})
-            .then(res=>{
-                //등록완료 시 스타일페이지로 이동하게 만드는 메소드
-                // navi('/admin/adproduct');
-            })
+        const url = localStorage.url + "/style/list/insert/style";
+            axios.post(url, {photo, u_num, content, tag : hashTagStr, p_list : productstr})
+                .then(res=>{
+                    //등록완료 시 스타일페이지로 이동하게 만드는 메소드
+                    navi('/mystyle');
+                })
     }
+    const parsing = async () => {
+
+    }
+
+    const setData = async () => {
+
+    }
+
     return (
         <form onSubmit={submitForm}>
         <Wrapper>
@@ -117,8 +121,9 @@ export const MyStyleForm = () => {
                         tabIndex={2}
                         onChange={e => setTagItem(e.target.value)}
                         value={tagItem}
-                        onKeyPress={onKeyPress}
+                        ref={tagInputRef}
                     />
+                    <button onClick={onClick} style={{border:"2px solid #CCC", fontFamily:"inherit", padding:"3px 8px"}}>등록</button>
                     <TagBox>
                         {tagList.map((tagItem, index) => {
                             return (
@@ -128,7 +133,6 @@ export const MyStyleForm = () => {
                                 </TagItem>
                             )
                         })}
-
                     </TagBox>
                 </WholeBox>
             </div>
@@ -148,9 +152,11 @@ export const MyStyleForm = () => {
                 }
             </div>
             <Menu style={{width:"200px"}}>
-                <button type={"submit"}>등록</button>
+                <button type={"submit"} style={{height:"40px"}}>등록</button>
                 {/*라우터 메인 수정하고 useNavigate 써서 뒤로가기 구현*/}
-                <button>뒤로가기</button>
+                <button style={{height:"40px"}}>
+                    <Link to={"/mystyle"} style={{textDecoration:"none"}} >뒤로가기</Link>
+                </button>
             </Menu>
         </Wrapper>
         </form>
@@ -162,7 +168,7 @@ export default MyStyleForm;
 const Wrapper = styled.div`
   display: flex;
   width: 600px;
-  min-height: 800px;
+  min-height: 700px;
   margin: 0 auto;
   margin-top: 20px;
   flex-wrap: wrap;
@@ -222,8 +228,6 @@ const TagInput = styled.input`
   display: inline-flex;
   min-width: 150px;
   background: transparent;
-  border: none;
-  outline: none;
   cursor: text;
 `
 const SearchElement = styled.div`

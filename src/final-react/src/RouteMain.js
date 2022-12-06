@@ -153,6 +153,8 @@ function RouteMain(props) {
             <>
               <Menu />
               <MyStyle />
+                <Footer/>
+
             </>
           }
         >
@@ -173,6 +175,8 @@ function RouteMain(props) {
             <>
               <Menu />
               <MyStyle />
+                <Footer/>
+
             </>
           }
         >
@@ -182,6 +186,8 @@ function RouteMain(props) {
               <>
                 <Menu />
                 <MyStyle />
+                  <Footer/>
+
               </>
             }
           />
@@ -192,6 +198,8 @@ function RouteMain(props) {
             <>
               <Menu />
               <MyStyle />
+                <Footer/>
+
             </>
           }
         >
@@ -201,6 +209,8 @@ function RouteMain(props) {
               <>
                 <Menu />
                 <MyStyle />
+                  <Footer/>
+
               </>
             }
           />
