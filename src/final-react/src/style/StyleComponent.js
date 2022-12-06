@@ -9,7 +9,7 @@ import MyStyleDetail from "./MyStyleDetail";
 
 const StyleComponent = (props) => {
     const {elt} = props;
-    const imgSrc = process.env.REACT_APP_URL + `/mystyle/${elt.photo}`;
+    const imgSrc = localStorage.url + `/mystyle/${elt.photo}`;
     const [userData, setUserData] = useState({});
     const [genderImg, setGenderImg] = useState('');
     const [check, setCheck] = useState(false);
@@ -22,7 +22,6 @@ const StyleComponent = (props) => {
             elt.writeday = elt.writeday.substr(0, 10);
         });
     }
-
 
     //axios를 호출하여 커멘트의 갯수를 가져오는 함수
     const getLikeCount = async () => {
