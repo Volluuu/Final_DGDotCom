@@ -141,12 +141,12 @@ function Menu(props) {
                 <Category to={"/product/list"} className={"up underline"}>
                     상품 리스트
                 </Category>
-                <Category to={"/product/detail/1703"} className={"up underline"}>
-                    상품 상세
-                </Category>
-                <Category to={"/admin/dashboard"} className={"up underline"}>
-                    관리자페이지
-                </Category>
+                {/*<Category to={"/product/detail/1703"} className={"up underline"}>*/}
+                {/*    상품 상세*/}
+                {/*</Category>*/}
+                {/*<Category to={"/admin/dashboard"} className={"up underline"}>*/}
+                {/*    관리자페이지*/}
+                {/*</Category>*/}
                 {/*<button type={'button'} onClick={()=>{*/}
                 {/*    sessionStorage.removeItem("u_name");*/}
                 {/*    sessionStorage.u_name="세션이름 바꾸기";*/}
@@ -155,7 +155,8 @@ function Menu(props) {
             </Menubar>
             <Searchbar>
                 <NavLink to={"/"}>
-                    <b style={{fontSize: "30px"}}>동건닷컴</b>
+                    <b style={{fontSize: "30px", marginLeft: "5px"}}>DG.com</b>
+                    {/*<img alt={''} src={"DG.png"} style={{height: "50px", width: "50px"}}/>*/}
                 </NavLink>
                 <span style={{marginRight: "20px"}}>
 
