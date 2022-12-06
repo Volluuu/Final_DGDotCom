@@ -3,7 +3,7 @@
 <mapper namespace="data.mapper.MyStyleMapper">
     <!--    **********************************스타일 리스트 관련 SQL ****************************************-->
     <select id="getAllStyleOrderByNew" resultType="StyleDto">
-        select * from mystyle order by style_num
+        select * from mystyle order by style_num desc
     </select>
     <select id="getAllStyleOrderByPop" resultType="StyleDto">
         select * from mystyle order by (select count(*) from liketable where style_num = mystyle.style_num) desc

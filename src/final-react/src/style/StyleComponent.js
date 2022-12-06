@@ -87,6 +87,7 @@ const StyleComponent = (props) => {
                 </div>
                 <div className="tag_box">
                     {
+                        elt.tag==="" ? <span key={elt} style={{marginRight: "3px"}}>선택된 태그가 없습니다.</span> :
                         elt.tag.split(",").map((elt, idx) => <span key={elt} style={{marginRight: "3px"}}>#{elt}</span>)
                     }
                 </div>

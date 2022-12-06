@@ -73,12 +73,12 @@ const MyStyle = () => {
                     <div>
                         <PopAndNew onClick={activeNew} className={isActive.new ? "active" : ""}>최신</PopAndNew>
                         <PopAndNew onClick={activePop} className={isActive.pop ? "active" : ""}>인기</PopAndNew>
-                        {
-                            sessionStorage.loginok===undefined?
-                                <AddStyleButton to={"/mystyle"} onClick={moveToForm}>+</AddStyleButton>
-                                :
-                                <AddStyleButton to={"/mystyle/form"}>+</AddStyleButton>
-                        }
+                        {/*{*/}
+                        {/*    sessionStorage.loginok===undefined?*/}
+                        {/*        <AddStyleButton to={"/mystyle"} onClick={moveToForm}>+</AddStyleButton>*/}
+                        {/*        :*/}
+                        {/*        <AddStyleButton to={"/mystyle/form"}>+</AddStyleButton>*/}
+                        {/*}*/}
                     </div>
                 </StyledTabList>
                 <KeywordBind>

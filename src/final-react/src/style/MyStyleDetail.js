@@ -73,9 +73,7 @@ export default function MyStyleDetail(props) {
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} fullWidth={false}
                     maxWidth={false}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {
-                        sessionStorage.loginok!==undefined && sessionStorage.u_num==userData.u_num ? <button onClick={deleteStyle}>삭제</button> : <div>상세보기</div>
-                    }
+                        <div>상세보기</div>
                 </DialogTitle>
                 <DialogContent dividers>
                     <WrapperDiv>
