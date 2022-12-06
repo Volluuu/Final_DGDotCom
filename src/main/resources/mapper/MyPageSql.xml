@@ -47,13 +47,13 @@
     <!--    u_num에 해당하는 trade와 각 trade의 product를 반환하는 Join select-->
     <select id="joinTradeProductByU_num" parameterType="Map" resultType="JoinDto">
         select * from trade T join product P where T.p_num=P.p_num and u_num=#{u_num}
-<!--        <if test="startDate!=null and endDate!=null">-->
+        <if test="startDate!=null and endDate!=null">
             and (day between #{startDate} and #{endDate})
-<!--        </if>-->
+        </if>
         order by day desc
-<!--        <if test="startNum!=null and perPage!=null">-->
+        <if test="startNum!=null and perPage!=null">
             limit #{startNum},#{perPage}
-<!--&#45;&#45;         </if>-->
+        </if>
     </select>
     <!--    최초 거래 일자 반환 메서드-->
     <select id="getMinDayByU_num" parameterType="int" resultType="String">

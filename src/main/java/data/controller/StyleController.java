@@ -119,6 +119,11 @@ String uploadFileName;
 	public void insertStyle(@RequestBody StyleDto dto)
 	{
 		dto.setPhoto(uploadFileName);
+		if(dto.getTag()==null) {
+			dto.setTag("");
+		}
+		dto.setP_list(dto.getP_list().substring(1));
+		dto.setTag(dto.getTag().substring(1));
 		mapper.insertStyle(dto);
 		uploadFileName = null;
 	}

@@ -327,9 +327,9 @@ function MypageOrder(props) {
                                     결제 금액
                                 </dt>
                                 <dd data-v-0c307fea="" className="count">
-                                    {tradeData.joined &&
-                                        tradeData.joined
-                                            .map((item) => item.lastprice * item.count)
+                                    {
+                                        tradeData.joined &&
+                                        tradeData.joined.map((item) => item.lastprice * item.count)
                                             .reduce((prev, curr) => prev + curr, 0)
                                             .toString()
                                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

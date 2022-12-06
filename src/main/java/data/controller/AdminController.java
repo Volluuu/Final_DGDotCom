@@ -99,13 +99,13 @@ public class AdminController {
 //
 //    }
 //
-//    //삭제
-//    @DeleteMapping("/deleteuser")
-//    public void deleteUser(@RequestParam int u_num)
-//    {
-//        adminMapper.DeleteUser(u_num);
-//    }
-//
+    //삭제
+    @DeleteMapping("/deleteuser")
+    public void deleteUser(@RequestParam int u_num)
+    {
+        adminMapper.DeleteUser(u_num);
+    }
+
 //    //회원 이름,Email검색
 //    @GetMapping("/searchuser")
 //    public List<UserDto> SearchUser(@RequestParam String word)
