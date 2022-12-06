@@ -500,13 +500,14 @@ function DetailDelivery(props) {
                   alt=""
                   className="img"
                   data-v-53b73c92
-                  style={{ float: "left", height: "50px" }}
+                  style={{ float: "left", height: "60px", width: "50px" }}
                 />
               </div>
               <div className="text_area" data-v-53b73c92>
                 <strong className="title" data-v-53b73c92>
                   100% 정품 보증
                 </strong>
+                <br />
                 <span className="desc" data-v-53b73c92>
                   DG.com에서 검수한 상품이 정품이 아닐 경우, 구매가의 3배를
                   보상합니다.
@@ -521,13 +522,14 @@ function DetailDelivery(props) {
                   alt=""
                   className="img"
                   data-v-53b73c92
-                  style={{ float: "left", height: "50px" }}
+                  style={{ float: "left", height: "60px", width: "50px" }}
                 />
               </div>
               <div className="text_area" data-v-53b73c92>
                 <strong className="title" data-v-53b73c92>
                   엄격한 다중 검수
                 </strong>
+                <br />
                 <span className="desc" data-v-53b73c92>
                   모든 상품은 검수센터에 도착한 후, 상품별 전문가 그룹의
                   체계적인 시스템을 거쳐 검수를 진행합니다.
@@ -542,13 +544,14 @@ function DetailDelivery(props) {
                   alt=""
                   className="img"
                   data-v-53b73c92
-                  style={{ float: "left", height: "50px" }}
+                  style={{ float: "left", height: "60px", width: "50px" }}
                 />
               </div>
               <div className="text_area" data-v-53b73c92>
                 <strong className="title" data-v-53b73c92>
                   정품 인증 패키지
                 </strong>
+                <br />
                 <span className="desc" data-v-53b73c92>
                   검수에 합격한 경우에 한하여 DG.com의 정품 인증 패키지가 포함된
                   상품이 배송됩니다.
