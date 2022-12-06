@@ -24,9 +24,9 @@
   height: 50px;
   border-radius: 100%;
   border: 0 none;
-  background: white;
-  color: black;
-  border: 2px solid black;
+  background: #565656;
+  color: white;
+  /* border: 2px solid black; */
   font-size: 18px;
   font-weight: bold;
   letter-spacing: -0.06em;
@@ -43,5 +43,101 @@
 .topBtn:hover,
 .topBtn:focus,
 .topBtn:active {
+  outline: 0 none;
+}
+
+.homeBtn {
+  position: fixed;
+  opacity: 0;
+  bottom: 31%;
+  right: 5%;
+  z-index: -10;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 0 none;
+  background: #565656;
+  color: white;
+  /* border: 2px solid black; */
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.06em;
+  /* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3); */
+  cursor: pointer;
+  transition: opacity 0.3s ease-in;
+}
+
+.homeBtn.active {
+  z-index: 10;
+  opacity: 1;
+}
+
+.homeBtn:hover,
+.homeBtn:focus,
+.homeBtn:active {
+  outline: 0 none;
+}
+
+.shopBtn {
+  position: fixed;
+  opacity: 0;
+  bottom: 24%;
+  right: 5%;
+  z-index: -10;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 0 none;
+  background: #565656;
+  color: white;
+  /* border: 2px solid black; */
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.06em;
+  /* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3); */
+  cursor: pointer;
+  transition: opacity 0.3s ease-in;
+}
+
+.shopBtn.active {
+  z-index: 10;
+  opacity: 1;
+}
+
+.shopBtn:hover,
+.shopBtn:focus,
+.shopBtn:active {
+  outline: 0 none;
+}
+
+.cartBtn {
+  position: fixed;
+  opacity: 0;
+  bottom: 17%;
+  right: 5%;
+  z-index: -10;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 0 none;
+  background: #565656;
+  color: white;
+  /* border: 2px solid black; */
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.06em;
+  /* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3); */
+  cursor: pointer;
+  transition: opacity 0.3s ease-in;
+}
+
+.cartBtn.active {
+  z-index: 10;
+  opacity: 1;
+}
+
+.cartBtn:hover,
+.cartBtn:focus,
+.cartBtn:active {
   outline: 0 none;
 }

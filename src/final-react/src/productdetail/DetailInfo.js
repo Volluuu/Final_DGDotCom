@@ -359,7 +359,7 @@ function DetailInfo(props) {
                       cancelButtonColor: "#d33",
                       confirmButtonText: "장바구니로 이동",
                     }).then((result) => {
-                      // console.log("result:" + JSON.stringify(result));
+                      console.log("result:" + JSON.stringify(result));
                       if (result.isConfirmed) {
                         navi("/mypage/cart/1");
                       }
@@ -367,6 +367,7 @@ function DetailInfo(props) {
                         // setAmount(1);
                         // setItemlist("");
                         closeEvent();
+
                         // alert("취소");
                       }
                       // alert("취소222");
@@ -423,7 +424,8 @@ function DetailInfo(props) {
               if (result.isDismissed) {
                 // setAmount(1);
                 // setItemlist({});
-                closeEvent();
+                // closeEvent();
+                window.location.reload();
               }
             });
             // navi("/product/list");

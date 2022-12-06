@@ -28,10 +28,10 @@ function OrderUser(props) {
             <th>배송받을 e-mail</th>
             <td>{row && row.list[0].t_email}</td>
           </tr>
-          <tr>
+          {/* <tr>
             <th>배송 정보</th>
             <td>{row && row.list[0].invoice}</td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
     </div>
