@@ -6,6 +6,7 @@ import axios from "axios";
 function BeforeDelivery(props) {
     const {currentPage} = useParams();
     const [data, setData] = useState('');
+
     const navi = useNavigate();
 
     const TradePaging = () => {
@@ -17,17 +18,23 @@ function BeforeDelivery(props) {
             })
     }
    // update button이벤트
-    const insertInvoice = (e) => {
-        let upin = document.querySelector(".ui").previousElementSibling.value;
-        console.log(upin);
+    const insertInvoice = (e,t_num) => {
+        // let upin = document.querySelector(".ui").previousElementSibling.value;
+        // console.log(upin);
+        let upin = e.target.previousElementSibling.value;
+        if(e.target.previousElementSibling.value===''){
+            alert('송장번호를 입력해주세요')
+            return;
+        }else{
+        console.log(e.target.previousElementSibling.value);
         let url = localStorage.url + '/admin/insertinvoice';
         console.dir(data);
-        axios.put(url, {invoice: upin, t_num: e})
+        axios.put(url, {invoice: upin, t_num: t_num})
             .then(res => {
                 alert('송장번호가 저장되었습니다');
                 window.location.reload();
             })
-    }
+    }}
 
     //currentPage 값이 변경될때마다 함수 다시 호출
     useEffect(() => {
@@ -67,14 +74,17 @@ function BeforeDelivery(props) {
                                 <td className='td-hj'>{r.lastprice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                 <td className='td-hj'>{r.p_size}</td>
                                 <td className='td-hj'>
+
                                     <input type={'text'}
-                                           style={{border: '1px solid lightgray', width: '100%'}}/>
+                                           style={{border: '1px solid lightgray', width: '100%'}}
+                                            />
+
                                     <button type='button'
                                             className='ui'
-                                            onClick={() => {
-                                                insertInvoice(r.t_num);
+                                            onClick={(e) => {
+                                                insertInvoice(e,r.t_num);
                                             }}
-                                    ><strong>추가하기</strong>
+                                    >추가하기
                                     </button>
                                 </td>
                                 <td className='td-hj'>{r.state}</td>
