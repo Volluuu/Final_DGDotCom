@@ -34,6 +34,7 @@ function UserInfo({path}) {
     const handleSingleCheck = (checked, id) => {
         if (checked) {
             setCheckItems([...checkItems, id]);
+            console.log(id);
         } else {
             // 체크 해제
             setCheckItems(checkItems.filter((r) => r !== id));
@@ -48,7 +49,7 @@ function UserInfo({path}) {
             const idArray = [];
             // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
             // 전체 체크 박스 체크
-            userData.forEach((el) => idArray.push(el.u_num));
+            _perPage.currentData().forEach((el) => idArray.push(el.u_num));
             console.log();
             setCheckItems(idArray);
         }
@@ -62,7 +63,6 @@ function UserInfo({path}) {
     //유저 삭제
     const deleteUser = (u_num) => {
         const deleteUrl = localStorage.url + "/admin/deleteuser?u_num=" + u_num;
-
         if (window.confirm("삭제하시겠습니까?")) {
             alert("삭제완료");
             axios.delete(deleteUrl)
@@ -133,7 +133,7 @@ function UserInfo({path}) {
                                 // checkItems의 갯 수와 불러오는 데이터가 같을 때, 전체 선택을 활성화
                                 // 하나라도 빼면 체크 박스 해제
                                 checked={
-                                    checkItems.length === 4
+                                    checkItems.length === 10
                                         ? true
                                         : false
                                 }></Checkbox></th>

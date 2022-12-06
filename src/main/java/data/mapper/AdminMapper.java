@@ -23,7 +23,7 @@ public interface AdminMapper {
     public List<ReviewDto> TotalReview();
 
     /* 회원정보를 삭제하기위한 메서드 */
-    public String DeleteUser(int u_num);
+    public int DeleteUser(int u_num);
 
     /* 회원 검색 메서드*/
     public List<UserDto> SearchUser(String u_name);
