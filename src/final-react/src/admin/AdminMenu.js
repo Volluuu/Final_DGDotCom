@@ -110,12 +110,12 @@ function AdminMenu(props) {
                                 <div className="topbar-divider d-none d-sm-block"></div>
 
                                 <li className="nav-item dropdown no-arrow">
-                                    <a className="nav-link dropdown-toggle" href="src/final-react/src/home/AdminForm#" id="userDropdown" role="button"
+                                    <b className="nav-link dropdown-toggle"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i className="fa-solid fa-address-card"></i>&nbsp;
                                         <span className="mr-2 d-none d-lg-inline large"
                                               style={{color: 'white'}}>관리자</span>
-                                    </a>
+                                    </b>
                                 </li>
                             </ul>
                         </nav>

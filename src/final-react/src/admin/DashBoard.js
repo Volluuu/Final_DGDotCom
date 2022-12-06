@@ -294,7 +294,6 @@ function DashBoard(props) {
                             </thead>
                             <tbody className='tbody-hj'>
                             {
-                                dashproduct &&
                                 dashproduct.productList?.map((r,idx) =>
                                     <tr key={idx} className='tr-hj' align='center'>
                                         <td className='td-hj'><img style={{width: '70px', borderRadius: '15px'}}

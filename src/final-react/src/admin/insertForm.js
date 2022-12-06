@@ -90,6 +90,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -113,7 +114,7 @@ function InsertForm(props) {
                         fontWeight: '500',
                         marginBottom:'12px',
                         border: '1px solid lightgray'
-                    }}
+                    }}required
                 />
 
                 <div style={{
@@ -138,6 +139,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -162,6 +164,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -185,8 +188,8 @@ function InsertForm(props) {
                         fontWeight: '500',
                         marginBottom:'12px',
                         border: '1px solid lightgray'
-
                     }}
+                    required
                 />
 
                 <div style={{
@@ -211,6 +214,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -235,6 +239,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -259,6 +264,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <div style={{
@@ -282,6 +288,7 @@ function InsertForm(props) {
                         marginBottom:'12px',
                         border: '1px solid lightgray'
                     }}
+                    required
                 />
 
                 <button type="submit"
