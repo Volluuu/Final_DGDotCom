@@ -49,8 +49,8 @@ const EventBanner = (props) => {
 
         },
         third : {img : "https://kream-phinf.pstatic.net/MjAyMjExMjhfMjIy/MDAxNjY5NjI2Njc1ODE5.GIQL7cx3Q98fNwy2Kqoj6z8x6TEKuTDdfOGDNT7WGuAg.gBUVfsJhkcFUukEoCfc9UJ1rL6Y-007uqKneimwbBIAg.JPEG/a_063562e0e9724bcab1d2cf8a818f45b3.jpg?type=m_2560",
-            title:"인기상품",
-            engtitle:"Most Popular",
+            title:"나이키 X 스투시",
+            engtitle:"NIKE X STUSSY",
             num : [1137,1099,1330,996],
             backgroundColor : "#e1ddc2"
         },
