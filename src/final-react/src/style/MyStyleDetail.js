@@ -136,13 +136,13 @@ const CommentDiv = styled.div`
 `
 
 const UserInfo = styled.div`
-  width: 100%;
+  width: 400px;
   height: 100px;
   padding-left: 10px;
   padding-bottom: 10px;
-  border : 1px solid #CCC;
+  border-bottom : 1px solid #CCC;
   & > div.text_box {
-    width: 100%;
+    width: 350px;
     word-break: break-all;
     flex-wrap: wrap;
   }
@@ -157,7 +157,7 @@ const UserInfo = styled.div`
   }
 `
 const CommentList = styled.div`
-  width: 100%;
+  width: 400px;
   display: flex;
   flex-wrap: wrap;
   word-break: break-all;

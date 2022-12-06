@@ -199,7 +199,6 @@ export default StyleComment;
 
 const UnactiveScroll = styled.div`
 
-  border: 1px solid #CCC;
   border-top: none;
   border-bottom: none;
   height: 600px;
