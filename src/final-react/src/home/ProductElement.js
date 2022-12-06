@@ -125,8 +125,14 @@ function ProductElement(props) {
             <p className={classes.productname}>{elt.p_name}</p>
           </div>
         </div>
-        <p style={{ position: "relative", bottom: 0, left: "5%" }}>
-          {elt.price}
+        <p
+          style={{
+            position: "relative",
+            bottom: 0,
+            left: "5%",
+          }}
+        >
+          \{elt && elt.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         </p>
       </Card>
     </ProductCard>

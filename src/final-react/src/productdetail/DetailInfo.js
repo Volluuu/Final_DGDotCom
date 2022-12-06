@@ -621,9 +621,7 @@ function DetailInfo(props) {
       <div>
         <Rating name="half-rating" value={star} precision={0.1} readOnly />(
         {star}) &nbsp;
-        <Link>
-          <span style={{ fontSize: "13px" }}>후기더보기(+{rev})</span>
-        </Link>
+        <span style={{ fontSize: "13px" }}>후기(+{rev})</span>
       </div>
       <br />
       <h5 style={{ textAlign: "right" }}>

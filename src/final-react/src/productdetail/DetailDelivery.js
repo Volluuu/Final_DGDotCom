@@ -18,14 +18,52 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 function DetailDelivery(props) {
   return (
     <div>
-      <h3 style={{ padding: "20px" }}>구매 전 확인사항</h3>
+      <Card>
+        <h5
+          className="detail_title sm"
+          data-v-52dd777b
+          data-v-3900a1a2
+          style={{ padding: "20px" }}
+        >
+          {" "}
+          배송 정보{" "}
+        </h5>
+        <div className="delivery_way" data-v-12ba7144 data-v-3900a1a2>
+          <div className="way_info" data-v-12ba7144>
+            <div
+              className="way_status_thumb"
+              data-v-12ba7144
+              style={{ paddingLeft: "20px" }}
+            >
+              <img
+                src="https://kream-phinf.pstatic.net/MjAyMTExMjlfMTQ4/MDAxNjM4MTc4MjI5NTk3.2phJLPtRvFqViNfhZu06HzNRiUBlT4cmZR4_Ukqsyesg.ikrfWOrL7WXCVO0Rqy5kMvOn3B2YpjLUj6RuJqosPX0g.PNG/a_8b54cbca40e945f4abf1ee24bdd031f7.png"
+                alt=""
+                className="way_img"
+                data-v-12ba7144
+                style={{ width: "60px", float: "left" }}
+              />
+              &nbsp;
+              <span>
+                무료 배송
+                <br />
+                <span style={{ color: "gray" }}>
+                  &nbsp;검수 후 배송 ・ 5-7일 내 도착 예정
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <br />
+      </Card>
+      <h5 style={{ padding: "20px" }}>구매 전 확인사항</h5>
+      <div className="delivery_way_wrap" data-v-3900a1a2></div>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+          <Typography style={{ fontSize: "18px", fontWeight: "bold" }}>
             검수 기준
           </Typography>
         </AccordionSummary>
@@ -59,7 +97,7 @@ function DetailDelivery(props) {
             <br />
             <br />
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "18px" }}>
               불합격/페널티 부과사항
             </span>
             <br />
@@ -136,7 +174,7 @@ function DetailDelivery(props) {
             <br />
             <br />
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "18px" }}>
               패키지 및 구성품
             </span>
             <br />
@@ -209,7 +247,7 @@ function DetailDelivery(props) {
             <br />
             <br />
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "18px" }}>
               제품 상태
             </span>
             <br />
@@ -309,7 +347,7 @@ function DetailDelivery(props) {
             </TableContainer>
             <br />
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "18px" }}>
               유의사항
             </span>
             <br />
@@ -326,7 +364,7 @@ function DetailDelivery(props) {
             차이가 있으며 이는 발송(반송) 시에도 제거되지 않습니다.
             <br />
             <br />
-            <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "18px" }}>
               검수 불합격 시 반송 택배 운임
             </span>
             <br />
@@ -347,7 +385,7 @@ function DetailDelivery(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+          <Typography style={{ fontSize: "18px", fontWeight: "bold" }}>
             배송기간 안내
           </Typography>
         </AccordionSummary>
@@ -391,7 +429,7 @@ function DetailDelivery(props) {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+          <Typography style={{ fontSize: "18px", fontWeight: "bold" }}>
             검수 안내
           </Typography>
         </AccordionSummary>
@@ -427,7 +465,7 @@ function DetailDelivery(props) {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+          <Typography style={{ fontSize: "18px", fontWeight: "bold" }}>
             구매 환불/취소/교환 안내
           </Typography>
         </AccordionSummary>
