@@ -406,7 +406,8 @@ function MypageBasket(props) {
 
   return (
     <div data-v-f263fda4="" data-v-39b2348a="" className="content_area">
-      <h1 style={{ textAlign: "left" }}>Order / Payment</h1>
+      <h3 style={{ textAlign: "left" }}>장바구니</h3>
+      <br />
       <div data-v-f263fda4="" className="recent_purchase">
         <div
           data-v-0c307fea=""
