@@ -1,14 +1,14 @@
 import { Card } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DetailDelivery from "./DetailDelivery";
 import DetailImage from "./DetailImage";
 import DetailInfo from "./DetailInfo";
 import DetailReview from "./DetailReview";
 import Footer from "../home/Footer";
 import Detail from "./Detail.css";
-import { ArrowUpward } from "@material-ui/icons";
+import { ArrowUpward, Home, ShoppingCart, Store } from "@material-ui/icons";
 
 function ProductDetail(props) {
   const { p_num } = useParams(); //u_num
@@ -106,14 +106,36 @@ function ProductDetail(props) {
     };
   });
 
+  const navi = useNavigate();
+
   return (
     <div>
-      <button
-        className={BtnStatus ? "topBtn active" : "topBtn"} // 버튼 노출 여부
-        onClick={handleTop} // 버튼 클릭시 함수 호출
-      >
-        <ArrowUpward fontSize="large" />
-      </button>
+      <div>
+        <button
+          className={BtnStatus ? "homeBtn active" : "homeBtn"} // 버튼 노출 여부
+          onClick={() => navi("/")} // 버튼 클릭시 함수 호출
+        >
+          <Home fontSize="large" />
+        </button>
+        <button
+          className={BtnStatus ? "shopBtn active" : "shopBtn"} // 버튼 노출 여부
+          onClick={() => navi("/product/list")} // 버튼 클릭시 함수 호출
+        >
+          <Store fontSize="large" />
+        </button>
+        <button
+          className={BtnStatus ? "cartBtn active" : "cartBtn"} // 버튼 노출 여부
+          onClick={() => navi("/mypage/cart")} // 버튼 클릭시 함수 호출
+        >
+          <ShoppingCart fontSize="large" />
+        </button>
+        <button
+          className={BtnStatus ? "topBtn active" : "topBtn"} // 버튼 노출 여부
+          onClick={handleTop} // 버튼 클릭시 함수 호출
+        >
+          <ArrowUpward fontSize="large" />
+        </button>
+      </div>
       <div
         style={{
           width: "70%",
