@@ -109,7 +109,7 @@ function MypageProfile(props) {
         let emailSendUrl = process.env.REACT_APP_URL + "/user/mailconfirm";
         axios.post(emailSendUrl, {email})
             .then(res => {
-                console.dir(res.data);
+                // console.dir(res.data);
                 setSendedCode(res.data);
                 setEmailCodeModal("");
                 emailCodeRef.current.focus();
@@ -173,7 +173,7 @@ function MypageProfile(props) {
             u_num,
             pass
         }).then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             //res.data 가 true면 이전 비밀번호랑 일치
             if (!res.data) {
                 setPrePassError(true);
@@ -230,8 +230,8 @@ function MypageProfile(props) {
         let hpCheckUrl = process.env.REACT_APP_URL + "/user/hpcheck?hp=" + hp;
         axios.get(hpCheckUrl)
             .then(res => {
-                console.log("핸드폰 중복 체크");
-                console.dir(res.data);
+                // console.log("핸드폰 중복 체크");
+                // console.dir(res.data);
                 if (res.data > 0) {
                     setHpErrorMsg("이미 가입한 번호입니다.");
                     setHpError(true);

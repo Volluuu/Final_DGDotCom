@@ -51,7 +51,7 @@ function SignupForm(props) {
         let emailSendUrl = process.env.REACT_APP_URL + "/user/mailconfirm";
         axios.post(emailSendUrl, {email})
             .then(res => {
-                console.dir(res.data);
+                // console.dir(res.data);
                 setSendedCode(res.data);
                 setEmailCodeModal("");
                 emailCodeRef.current.focus();
