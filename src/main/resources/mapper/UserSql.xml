@@ -89,7 +89,7 @@
         where hp = #{hp}
           and email = #{email}
     </update>
-    <delete id="deleteRefreshToken" parameterType="string">
+    <delete id="deleteRefreshToken" parameterType="int">
         delete
         from refresh_token
         where rt_key = #{u_num}

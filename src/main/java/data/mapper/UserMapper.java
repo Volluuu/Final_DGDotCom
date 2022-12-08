@@ -50,6 +50,6 @@ public interface UserMapper {
     public void findPassUpdate(UserDto dto);
 
     // refresh_token 삭제
-    public void deleteRefreshToken(String u_num);
+    public void deleteRefreshToken(int u_num);
 
 }
