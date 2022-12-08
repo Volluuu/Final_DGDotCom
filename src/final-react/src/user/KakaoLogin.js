@@ -54,7 +54,7 @@ function KakaoLogin(props) {
                 'Content-type': "application/x-www-form-urlencoded;charset=utf-8"
             },
         }).then(res => {
-            console.dir(res.data);
+            // console.dir(res.data);
             kakaoEmailCheck(res.data.kakao_account.email, res.data);
         })
     }
@@ -63,7 +63,7 @@ function KakaoLogin(props) {
         let emailCheckUrl = process.env.REACT_APP_URL + "/user/emailcheck?email=" + email;
         axios.get(emailCheckUrl)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data > 0) {
                     setFirstKakao(false);
                     kakaoLogin(email);

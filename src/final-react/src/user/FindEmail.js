@@ -16,7 +16,7 @@ function FindEmail(props) {
         let findEmailUrl = process.env.REACT_APP_URL + "/user/findemail?hp=" + hp;
         axios.get(findEmailUrl)
             .then(res => {
-                console.dir(res.data);
+                // console.dir(res.data);
                 if (res.data !== "") {
                     setEmail(res.data);
                     setFinded(true);

@@ -47,8 +47,8 @@ public class MyPageController {
                                                @RequestParam(required = false) String startDate,
                                                @RequestParam(required = false) String endDate) {
 //        System.out.println("currentPage="+currentPage);
-//        System.out.println("startDate="+startDate);
-//        System.out.println("endDate="+endDate);
+//        System.out.println("startDate=" + startDate);
+//        System.out.println("endDate=" + endDate);
         int perPage = 10; // 한 페이지당 출력할 글 갯수
         int perBlock = 3; // 출력할 페이지 갯수
 
@@ -56,8 +56,9 @@ public class MyPageController {
         int totalCount;
         Map<String, Object> tmap = new HashMap<>();
         tmap.put("u_num", u_num);
-        if (startDate == null)
+        if (startDate == "")
             startDate = myPageMapper.getMinDayByU_num(u_num);
+        System.out.println(startDate);
         tmap.put("startDate", startDate);
         if (endDate == null) {
             Date now = new Date();
@@ -66,6 +67,8 @@ public class MyPageController {
             String date = Integer.toString(now.getDate());
 
             endDate = year + "-" + (month.length() == 1 ? "0" + month : month) + "-" + (date.length() == 1 ? "0" + date : date) + " 23:59:59";
+        } else {
+            endDate = endDate + " 23:59:59";
         }
         tmap.put("endDate", endDate);
         // 검색 옵션 나중에 넣기
@@ -118,17 +121,18 @@ public class MyPageController {
             dto.setU_num(u_num);
             rlist.add(myPageMapper.reviewDetail(dto));
         }
-        //출력할 페이지번호들을 Vector에 담아서 보내기
-        Vector<Integer> pidx = new Vector<>();
-        for (int i = startPage; i <= endPage; i++) {
-            pidx.add(i);
-        }
 
         Map<String, Object> jmap = new HashMap<>();
         jmap.put("u_num", u_num);
         jmap.put("startDate", startDate);
         jmap.put("endDate", endDate);
         List<JoinDto> joined = myPageMapper.joinTradeProductByU_num(jmap);
+
+        //출력할 페이지번호들을 Vector에 담아서 보내기
+        Vector<Integer> pidx = new Vector<>();
+        for (int i = startPage; i <= endPage; i++) {
+            pidx.add(i);
+        }
 
         // 유저 이름도 반환
         UserDto userDto = myPageMapper.userByNum(u_num);

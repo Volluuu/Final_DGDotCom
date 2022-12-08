@@ -46,7 +46,7 @@ function FindPass(props) {
             hp: hpRef.current.value,
             email: emailRef.current.value
         }).then(res => {
-            console.log(res.data);
+            // console.log(res.data);
         })
     }
 
