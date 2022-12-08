@@ -134,7 +134,7 @@ function ProductList(props) {
       "#dcdcdc",
     ][random(0, 8)];
   };
-  console.log("다시 렌더링");
+  // console.log("다시 렌더링");
 
   localStorage.url = process.env.REACT_APP_URL;
 
@@ -162,7 +162,7 @@ function ProductList(props) {
       priceOrderBy: parms?.priceOrderBy || priceOrderBy,
       keyword: _keyword,
     };
-    console.log(parms);
+    // console.log(parms);
     if (parms?.page) _params.currentPage = paging.page;
     if (_params.priceOrderBy !== "desc" && _params.priceOrderBy !== "asc")
       delete _params.priceOrderBy;
@@ -180,7 +180,7 @@ function ProductList(props) {
         }),
       })
       .then((res) => {
-        console.log("axios 성공");
+        // console.log("axios 성공");
         if (paging.page === 1) {
           setProductlist(res.data.list);
         } else {
@@ -298,7 +298,7 @@ function ProductList(props) {
 
   useEffect(() => {
     paging.page = 1;
-    console.log("list 호출");
+    // console.log("list 호출");
     setKeyword(_keyword);
     getPageList();
   }, [location.search]);
@@ -360,7 +360,7 @@ function ProductList(props) {
         window.innerHeight + window.scrollY + 8 >=
         document.getElementById("root").offsetHeight
       ) {
-        console.log("스크롤 마지막");
+        // console.log("스크롤 마지막");
         paging.getPageList();
       }
     };

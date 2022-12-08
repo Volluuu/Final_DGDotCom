@@ -187,7 +187,9 @@ function DetailInfo(props) {
       alert("정보가 누락되었습니다");
       return;
     }
+
     setOpen(false);
+
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp81470772"); // 가맹점 식별 코드
 
