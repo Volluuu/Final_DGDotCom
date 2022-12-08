@@ -96,7 +96,7 @@ export default function TransitionsModal() {
   };
 
   useEffect(() => {
-    console.log("render");
+    // console.log("render");
     updateLatest().then();
     const debounce = setTimeout(() => {
       if (word) {

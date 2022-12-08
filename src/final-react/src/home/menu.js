@@ -92,7 +92,7 @@ function Menu(props) {
           refreshToken: localStorage.refreshToken,
         })
         .then((res) => {
-          console.dir(res.data);
+          // console.dir(res.data);
           localStorage.accessToken = res.data.accessToken;
           localStorage.refreshToken = res.data.refreshToken;
         })
@@ -118,7 +118,7 @@ function Menu(props) {
           refreshToken: localStorage.refreshToken,
         })
         .then((res) => {
-          console.dir(res.data);
+          // console.dir(res.data);
           localStorage.accessToken = res.data.accessToken;
           localStorage.refreshToken = res.data.refreshToken;
         })

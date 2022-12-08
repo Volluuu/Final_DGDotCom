@@ -66,9 +66,9 @@ function MypageForm(props) {
         headers: { Authorization: `Bearer ${localStorage.accessToken}` },
       })
       .then((res) => {
-        console.log("cart data 호출 성공");
+        // console.log("cart data 호출 성공");
         setCartlist(res.data);
-        console.dir("data:" + JSON.stringify(cartlist));
+        // console.dir("data:" + JSON.stringify(cartlist));
       });
   };
 

@@ -52,7 +52,7 @@ function MypageBasket(props) {
     });
   };
 
-  console.log("db:", cartlist);
+  // console.log("db:", cartlist);
 
   // 체크된 아이템을 담을 배열
   const [checkList, setCheckList] = useState([]);
@@ -120,12 +120,12 @@ function MypageBasket(props) {
 
   //수량 추가
   const addAmount = (c_num, amount, u_num) => {
-    console.log("c_num:" + c_num);
-    console.log("amount:" + amount);
-    console.log("u_num:" + u_num);
+    // console.log("c_num:" + c_num);
+    // console.log("amount:" + amount);
+    // console.log("u_num:" + u_num);
     if (amount < 5) {
       amount = amount + 1;
-      console.log("amount:" + amount);
+      // console.log("amount:" + amount);
       let updateUrl = localStorage.url + "/cart/update";
       axios.post(updateUrl, { amount, c_num, u_num }).then((res) => {
         // console.log("호출 성공");
@@ -171,7 +171,7 @@ function MypageBasket(props) {
     axios
       .post(updateUrl, { c_num: cartlist.c_num, u_num, amount })
       .then((res) => {
-        console.log("호출 성공");
+        // console.log("호출 성공");
       });
   };
   //총 결제 금액 계산
@@ -311,7 +311,7 @@ function MypageBasket(props) {
       },
       (rsp) => {
         // callback
-        console.log("rsp:" + JSON.stringify(rsp));
+        // console.log("rsp:" + JSON.stringify(rsp));
 
         if (rsp.success) {
           Swal.fire({
