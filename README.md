@@ -8,11 +8,9 @@
 - 대중적으로 사용하는 온라인 쇼핑몰을 구현. (Kream을 Reference Model로 진행)
 - React, Spring Boot를 이용하여 구현.
 - React-Router-dom을 이용하여 layout 구성.
+- 소셜 로그인, JWT, Spring security를 이용하여 회원가입 및 로그인 구현.
 ![image](https://user-images.githubusercontent.com/114208462/217546640-40285e9f-c353-4ef0-a9dc-3cf0f4190a14.png)
 ![image](https://user-images.githubusercontent.com/114208462/217546701-de92de9b-ab54-438f-8622-7dfc0a8e3a6a.png)
-
-- 소셜 로그인, JWT, Spring security를 이용하여 회원가입 및 로그인 구현.
-![image](https://user-images.githubusercontent.com/114208462/217546860-8f53e78a-1c88-4740-b598-3d30170deb1a.png)
 
 - Styled-component를 이용하여 스타일 페이지 구성.
 ![image](https://user-images.githubusercontent.com/114208462/217546776-59b7f991-a949-402e-ae77-18821e7e7fc7.png)
