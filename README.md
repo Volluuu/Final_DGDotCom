@@ -1,10 +1,10 @@
 # DG.com
-1. 프로젝트소개
+# 프로젝트소개
 - 일상에서 가장 흔하게 접해볼 수 있는 온라인 쇼핑몰
 - 많은 데이터를 카테고리별로 필터처리 하며 데이터를 다뤄볼 수 있는 좋은 시스템
 - 사고 팔수 있는 결제부터 jwt token,Spring security를 통한 보안 기능 등 다양한 기능들을 다뤄 볼 수 있는 좋은 시스템
 
-2. 구현 내용
+# 구현 내용
 - 대중적으로 사용하는 온라인 쇼핑몰을 구현. (Kream을 Reference Model로 진행)
 - React, Spring Boot를 이용하여 구현.
 - React-Router-dom을 이용하여 layout 구성.
@@ -24,10 +24,10 @@
 - 아임포트를 이용하여 결제 기능 구현.
 
 
-3. 개발환경 및 API
+# 개발환경 및 API
 ![image](https://user-images.githubusercontent.com/114208462/217550291-7e1188b6-2099-44a4-bba9-5d94e3b563b3.png)
 ![image](https://user-images.githubusercontent.com/114208462/217550367-1d3762e6-741d-4f5a-9508-fa37fc8b2133.png)
 
 
-4. ERD
+# ERD
 ![image](https://user-images.githubusercontent.com/114208462/217544427-ac87360c-1436-49b5-893d-ed2fd55d792e.png)
